@@ -783,9 +783,9 @@ body {
 
 .btn-cta {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
   margin: 0;
   font-family: var(--font-display);
   font-size: 1.25rem;
@@ -794,12 +794,12 @@ body {
   color: var(--bg-void);
   background: linear-gradient(135deg, var(--glow-primary) 0%, #00cc6a 100%);
   border: none;
-  padding: 1.25rem 2rem;
-  padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
-  border-radius: 0;
+  padding: 1.125rem 2rem;
+  padding-bottom: calc(1.125rem + env(safe-area-inset-bottom));
+  border-radius: 100px;
   cursor: pointer;
   transition: all 0.3s var(--ease-bounce);
-  box-shadow: 0 -4px 30px rgba(var(--glow-primary-rgb), 0.4);
+  box-shadow: 0 4px 30px rgba(var(--glow-primary-rgb), 0.5);
   z-index: 100;
 }
 
