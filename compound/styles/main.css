@@ -1011,6 +1011,8 @@ body {
   z-index: 0;
   transform: translateX(100%);
   opacity: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .page--comparison.active {
