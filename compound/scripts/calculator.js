@@ -355,8 +355,8 @@
   }
 
   function showComparison(firstName) {
-    // Get current values
-    const targetAge = state.timeframes[state.selectedTimeframe];
+    // Always calculate for age 65 (retirement)
+    const targetAge = CONFIG.targetAge; // Always 65
     const years = targetAge - state.age;
     const value = calculateProjection(state.weeklyAmount, years, state.scenario);
     const returnRate = Math.round(CONFIG.returnRates[state.scenario] * 100);
