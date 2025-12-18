@@ -454,10 +454,16 @@
     document.getElementById('btn-step-2').addEventListener('click', () => validateAndNextStep(2));
     const btnStep3 = document.getElementById('btn-step-3');
     console.log('btn-step-3 element:', btnStep3);
-    btnStep3.addEventListener('click', () => {
-      console.log('btn-step-3 clicked!');
-      validateAndNextStep(3);
-    });
+    if (btnStep3) {
+      btnStep3.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('btn-step-3 clicked!');
+        alert('See my plan clicked! Check console for debug info.');
+        validateAndNextStep(3);
+      });
+    } else {
+      console.error('btn-step-3 not found!');
+    }
 
     // Enter key advances to next step
     document.getElementById('first-name').addEventListener('keydown', (e) => {
