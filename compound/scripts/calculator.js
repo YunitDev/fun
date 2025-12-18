@@ -53,8 +53,7 @@
     totalFinal: document.getElementById('total-final'),
     // Comparison page elements
     userFirstName: document.getElementById('user-first-name'),
-    goalAmount: document.getElementById('goal-amount'),
-    hardReturn: document.getElementById('hard-return')
+    goalAmount: document.getElementById('goal-amount')
   };
 
   // ==========================================================================
@@ -358,48 +357,17 @@
     const targetAge = CONFIG.targetAge;
     const years = targetAge - state.age;
     const value = calculateProjection(state.weeklyAmount, years, state.scenario);
-    const returnRate = Math.round(CONFIG.returnRates[state.scenario] * 100);
 
     // Update comparison page with personalized data
     const userFirstNameEl = document.getElementById('user-first-name');
     const goalAmountEl = document.getElementById('goal-amount');
-    const hardReturnEl = document.getElementById('hard-return');
 
     if (userFirstNameEl) userFirstNameEl.textContent = firstName;
     if (goalAmountEl) goalAmountEl.textContent = formatCurrency(value);
-    if (hardReturnEl) hardReturnEl.textContent = returnRate + '%';
 
     // Show comparison page
     elements.pageForm.classList.remove('active');
     elements.pageComparison.classList.add('active');
-
-    // Start the social proof count-up animation
-    setTimeout(() => animateSocialCount(), 500);
-  }
-
-  function animateSocialCount() {
-    const countEl = document.getElementById('social-count');
-    if (!countEl) return;
-
-    const targetCount = 47000;
-    const duration = 2500; // 2.5 seconds
-    const startTime = performance.now();
-    const easeOutQuart = t => 1 - Math.pow(1 - t, 4);
-
-    function updateCount(currentTime) {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easedProgress = easeOutQuart(progress);
-      const currentCount = Math.round(easedProgress * targetCount);
-
-      countEl.textContent = formatNumber(currentCount) + '+';
-
-      if (progress < 1) {
-        requestAnimationFrame(updateCount);
-      }
-    }
-
-    requestAnimationFrame(updateCount);
   }
 
   // ==========================================================================
