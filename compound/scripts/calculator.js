@@ -372,6 +372,34 @@
     // Show comparison page
     elements.pageForm.classList.remove('active');
     elements.pageComparison.classList.add('active');
+
+    // Start the social proof count-up animation
+    setTimeout(() => animateSocialCount(), 500);
+  }
+
+  function animateSocialCount() {
+    const countEl = document.getElementById('social-count');
+    if (!countEl) return;
+
+    const targetCount = 47000;
+    const duration = 2500; // 2.5 seconds
+    const startTime = performance.now();
+    const easeOutQuart = t => 1 - Math.pow(1 - t, 4);
+
+    function updateCount(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeOutQuart(progress);
+      const currentCount = Math.round(easedProgress * targetCount);
+
+      countEl.textContent = formatNumber(currentCount) + '+';
+
+      if (progress < 1) {
+        requestAnimationFrame(updateCount);
+      }
+    }
+
+    requestAnimationFrame(updateCount);
   }
 
   // ==========================================================================
