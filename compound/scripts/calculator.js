@@ -313,6 +313,7 @@
   }
 
   function validateAndNextStep(currentStep) {
+    console.log('validateAndNextStep called with step:', currentStep);
     let input, value;
 
     if (currentStep === 1) {
@@ -338,13 +339,16 @@
     } else if (currentStep === 3) {
       input = document.getElementById('phone');
       value = input.value.trim();
+      console.log('Step 3 - phone value:', value);
       if (!value) {
+        console.log('Phone validation failed - empty');
         input.classList.add('input-error');
         setTimeout(() => input.classList.remove('input-error'), 500);
         input.focus();
         return;
       }
       // All steps complete - store data and show comparison
+      console.log('Phone validation passed, calling showComparison');
       const firstName = document.getElementById('first-name').value.trim();
       const lastName = document.getElementById('last-name').value.trim();
       const phone = document.getElementById('phone').value.trim();
@@ -354,20 +358,43 @@
   }
 
   function showComparison(firstName) {
-    // Always calculate for age 65 (retirement)
-    const targetAge = CONFIG.targetAge; // Always 65
-    const years = targetAge - state.age;
-    const value = calculateProjection(state.weeklyAmount, years, state.scenario);
-    const returnRate = Math.round(CONFIG.returnRates[state.scenario] * 100);
+    console.log('showComparison called with firstName:', firstName);
+    try {
+      // Always calculate for age 65 (retirement)
+      const targetAge = CONFIG.targetAge; // Always 65
+      const years = targetAge - state.age;
+      console.log('Calculating projection: weeklyAmount=', state.weeklyAmount, 'years=', years, 'scenario=', state.scenario);
+      const value = calculateProjection(state.weeklyAmount, years, state.scenario);
+      const returnRate = Math.round(CONFIG.returnRates[state.scenario] * 100);
+      console.log('Projection result: value=', value, 'returnRate=', returnRate);
 
-    // Update comparison page with personalized data
-    elements.userFirstName.textContent = firstName;
-    elements.goalAmount.textContent = formatCurrency(value);
-    if (elements.hardReturn) elements.hardReturn.textContent = returnRate + '%';
+      // Update comparison page with personalized data
+      const userFirstNameEl = document.getElementById('user-first-name');
+      const goalAmountEl = document.getElementById('goal-amount');
+      const hardReturnEl = document.getElementById('hard-return');
+      console.log('Elements found:', { userFirstNameEl: !!userFirstNameEl, goalAmountEl: !!goalAmountEl, hardReturnEl: !!hardReturnEl });
 
-    // Show comparison page
-    elements.pageForm.classList.remove('active');
-    elements.pageComparison.classList.add('active');
+      if (userFirstNameEl) userFirstNameEl.textContent = firstName;
+      if (goalAmountEl) goalAmountEl.textContent = formatCurrency(value);
+      if (hardReturnEl) hardReturnEl.textContent = returnRate + '%';
+
+      // Show comparison page
+      const pageForm = document.getElementById('page-form');
+      const pageComparison = document.getElementById('page-comparison');
+      console.log('Page elements found:', { pageForm: !!pageForm, pageComparison: !!pageComparison });
+
+      if (pageForm) {
+        pageForm.classList.remove('active');
+        console.log('Removed active class from page-form');
+      }
+      if (pageComparison) {
+        pageComparison.classList.add('active');
+        console.log('Added active class to page-comparison');
+      }
+      console.log('showComparison completed successfully');
+    } catch (e) {
+      console.error('Error in showComparison:', e);
+    }
   }
 
   // ==========================================================================
@@ -425,7 +452,12 @@
     // Multi-step form buttons
     document.getElementById('btn-step-1').addEventListener('click', () => validateAndNextStep(1));
     document.getElementById('btn-step-2').addEventListener('click', () => validateAndNextStep(2));
-    document.getElementById('btn-step-3').addEventListener('click', () => validateAndNextStep(3));
+    const btnStep3 = document.getElementById('btn-step-3');
+    console.log('btn-step-3 element:', btnStep3);
+    btnStep3.addEventListener('click', () => {
+      console.log('btn-step-3 clicked!');
+      validateAndNextStep(3);
+    });
 
     // Enter key advances to next step
     document.getElementById('first-name').addEventListener('keydown', (e) => {
