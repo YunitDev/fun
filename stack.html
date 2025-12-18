@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Stack Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg: #0f0f1a;
+            --card: #1a1a2e;
+            --card-light: #252540;
+            --green: #10b981;
+            --green-bright: #34d399;
+            --red: #ef4444;
+            --red-bright: #f87171;
+            --gold: #fbbf24;
+            --purple: #8b5cf6;
+            --blue: #3b82f6;
+            --pink: #ec4899;
+            --text: #ffffff;
+            --text-dim: #9ca3af;
+        }
+
+        html, body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .container {
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+            padding-bottom: max(16px, env(safe-area-inset-bottom));
+            max-width: 420px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .hidden { display: none !important; }
+
+        /* ===== INTRO ===== */
+        .intro-screen {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 24px;
+        }
+
+        .game-logo {
+            font-size: 5rem;
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .game-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--green-bright), var(--blue), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .game-tagline {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            font-weight: 500;
+        }
+
+        .game-rules {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .rule {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+        }
+
+        .rule:not(:last-child) {
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .rule-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            text-align: center;
+        }
+
+        .rule-text {
+            font-size: 1rem;
+            color: var(--text-dim);
+        }
+
+        .rule-text strong {
+            color: var(--text);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: transform 0.15s, box-shadow 0.15s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-play {
+            background: linear-gradient(135deg, var(--green) 0%, var(--green-bright) 100%);
+            color: #000;
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-play:hover {
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.5);
+        }
+
+        /* ===== GAME SCREEN ===== */
+        .game-screen {
+            gap: 12px;
+        }
+
+        /* Top bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+        }
+
+        .week-badge {
+            background: var(--card);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .week-badge span {
+            color: var(--gold);
+        }
+
+        .streak-badge {
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Progress pips */
+        .progress-pips {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            padding: 8px 0;
+        }
+
+        .pip {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--card);
+            transition: all 0.3s ease;
+        }
+
+        .pip.done {
+            background: var(--green);
+            box-shadow: 0 0 10px var(--green);
+        }
+
+        .pip.current {
+            background: var(--gold);
+            box-shadow: 0 0 15px var(--gold);
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        .pip.sold {
+            background: var(--red);
+            box-shadow: 0 0 10px var(--red);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        /* Market event */
+        .market-card {
+            background: var(--card);
+            border-radius: 24px;
+            padding: 20px;
+            text-align: center;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .market-card.up {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), var(--card));
+            border: 2px solid var(--green);
+        }
+
+        .market-card.down {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), var(--card));
+            border: 2px solid var(--red);
+        }
+
+        .market-card.waiting {
+            border: 2px dashed var(--card-light);
+        }
+
+        .market-emoji {
+            font-size: 3rem;
+            margin-bottom: 8px;
+        }
+
+        .market-emoji.pop {
+            animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .market-change {
+            font-size: 2rem;
+            font-weight: 900;
+        }
+
+        .market-card.up .market-change { color: var(--green-bright); }
+        .market-card.down .market-change { color: var(--red-bright); }
+
+        .waiting-text {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+
+        /* Score card */
+        .score-card {
+            background: linear-gradient(135deg, var(--card) 0%, var(--card-light) 100%);
+            border-radius: 28px;
+            padding: 28px 24px;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .score-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--green), var(--blue), var(--purple), var(--pink));
+        }
+
+        .score-card.sold::before {
+            background: var(--red);
+        }
+
+        .score-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .score-value {
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 12px;
+            transition: color 0.3s;
+        }
+
+        .score-value.up { color: var(--green-bright); }
+        .score-value.down { color: var(--red-bright); }
+        .score-value.neutral { color: var(--text); }
+
+        .score-detail {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.95rem;
+            color: var(--text-dim);
+        }
+
+        .score-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .detail-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .detail-dot.invested { background: var(--blue); }
+        .detail-dot.profit { background: var(--green); }
+        .detail-dot.loss { background: var(--red); }
+
+        /* Sold banner */
+        .sold-banner {
+            background: var(--red);
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 700;
+            display: none;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .sold-banner.visible {
+            display: block;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Chart */
+        .chart-wrap {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 16px;
+            height: 140px;
+            position: relative;
+        }
+
+        #chartCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Action area - always at bottom */
+        .action-area {
+            padding-top: 12px;
+            margin-top: auto;
+        }
+
+        .btn-stack {
+            background: linear-gradient(135deg, var(--green) 0%, var(--green-bright) 100%);
+            color: #000;
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-next {
+            background: var(--card-light);
+            color: var(--text);
+        }
+
+        .btn-cashout {
+            background: transparent;
+            border: 2px solid var(--red);
+            color: var(--red);
+            padding: 16px;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .btn-results {
+            background: linear-gradient(135deg, var(--gold) 0%, #f59e0b 100%);
+            color: #000;
+            box-shadow: 0 6px 25px rgba(251, 191, 36, 0.35);
+        }
+
+        /* ===== DECISION MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 15, 26, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--card);
+            border-radius: 28px;
+            padding: 32px 24px;
+            width: 100%;
+            max-width: 340px;
+            text-align: center;
+            transform: scale(0.8);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-overlay.visible .modal {
+            transform: scale(1);
+        }
+
+        .modal-emoji {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        .modal-week {
+            font-size: 0.8rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        .modal-amount {
+            background: var(--bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .modal-amount-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--green-bright);
+        }
+
+        .modal-amount-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
+
+        /* ===== RESULT MODAL ===== */
+        .result-emoji {
+            font-size: 5rem;
+            margin-bottom: 16px;
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .result-badge.win {
+            background: linear-gradient(135deg, var(--green), var(--green-bright));
+            color: #000;
+        }
+
+        .result-badge.loss {
+            background: var(--red);
+            color: white;
+        }
+
+        .result-score {
+            margin-bottom: 20px;
+        }
+
+        .result-score-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-score-value {
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        .result-score-value.win { color: var(--green-bright); }
+        .result-score-value.loss { color: var(--red-bright); }
+
+        .result-profit {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .result-profit.win { color: var(--green-bright); }
+        .result-profit.loss { color: var(--red-bright); }
+
+        .result-comparison {
+            background: var(--bg);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .comparison-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-bottom: 4px;
+        }
+
+        .comparison-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .comparison-diff {
+            font-size: 0.85rem;
+            color: var(--red-bright);
+            margin-top: 4px;
+        }
+
+        .btn-restart {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+            z-index: 200;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Float up animation for score changes */
+        .float-up {
+            position: absolute;
+            font-size: 1.5rem;
+            font-weight: 800;
+            pointer-events: none;
+            animation: floatUp 1s ease-out forwards;
+        }
+
+        .float-up.gain { color: var(--green-bright); }
+        .float-up.loss { color: var(--red-bright); }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-60px) scale(1.2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- INTRO -->
+        <div id="introScreen" class="screen intro-screen">
+            <div class="game-logo">💰</div>
+            <h1 class="game-title">STACK</h1>
+            <p class="game-tagline">How high can you go?</p>
+
+            <div class="game-rules">
+                <div class="rule">
+                    <div class="rule-icon">📈</div>
+                    <div class="rule-text"><strong>6 weeks</strong> of market moves</div>
+                </div>
+                <div class="rule">
+                    <div class="rule-icon">💵</div>
+                    <div class="rule-text"><strong>$1,000</strong> to invest each week</div>
+                </div>
+                <div class="rule">
+                    <div class="rule-icon">🎯</div>
+                    <div class="rule-text"><strong>Stack</strong> as much as you can</div>
+                </div>
+            </div>
+
+            <button class="btn btn-play" onclick="startGame()">PLAY</button>
+        </div>
+
+        <!-- GAME -->
+        <div id="gameScreen" class="screen game-screen hidden">
+            <div class="top-bar">
+                <div class="week-badge">WEEK <span id="weekNum">1</span>/6</div>
+                <div class="streak-badge" id="streakBadge">🔥 <span id="streakCount">0</span></div>
+            </div>
+
+            <div class="progress-pips" id="progressPips">
+                <div class="pip"></div>
+                <div class="pip"></div>
+                <div class="pip"></div>
+                <div class="pip"></div>
+                <div class="pip"></div>
+                <div class="pip"></div>
+            </div>
+
+            <div class="sold-banner" id="soldBanner">💸 YOU CASHED OUT</div>
+
+            <div class="market-card waiting" id="marketCard">
+                <div class="market-emoji" id="marketEmoji">🎲</div>
+                <div class="waiting-text" id="marketText">Waiting...</div>
+                <div class="market-change" id="marketChange" style="display: none;"></div>
+            </div>
+
+            <div class="score-card" id="scoreCard">
+                <div class="score-label" id="scoreLabel">YOUR STACK</div>
+                <div class="score-value neutral" id="scoreValue">$0</div>
+                <div class="score-detail">
+                    <div class="score-detail-item">
+                        <div class="detail-dot invested"></div>
+                        <span id="investedText">$0 in</span>
+                    </div>
+                    <div class="score-detail-item">
+                        <div class="detail-dot" id="profitDot"></div>
+                        <span id="profitText">$0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-wrap">
+                <canvas id="chartCanvas"></canvas>
+            </div>
+
+            <div class="action-area">
+                <button class="btn btn-next" id="actionBtn" onclick="handleAction()">NEXT WEEK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DECISION MODAL -->
+    <div class="modal-overlay" id="decisionModal">
+        <div class="modal">
+            <div class="modal-emoji" id="decisionEmoji">💰</div>
+            <div class="modal-week" id="decisionWeek">WEEK 1</div>
+            <h2 class="modal-title" id="decisionTitle">Ready to stack?</h2>
+
+            <div class="modal-amount">
+                <div class="modal-amount-value">$1,000</div>
+                <div class="modal-amount-label">to invest this week</div>
+            </div>
+
+            <button class="btn btn-stack" onclick="makeDecision('buy')">STACK IT 📈</button>
+            <button class="btn btn-cashout" id="cashoutBtn" style="display: none;" onclick="makeDecision('sell')">CASH OUT 💸</button>
+        </div>
+    </div>
+
+    <!-- RESULT MODAL -->
+    <div class="modal-overlay" id="resultModal">
+        <div class="modal">
+            <div class="result-emoji" id="resultEmoji">🏆</div>
+            <div class="result-badge" id="resultBadge">WINNER</div>
+
+            <div class="result-score">
+                <div class="result-score-label">FINAL STACK</div>
+                <div class="result-score-value" id="resultValue">$0</div>
+            </div>
+
+            <div class="result-profit" id="resultProfit">+$0 profit</div>
+
+            <div class="result-comparison" id="resultComparison">
+                <div class="comparison-label">If you stayed all 6 weeks</div>
+                <div class="comparison-value" id="comparisonValue">$0</div>
+                <div class="comparison-diff" id="comparisonDiff">You missed $0</div>
+            </div>
+
+            <button class="btn btn-restart" onclick="restartGame()">PLAY AGAIN</button>
+        </div>
+    </div>
+
+    <script>
+        const TOTAL_WEEKS = 6;
+        const WEEKLY_INVESTMENT = 1000;
+
+        const SCENARIOS = [
+            [-8, -15, 12, 8, 10, 18],
+            [5, -18, -10, 22, 10, 12],
+            [-12, 6, -14, 16, 12, 14],
+            [6, 4, -22, 14, 12, 10],
+            [-6, -14, 10, -4, 18, 20],
+            [-18, 8, 6, -6, 14, 22]
+        ];
+
+        const EMOJIS = {
+            bigUp: ['🚀', '🔥', '💎', '⚡'],
+            smallUp: ['📈', '✨', '💪', '👍'],
+            smallDown: ['😅', '📉', '🤔', '😬'],
+            bigDown: ['😱', '💀', '🆘', '😰']
+        };
+
+        let state = {
+            week: 0,
+            price: 100,
+            priceHistory: [100],
+            allPrices: [],
+            playerShares: 0,
+            playerInvested: 0,
+            playerSoldValue: 0,
+            hasSold: false,
+            soldAtWeek: -1,
+            dcaShares: 0,
+            dcaInvested: 0,
+            marketMoves: [],
+            gameOver: false,
+            streak: 0
+        };
+
+        const canvas = document.getElementById('chartCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function calcPrices(moves) {
+            const prices = [100];
+            let p = 100;
+            for (const m of moves) {
+                p = p * (1 + m / 100);
+                prices.push(p);
+            }
+            return prices;
+        }
+
+        function resizeCanvas() {
+            const wrap = canvas.parentElement;
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = wrap.offsetWidth * dpr;
+            canvas.height = wrap.offsetHeight * dpr;
+            ctx.scale(dpr, dpr);
+            canvas.style.width = wrap.offsetWidth + 'px';
+            canvas.style.height = wrap.offsetHeight + 'px';
+            if (state.priceHistory.length > 1) drawChart();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        function startGame() {
+            document.getElementById('introScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+
+            const moves = SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)];
+
+            state = {
+                week: 0,
+                price: 100,
+                priceHistory: [100],
+                allPrices: calcPrices(moves),
+                playerShares: 0,
+                playerInvested: 0,
+                playerSoldValue: 0,
+                hasSold: false,
+                soldAtWeek: -1,
+                dcaShares: 0,
+                dcaInvested: 0,
+                marketMoves: moves,
+                gameOver: false,
+                streak: 0
+            };
+
+            // Reset UI
+            document.getElementById('soldBanner').classList.remove('visible');
+            document.getElementById('scoreCard').classList.remove('sold');
+            document.getElementById('marketCard').className = 'market-card waiting';
+            document.getElementById('marketEmoji').textContent = '🎲';
+            document.getElementById('marketText').textContent = 'Waiting...';
+            document.getElementById('marketText').style.display = 'block';
+            document.getElementById('marketChange').style.display = 'none';
+
+            updatePips();
+            updateScore(0, false);
+
+            setTimeout(() => {
+                resizeCanvas();
+                showDecision();
+            }, 100);
+        }
+
+        function updatePips() {
+            const pips = document.querySelectorAll('.pip');
+            pips.forEach((pip, i) => {
+                pip.className = 'pip';
+                if (i < state.week) {
+                    pip.classList.add(state.hasSold && i >= state.soldAtWeek ? 'sold' : 'done');
+                } else if (i === state.week && state.week < TOTAL_WEEKS) {
+                    pip.classList.add('current');
+                }
+            });
+        }
+
+        function getEmoji(pct) {
+            let cat;
+            if (pct >= 10) cat = EMOJIS.bigUp;
+            else if (pct > 0) cat = EMOJIS.smallUp;
+            else if (pct > -10) cat = EMOJIS.smallDown;
+            else cat = EMOJIS.bigDown;
+            return cat[Math.floor(Math.random() * cat.length)];
+        }
+
+        function showDecision() {
+            const weekNum = state.week + 1;
+            document.getElementById('decisionWeek').textContent = `WEEK ${weekNum}`;
+
+            if (state.week === 0) {
+                document.getElementById('decisionEmoji').textContent = '💰';
+                document.getElementById('decisionTitle').textContent = 'Ready to stack?';
+                document.getElementById('cashoutBtn').style.display = 'none';
+            } else {
+                const lastMove = state.marketMoves[state.week - 1];
+                if (lastMove < -10) {
+                    document.getElementById('decisionEmoji').textContent = '😰';
+                    document.getElementById('decisionTitle').textContent = 'Scary! Keep going?';
+                } else if (lastMove < 0) {
+                    document.getElementById('decisionEmoji').textContent = '🤔';
+                    document.getElementById('decisionTitle').textContent = 'A dip. Stay in?';
+                } else if (lastMove > 10) {
+                    document.getElementById('decisionEmoji').textContent = '🔥';
+                    document.getElementById('decisionTitle').textContent = 'On fire! More?';
+                } else {
+                    document.getElementById('decisionEmoji').textContent = '💪';
+                    document.getElementById('decisionTitle').textContent = 'Keep stacking?';
+                }
+                document.getElementById('cashoutBtn').style.display = 'block';
+            }
+
+            document.getElementById('decisionModal').classList.add('visible');
+        }
+
+        function makeDecision(decision) {
+            document.getElementById('decisionModal').classList.remove('visible');
+
+            state.week++;
+            document.getElementById('weekNum').textContent = state.week;
+
+            const move = state.marketMoves[state.week - 1];
+            state.price = state.allPrices[state.week];
+            state.priceHistory.push(state.price);
+
+            // Market card update
+            const marketCard = document.getElementById('marketCard');
+            const emoji = document.getElementById('marketEmoji');
+            const change = document.getElementById('marketChange');
+
+            marketCard.className = 'market-card ' + (move >= 0 ? 'up' : 'down');
+            emoji.textContent = getEmoji(move);
+            emoji.classList.remove('pop');
+            void emoji.offsetWidth;
+            emoji.classList.add('pop');
+
+            document.getElementById('marketText').style.display = 'none';
+            change.style.display = 'block';
+            change.textContent = (move >= 0 ? '+' : '') + move + '%';
+
+            let oldValue = state.hasSold ? state.playerSoldValue : state.playerShares * state.allPrices[state.week - 1];
+
+            if (decision === 'buy') {
+                state.playerShares += WEEKLY_INVESTMENT / state.price;
+                state.playerInvested += WEEKLY_INVESTMENT;
+                state.streak++;
+            } else {
+                state.playerSoldValue = state.playerShares * state.price;
+                state.hasSold = true;
+                state.soldAtWeek = state.week;
+                state.streak = 0;
+                document.getElementById('soldBanner').classList.add('visible');
+                document.getElementById('scoreCard').classList.add('sold');
+            }
+
+            state.dcaShares += WEEKLY_INVESTMENT / state.price;
+            state.dcaInvested += WEEKLY_INVESTMENT;
+
+            document.getElementById('streakCount').textContent = state.streak;
+
+            let newValue = state.hasSold ? state.playerSoldValue : state.playerShares * state.price;
+            let diff = newValue - oldValue;
+
+            updatePips();
+            updateScore(newValue, true, diff);
+            drawChart();
+
+            // Update button
+            const btn = document.getElementById('actionBtn');
+            if (state.week >= TOTAL_WEEKS) {
+                state.gameOver = true;
+                btn.textContent = 'SEE RESULTS 🏆';
+                btn.className = 'btn btn-results';
+            } else {
+                btn.textContent = 'NEXT WEEK →';
+                btn.className = 'btn btn-next';
+            }
+        }
+
+        function handleAction() {
+            if (state.gameOver) {
+                showResults();
+                return;
+            }
+
+            if (state.hasSold) {
+                // Auto advance
+                state.week++;
+                document.getElementById('weekNum').textContent = state.week;
+
+                const move = state.marketMoves[state.week - 1];
+                state.price = state.allPrices[state.week];
+                state.priceHistory.push(state.price);
+
+                const marketCard = document.getElementById('marketCard');
+                const emoji = document.getElementById('marketEmoji');
+                const change = document.getElementById('marketChange');
+
+                marketCard.className = 'market-card ' + (move >= 0 ? 'up' : 'down');
+                emoji.textContent = getEmoji(move);
+                emoji.classList.remove('pop');
+                void emoji.offsetWidth;
+                emoji.classList.add('pop');
+
+                change.textContent = (move >= 0 ? '+' : '') + move + '%';
+
+                state.dcaShares += WEEKLY_INVESTMENT / state.price;
+                state.dcaInvested += WEEKLY_INVESTMENT;
+
+                updatePips();
+                updateScore(state.playerSoldValue, true, 0);
+                drawChart();
+
+                if (state.week >= TOTAL_WEEKS) {
+                    state.gameOver = true;
+                    const btn = document.getElementById('actionBtn');
+                    btn.textContent = 'SEE RESULTS 🏆';
+                    btn.className = 'btn btn-results';
+                }
+            } else {
+                showDecision();
+            }
+        }
+
+        function updateScore(value, animate, diff) {
+            const scoreEl = document.getElementById('scoreValue');
+            const scoreCard = document.getElementById('scoreCard');
+
+            if (animate) {
+                animateValue(scoreEl, value);
+
+                // Float up effect
+                if (diff && diff !== 0) {
+                    showFloatUp(diff);
+                }
+            } else {
+                scoreEl.textContent = formatMoney(value);
+            }
+
+            // Color
+            if (state.hasSold) {
+                document.getElementById('scoreLabel').textContent = 'CASHED OUT';
+                scoreEl.className = 'score-value down';
+            } else if (value > state.playerInvested) {
+                document.getElementById('scoreLabel').textContent = 'YOUR STACK';
+                scoreEl.className = 'score-value up';
+            } else if (value < state.playerInvested) {
+                document.getElementById('scoreLabel').textContent = 'YOUR STACK';
+                scoreEl.className = 'score-value down';
+            } else {
+                document.getElementById('scoreLabel').textContent = 'YOUR STACK';
+                scoreEl.className = 'score-value neutral';
+            }
+
+            document.getElementById('investedText').textContent = formatMoney(state.playerInvested) + ' in';
+
+            const profit = value - state.playerInvested;
+            const profitDot = document.getElementById('profitDot');
+            const profitText = document.getElementById('profitText');
+
+            if (profit > 0) {
+                profitDot.className = 'detail-dot profit';
+                profitText.textContent = '+' + formatMoney(profit);
+            } else if (profit < 0) {
+                profitDot.className = 'detail-dot loss';
+                profitText.textContent = formatMoney(profit);
+            } else {
+                profitDot.className = 'detail-dot';
+                profitText.textContent = '$0';
+            }
+        }
+
+        function animateValue(el, target) {
+            const duration = 600;
+            const start = performance.now();
+            const startVal = parseInt(el.textContent.replace(/[$,\-]/g, '')) || 0;
+
+            function tick(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const ease = 1 - Math.pow(1 - progress, 4);
+                const current = startVal + (target - startVal) * ease;
+                el.textContent = formatMoney(current);
+                if (progress < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        }
+
+        function showFloatUp(diff) {
+            const scoreCard = document.getElementById('scoreCard');
+            const float = document.createElement('div');
+            float.className = 'float-up ' + (diff > 0 ? 'gain' : 'loss');
+            float.textContent = (diff > 0 ? '+' : '') + formatMoney(diff);
+            float.style.left = '50%';
+            float.style.top = '40%';
+            float.style.transform = 'translateX(-50%)';
+            scoreCard.appendChild(float);
+            setTimeout(() => float.remove(), 1000);
+        }
+
+        function drawChart() {
+            const wrap = canvas.parentElement;
+            const w = wrap.offsetWidth;
+            const h = wrap.offsetHeight;
+            if (!w || !h) return;
+
+            ctx.clearRect(0, 0, w, h);
+
+            const prices = state.priceHistory;
+            if (prices.length < 2) return;
+
+            const all = state.allPrices;
+            const min = Math.min(...all);
+            const max = Math.max(...all);
+            const range = max - min;
+            const padMin = min - range * 0.2;
+            const padMax = max + range * 0.2;
+            const displayRange = padMax - padMin;
+
+            const pad = { t: 10, r: 10, b: 20, l: 10 };
+            const gw = w - pad.l - pad.r;
+            const gh = h - pad.t - pad.b;
+
+            const getY = p => pad.t + gh - ((p - padMin) / displayRange) * gh;
+            const getX = i => pad.l + (i / TOTAL_WEEKS) * gw;
+
+            // Grid
+            ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = pad.t + (gh / 4) * i;
+                ctx.beginPath();
+                ctx.moveTo(pad.l, y);
+                ctx.lineTo(w - pad.r, y);
+                ctx.stroke();
+            }
+
+            // Line
+            const color = state.hasSold ? '#ef4444' : '#10b981';
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+            prices.forEach((p, i) => {
+                const x = getX(i);
+                const y = getY(p);
+                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+
+            // Fill
+            ctx.beginPath();
+            prices.forEach((p, i) => {
+                const x = getX(i);
+                const y = getY(p);
+                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            });
+            ctx.lineTo(getX(prices.length - 1), h - pad.b);
+            ctx.lineTo(pad.l, h - pad.b);
+            ctx.closePath();
+            const grad = ctx.createLinearGradient(0, pad.t, 0, h - pad.b);
+            grad.addColorStop(0, state.hasSold ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)');
+            grad.addColorStop(1, 'transparent');
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            // Dots
+            prices.forEach((p, i) => {
+                const x = getX(i);
+                const y = getY(p);
+                const last = i === prices.length - 1;
+
+                if (last) {
+                    ctx.beginPath();
+                    ctx.arc(x, y, 12, 0, Math.PI * 2);
+                    ctx.fillStyle = state.hasSold ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)';
+                    ctx.fill();
+                }
+
+                ctx.beginPath();
+                ctx.arc(x, y, last ? 6 : 3, 0, Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.fill();
+            });
+
+            // Labels
+            ctx.fillStyle = 'rgba(255,255,255,0.25)';
+            ctx.font = '10px Outfit';
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= TOTAL_WEEKS; i++) {
+                ctx.fillText(i === 0 ? 'Start' : 'W' + i, getX(i), h - 4);
+            }
+        }
+
+        function showResults() {
+            const playerFinal = state.hasSold ? state.playerSoldValue : state.playerShares * state.price;
+            const dcaFinal = state.dcaShares * state.price;
+            const profit = playerFinal - state.playerInvested;
+            const diff = dcaFinal - playerFinal;
+
+            document.getElementById('resultValue').textContent = formatMoney(playerFinal);
+            document.getElementById('comparisonValue').textContent = formatMoney(dcaFinal);
+
+            if (state.hasSold) {
+                document.getElementById('resultEmoji').textContent = '😬';
+                document.getElementById('resultBadge').textContent = 'CASHED OUT';
+                document.getElementById('resultBadge').className = 'result-badge loss';
+                document.getElementById('resultValue').className = 'result-score-value loss';
+                document.getElementById('resultProfit').textContent = formatMoney(profit) + ' profit';
+                document.getElementById('resultProfit').className = 'result-profit ' + (profit >= 0 ? 'win' : 'loss');
+                document.getElementById('comparisonDiff').textContent = 'You missed ' + formatMoney(diff);
+                document.getElementById('resultComparison').style.display = 'block';
+            } else {
+                document.getElementById('resultEmoji').textContent = profit >= 0 ? '🏆' : '💪';
+                document.getElementById('resultBadge').textContent = profit >= 0 ? 'WINNER!' : 'HELD STRONG';
+                document.getElementById('resultBadge').className = 'result-badge win';
+                document.getElementById('resultValue').className = 'result-score-value ' + (profit >= 0 ? 'win' : 'loss');
+                document.getElementById('resultProfit').textContent = (profit >= 0 ? '+' : '') + formatMoney(profit) + ' profit';
+                document.getElementById('resultProfit').className = 'result-profit ' + (profit >= 0 ? 'win' : 'loss');
+                document.getElementById('resultComparison').style.display = 'none';
+
+                if (profit >= 0) spawnConfetti();
+            }
+
+            document.getElementById('resultModal').classList.add('visible');
+        }
+
+        function spawnConfetti() {
+            const colors = ['#10b981', '#fbbf24', '#8b5cf6', '#ec4899', '#3b82f6'];
+            for (let i = 0; i < 50; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = Math.random() * 100 + 'vw';
+                piece.style.top = '-20px';
+                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.animationDelay = Math.random() * 0.5 + 's';
+                piece.style.animationDuration = (2 + Math.random()) + 's';
+                document.body.appendChild(piece);
+                setTimeout(() => piece.remove(), 3500);
+            }
+        }
+
+        function restartGame() {
+            document.getElementById('resultModal').classList.remove('visible');
+            startGame();
+        }
+
+        function formatMoney(n) {
+            const r = Math.round(n);
+            if (r < 0) return '-$' + Math.abs(r).toLocaleString();
+            return '$' + r.toLocaleString();
+        }
+    </script>
+</body>
+</html>
