@@ -54,7 +54,6 @@
     // Comparison page elements
     userFirstName: document.getElementById('user-first-name'),
     goalAmount: document.getElementById('goal-amount'),
-    hardWeekly: document.getElementById('hard-weekly'),
     hardReturn: document.getElementById('hard-return')
   };
 
@@ -364,8 +363,7 @@
     // Update comparison page with personalized data
     elements.userFirstName.textContent = firstName;
     elements.goalAmount.textContent = formatCurrency(value);
-    elements.hardWeekly.textContent = formatCurrency(state.weeklyAmount);
-    elements.hardReturn.textContent = returnRate + '%';
+    if (elements.hardReturn) elements.hardReturn.textContent = returnRate + '%';
 
     // Show comparison page
     elements.pageForm.classList.remove('active');
