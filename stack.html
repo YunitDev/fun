@@ -498,6 +498,28 @@
             margin-top: 4px;
         }
 
+        .result-lesson {
+            background: var(--bg);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .lesson-label {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .lesson-text {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--text);
+        }
+
         .btn-restart {
             width: 100%;
             background: var(--text);
@@ -668,6 +690,11 @@
                 <div class="comparison-label">If you stayed invested all 6 weeks</div>
                 <div class="comparison-value" id="comparisonValue">$0</div>
                 <div class="comparison-diff" id="comparisonDiff"></div>
+            </div>
+
+            <div class="result-lesson" id="resultLesson">
+                <div class="lesson-label">What happened</div>
+                <div class="lesson-text" id="lessonText"></div>
             </div>
 
             <button class="btn btn-restart" onclick="restartGame()">PLAY AGAIN</button>
@@ -1073,6 +1100,8 @@
             const didCashOut = state.sold && !state.reinvested;
             const triedTiming = state.reinvested;
 
+            let lesson = '';
+
             if (didCashOut || triedTiming) {
                 document.getElementById('resultEmoji').textContent = '😬';
                 document.getElementById('resultBadge').textContent = triedTiming ? 'TRIED TO TIME IT' : 'CASHED OUT';
@@ -1082,6 +1111,12 @@
                 document.getElementById('resultProfit').className = 'result-profit ' + (profit >= 0 ? 'win' : 'loss');
                 document.getElementById('comparisonDiff').textContent = 'You missed ' + fmt(missed);
                 document.getElementById('resultComparison').style.display = 'block';
+
+                if (triedTiming) {
+                    lesson = 'You got scared and sold. Then you tried to jump back in at the "right time." Nobody can predict that. The market dropped right after you reinvested.';
+                } else {
+                    lesson = 'When the market dropped, you got out. It felt safe. But the market recovered — without you. This is why most people who sell during dips end up with less.';
+                }
             } else {
                 document.getElementById('resultEmoji').textContent = profit >= 0 ? '🏆' : '💪';
                 document.getElementById('resultBadge').textContent = profit >= 0 ? 'WINNER' : 'HELD STRONG';
@@ -1091,7 +1126,15 @@
                 document.getElementById('resultProfit').className = 'result-profit ' + (profit >= 0 ? 'win' : 'loss');
                 document.getElementById('resultComparison').style.display = 'none';
                 if (profit >= 0) confetti();
+
+                if (profit >= 0) {
+                    lesson = 'You kept investing every week — even when the market dropped. That took guts. Buying during dips means you got more shares at lower prices. That\'s how wealth builds.';
+                } else {
+                    lesson = 'You stayed in through a rough stretch. In real markets, this patience usually pays off over time. The key is not to panic.';
+                }
             }
+
+            document.getElementById('lessonText').textContent = lesson;
 
             document.getElementById('resultModal').classList.add('visible');
         }
