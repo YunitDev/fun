@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Stack Game</title>
+    <title>Stack</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
@@ -14,19 +14,14 @@
         }
 
         :root {
-            --bg: #0f0f1a;
-            --card: #1a1a2e;
-            --card-light: #252540;
-            --green: #10b981;
-            --green-bright: #34d399;
+            --bg: #0a0a0f;
+            --card: #16161f;
+            --green: #22c55e;
+            --green-dim: rgba(34, 197, 94, 0.15);
             --red: #ef4444;
-            --red-bright: #f87171;
-            --gold: #fbbf24;
-            --purple: #8b5cf6;
-            --blue: #3b82f6;
-            --pink: #ec4899;
+            --red-dim: rgba(239, 68, 68, 0.15);
             --text: #ffffff;
-            --text-dim: #9ca3af;
+            --text-dim: #71717a;
         }
 
         html, body {
@@ -46,17 +41,14 @@
             flex-direction: column;
             padding: 16px;
             padding-bottom: max(16px, env(safe-area-inset-bottom));
-            max-width: 420px;
+            max-width: 400px;
             margin: 0 auto;
-            position: relative;
-            overflow: hidden;
         }
 
         .screen {
             flex: 1;
             display: flex;
             flex-direction: column;
-            height: 100%;
         }
 
         .hidden { display: none !important; }
@@ -66,62 +58,63 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            gap: 24px;
+            gap: 32px;
+        }
+
+        .intro-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
         }
 
         .game-logo {
-            font-size: 5rem;
-            animation: bounce 1s ease-in-out infinite;
+            font-size: 4rem;
+            animation: bounce 1.5s ease-in-out infinite;
         }
 
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+            50% { transform: translateY(-12px); }
         }
 
         .game-title {
             font-size: 2.5rem;
             font-weight: 900;
-            background: linear-gradient(135deg, var(--green-bright), var(--blue), var(--purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            letter-spacing: -1px;
         }
 
         .game-tagline {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: var(--text-dim);
-            font-weight: 500;
         }
 
         .game-rules {
-            background: var(--card);
-            border-radius: 20px;
-            padding: 20px;
-            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
             width: 100%;
         }
 
         .rule {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 10px 0;
-        }
-
-        .rule:not(:last-child) {
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            gap: 16px;
+            background: var(--card);
+            padding: 16px;
+            border-radius: 16px;
         }
 
         .rule-icon {
             font-size: 1.5rem;
-            width: 40px;
+            width: 32px;
             text-align: center;
         }
 
         .rule-text {
             font-size: 1rem;
             color: var(--text-dim);
+            text-align: left;
         }
 
         .rule-text strong {
@@ -129,265 +122,194 @@
         }
 
         .btn {
-            width: 100%;
-            padding: 20px;
-            font-size: 1.2rem;
-            font-weight: 800;
+            padding: 18px 24px;
+            font-size: 1.1rem;
+            font-weight: 700;
             border: none;
-            border-radius: 16px;
+            border-radius: 14px;
             cursor: pointer;
             font-family: inherit;
-            transition: transform 0.15s, box-shadow 0.15s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            transition: transform 0.1s;
         }
 
         .btn:active {
-            transform: scale(0.96);
+            transform: scale(0.97);
         }
 
         .btn-play {
-            background: linear-gradient(135deg, var(--green) 0%, var(--green-bright) 100%);
+            width: 100%;
+            background: var(--green);
             color: #000;
-            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
         }
 
-        .btn-play:hover {
-            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.5);
-        }
-
-        /* ===== GAME SCREEN ===== */
+        /* ===== GAME ===== */
         .game-screen {
-            gap: 12px;
+            gap: 16px;
         }
 
-        /* Top bar */
-        .top-bar {
+        /* Header */
+        .game-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            padding: 8px 0;
+            padding: 4px 0;
         }
 
-        .week-badge {
-            background: var(--card);
-            padding: 8px 16px;
-            border-radius: 100px;
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-
-        .week-badge span {
-            color: var(--gold);
-        }
-
-        .streak-badge {
-            background: linear-gradient(135deg, var(--purple), var(--pink));
-            padding: 8px 16px;
-            border-radius: 100px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Progress pips */
-        .progress-pips {
+        .week-indicator {
             display: flex;
             gap: 8px;
-            justify-content: center;
-            padding: 8px 0;
         }
 
-        .pip {
-            width: 12px;
-            height: 12px;
+        .week-dot {
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: var(--card);
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
 
-        .pip.done {
-            background: var(--green);
-            box-shadow: 0 0 10px var(--green);
+        .week-dot.done { background: var(--green); }
+        .week-dot.current {
+            background: #fbbf24;
+            box-shadow: 0 0 12px #fbbf24;
         }
+        .week-dot.sold { background: var(--red); }
 
-        .pip.current {
-            background: var(--gold);
-            box-shadow: 0 0 15px var(--gold);
-            animation: pulse 1s ease-in-out infinite;
-        }
-
-        .pip.sold {
-            background: var(--red);
-            box-shadow: 0 0 10px var(--red);
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-        }
-
-        /* Market event */
-        .market-card {
+        /* This Week Card */
+        .week-card {
             background: var(--card);
-            border-radius: 24px;
+            border-radius: 20px;
             padding: 20px;
             text-align: center;
-            min-height: 120px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
         }
 
-        .market-card.up {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), var(--card));
+        .week-card.up {
+            background: var(--green-dim);
             border: 2px solid var(--green);
         }
 
-        .market-card.down {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), var(--card));
+        .week-card.down {
+            background: var(--red-dim);
             border: 2px solid var(--red);
         }
 
-        .market-card.waiting {
-            border: 2px dashed var(--card-light);
+        .week-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
         }
 
-        .market-emoji {
-            font-size: 3rem;
-            margin-bottom: 8px;
+        .week-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
         }
 
-        .market-emoji.pop {
-            animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .week-emoji {
+            font-size: 2.5rem;
+        }
+
+        .week-emoji.pop {
+            animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         @keyframes pop {
-            0% { transform: scale(0); }
-            50% { transform: scale(1.3); }
+            0% { transform: scale(0.5); }
+            70% { transform: scale(1.2); }
             100% { transform: scale(1); }
         }
 
-        .market-change {
-            font-size: 2rem;
+        .week-change {
+            font-size: 2.5rem;
             font-weight: 900;
         }
 
-        .market-card.up .market-change { color: var(--green-bright); }
-        .market-card.down .market-change { color: var(--red-bright); }
+        .week-card.up .week-change { color: var(--green); }
+        .week-card.down .week-change { color: var(--red); }
 
-        .waiting-text {
-            color: var(--text-dim);
+        .week-waiting {
             font-size: 1.1rem;
+            color: var(--text-dim);
         }
 
-        /* Score card */
-        .score-card {
-            background: linear-gradient(135deg, var(--card) 0%, var(--card-light) 100%);
-            border-radius: 28px;
-            padding: 28px 24px;
+        /* Sold Notice */
+        .sold-notice {
+            background: var(--red);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 700;
+            display: none;
+        }
+
+        .sold-notice.visible { display: block; }
+
+        /* Balance Card */
+        .balance-card {
+            background: var(--card);
+            border-radius: 24px;
+            padding: 32px 24px;
             text-align: center;
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             min-height: 0;
-            position: relative;
-            overflow: hidden;
         }
 
-        .score-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--green), var(--blue), var(--purple), var(--pink));
-        }
-
-        .score-card.sold::before {
-            background: var(--red);
-        }
-
-        .score-label {
-            font-size: 0.85rem;
+        .balance-label {
+            font-size: 0.8rem;
             color: var(--text-dim);
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             margin-bottom: 8px;
         }
 
-        .score-value {
-            font-size: 4rem;
+        .balance-value {
+            font-size: 3.5rem;
             font-weight: 900;
             line-height: 1;
-            margin-bottom: 12px;
-            transition: color 0.3s;
+            margin-bottom: 16px;
         }
 
-        .score-value.up { color: var(--green-bright); }
-        .score-value.down { color: var(--red-bright); }
-        .score-value.neutral { color: var(--text); }
+        .balance-value.up { color: var(--green); }
+        .balance-value.down { color: var(--red); }
 
-        .score-detail {
+        .balance-breakdown {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            font-size: 0.95rem;
-            color: var(--text-dim);
+            gap: 24px;
         }
 
-        .score-detail-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .detail-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
-        .detail-dot.invested { background: var(--blue); }
-        .detail-dot.profit { background: var(--green); }
-        .detail-dot.loss { background: var(--red); }
-
-        /* Sold banner */
-        .sold-banner {
-            background: var(--red);
-            color: white;
-            padding: 12px;
-            border-radius: 12px;
+        .breakdown-item {
             text-align: center;
+        }
+
+        .breakdown-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .breakdown-value {
+            font-size: 1.1rem;
             font-weight: 700;
-            display: none;
-            animation: shake 0.5s ease-in-out;
         }
 
-        .sold-banner.visible {
-            display: block;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
+        .breakdown-value.green { color: var(--green); }
+        .breakdown-value.red { color: var(--red); }
 
         /* Chart */
         .chart-wrap {
             background: var(--card);
-            border-radius: 20px;
-            padding: 16px;
-            height: 140px;
-            position: relative;
+            border-radius: 16px;
+            padding: 12px;
+            height: 120px;
         }
 
         #chartCanvas {
@@ -395,51 +317,37 @@
             height: 100%;
         }
 
-        /* Action area - always at bottom */
+        /* Action */
         .action-area {
-            padding-top: 12px;
             margin-top: auto;
-        }
-
-        .btn-stack {
-            background: linear-gradient(135deg, var(--green) 0%, var(--green-bright) 100%);
-            color: #000;
-            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.35);
+            padding-top: 12px;
         }
 
         .btn-next {
-            background: var(--card-light);
+            width: 100%;
+            background: var(--card);
             color: var(--text);
         }
 
-        .btn-cashout {
-            background: transparent;
-            border: 2px solid var(--red);
-            color: var(--red);
-            padding: 16px;
-            font-size: 1rem;
-            margin-top: 10px;
-        }
-
         .btn-results {
-            background: linear-gradient(135deg, var(--gold) 0%, #f59e0b 100%);
+            width: 100%;
+            background: #fbbf24;
             color: #000;
-            box-shadow: 0 6px 25px rgba(251, 191, 36, 0.35);
         }
 
-        /* ===== DECISION MODAL ===== */
+        /* ===== MODAL ===== */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(15, 15, 26, 0.95);
+            background: rgba(10, 10, 15, 0.95);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 24px;
             z-index: 100;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.25s;
         }
 
         .modal-overlay.visible {
@@ -449,13 +357,13 @@
 
         .modal {
             background: var(--card);
-            border-radius: 28px;
+            border-radius: 24px;
             padding: 32px 24px;
             width: 100%;
-            max-width: 340px;
+            max-width: 320px;
             text-align: center;
-            transform: scale(0.8);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .modal-overlay.visible .modal {
@@ -463,22 +371,20 @@
         }
 
         .modal-emoji {
-            font-size: 4rem;
+            font-size: 3.5rem;
             margin-bottom: 16px;
-            animation: bounce 1s ease-in-out infinite;
         }
 
         .modal-week {
-            font-size: 0.8rem;
-            color: var(--gold);
+            font-size: 0.75rem;
+            color: var(--text-dim);
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-bottom: 8px;
-            font-weight: 700;
         }
 
         .modal-title {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 800;
             margin-bottom: 24px;
         }
@@ -491,149 +397,154 @@
         }
 
         .modal-amount-value {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 900;
-            color: var(--green-bright);
+            color: var(--green);
         }
 
         .modal-amount-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-dim);
             margin-top: 4px;
         }
 
-        /* ===== RESULT MODAL ===== */
+        /* Side by side buttons */
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .modal-buttons .btn {
+            flex: 1;
+            padding: 16px 12px;
+            font-size: 0.95rem;
+        }
+
+        .btn-stack {
+            background: var(--green);
+            color: #000;
+        }
+
+        .btn-sell {
+            background: var(--red-dim);
+            color: var(--red);
+            border: 2px solid var(--red);
+        }
+
+        .btn-stack-full {
+            width: 100%;
+            background: var(--green);
+            color: #000;
+        }
+
+        /* ===== RESULTS ===== */
         .result-emoji {
-            font-size: 5rem;
-            margin-bottom: 16px;
+            font-size: 4rem;
+            margin-bottom: 12px;
         }
 
         .result-badge {
             display: inline-block;
-            padding: 10px 24px;
+            padding: 8px 20px;
             border-radius: 100px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 800;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             text-transform: uppercase;
             margin-bottom: 20px;
         }
 
         .result-badge.win {
-            background: linear-gradient(135deg, var(--green), var(--green-bright));
+            background: var(--green);
             color: #000;
         }
 
         .result-badge.loss {
             background: var(--red);
-            color: white;
         }
 
-        .result-score {
-            margin-bottom: 20px;
-        }
-
-        .result-score-label {
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .result-score-value {
-            font-size: 4rem;
+        .result-value {
+            font-size: 3rem;
             font-weight: 900;
-            line-height: 1.1;
+            margin-bottom: 8px;
         }
 
-        .result-score-value.win { color: var(--green-bright); }
-        .result-score-value.loss { color: var(--red-bright); }
+        .result-value.win { color: var(--green); }
+        .result-value.loss { color: var(--red); }
 
         .result-profit {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             margin-bottom: 20px;
         }
 
-        .result-profit.win { color: var(--green-bright); }
-        .result-profit.loss { color: var(--red-bright); }
+        .result-profit.win { color: var(--green); }
+        .result-profit.loss { color: var(--red); }
 
         .result-comparison {
             background: var(--bg);
-            border-radius: 16px;
+            border-radius: 14px;
             padding: 16px;
             margin-bottom: 24px;
         }
 
         .comparison-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-dim);
             margin-bottom: 4px;
         }
 
         .comparison-value {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 800;
-            color: var(--gold);
+            color: #fbbf24;
         }
 
         .comparison-diff {
-            font-size: 0.85rem;
-            color: var(--red-bright);
+            font-size: 0.8rem;
+            color: var(--red);
             margin-top: 4px;
         }
 
         .btn-restart {
+            width: 100%;
             background: var(--text);
             color: var(--bg);
         }
 
         /* Confetti */
-        .confetti {
-            position: fixed;
-            pointer-events: none;
-            z-index: 200;
-        }
-
         .confetti-piece {
-            position: absolute;
+            position: fixed;
             width: 10px;
             height: 10px;
             border-radius: 2px;
+            pointer-events: none;
             animation: confetti-fall 3s ease-out forwards;
         }
 
         @keyframes confetti-fall {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
+            to {
                 transform: translateY(100vh) rotate(720deg);
                 opacity: 0;
             }
         }
 
-        /* Float up animation for score changes */
+        /* Float animation */
         .float-up {
             position: absolute;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 800;
             pointer-events: none;
-            animation: floatUp 1s ease-out forwards;
+            animation: floatUp 0.8s ease-out forwards;
         }
 
-        .float-up.gain { color: var(--green-bright); }
-        .float-up.loss { color: var(--red-bright); }
+        .float-up.gain { color: var(--green); }
+        .float-up.loss { color: var(--red); }
 
         @keyframes floatUp {
-            0% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-            100% {
+            to {
                 opacity: 0;
-                transform: translateY(-60px) scale(1.2);
+                transform: translateY(-50px);
             }
         }
     </style>
@@ -642,9 +553,11 @@
     <div class="container">
         <!-- INTRO -->
         <div id="introScreen" class="screen intro-screen">
-            <div class="game-logo">💰</div>
-            <h1 class="game-title">STACK</h1>
-            <p class="game-tagline">How high can you go?</p>
+            <div class="intro-header">
+                <div class="game-logo">💰</div>
+                <h1 class="game-title">STACK</h1>
+                <p class="game-tagline">How high can you stack it?</p>
+            </div>
 
             <div class="game-rules">
                 <div class="rule">
@@ -657,7 +570,7 @@
                 </div>
                 <div class="rule">
                     <div class="rule-icon">🎯</div>
-                    <div class="rule-text"><strong>Stack</strong> as much as you can</div>
+                    <div class="rule-text">Stack as high as you can</div>
                 </div>
             </div>
 
@@ -666,39 +579,39 @@
 
         <!-- GAME -->
         <div id="gameScreen" class="screen game-screen hidden">
-            <div class="top-bar">
-                <div class="week-badge">WEEK <span id="weekNum">1</span>/6</div>
-                <div class="streak-badge" id="streakBadge">🔥 <span id="streakCount">0</span></div>
+            <div class="game-header">
+                <div class="week-indicator" id="weekIndicator">
+                    <div class="week-dot"></div>
+                    <div class="week-dot"></div>
+                    <div class="week-dot"></div>
+                    <div class="week-dot"></div>
+                    <div class="week-dot"></div>
+                    <div class="week-dot"></div>
+                </div>
             </div>
 
-            <div class="progress-pips" id="progressPips">
-                <div class="pip"></div>
-                <div class="pip"></div>
-                <div class="pip"></div>
-                <div class="pip"></div>
-                <div class="pip"></div>
-                <div class="pip"></div>
+            <div class="sold-notice" id="soldNotice">💸 You cashed out</div>
+
+            <div class="week-card" id="weekCard">
+                <div class="week-label" id="weekLabel">Week 1</div>
+                <div class="week-content">
+                    <div class="week-emoji" id="weekEmoji">🎲</div>
+                    <div class="week-waiting" id="weekWaiting">Waiting...</div>
+                    <div class="week-change" id="weekChange" style="display: none;"></div>
+                </div>
             </div>
 
-            <div class="sold-banner" id="soldBanner">💸 YOU CASHED OUT</div>
-
-            <div class="market-card waiting" id="marketCard">
-                <div class="market-emoji" id="marketEmoji">🎲</div>
-                <div class="waiting-text" id="marketText">Waiting...</div>
-                <div class="market-change" id="marketChange" style="display: none;"></div>
-            </div>
-
-            <div class="score-card" id="scoreCard">
-                <div class="score-label" id="scoreLabel">YOUR STACK</div>
-                <div class="score-value neutral" id="scoreValue">$0</div>
-                <div class="score-detail">
-                    <div class="score-detail-item">
-                        <div class="detail-dot invested"></div>
-                        <span id="investedText">$0 in</span>
+            <div class="balance-card" id="balanceCard">
+                <div class="balance-label" id="balanceLabel">Your Balance</div>
+                <div class="balance-value" id="balanceValue">$0</div>
+                <div class="balance-breakdown">
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Invested</div>
+                        <div class="breakdown-value" id="investedValue">$0</div>
                     </div>
-                    <div class="score-detail-item">
-                        <div class="detail-dot" id="profitDot"></div>
-                        <span id="profitText">$0</span>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Profit/Loss</div>
+                        <div class="breakdown-value" id="profitValue">$0</div>
                     </div>
                 </div>
             </div>
@@ -717,16 +630,21 @@
     <div class="modal-overlay" id="decisionModal">
         <div class="modal">
             <div class="modal-emoji" id="decisionEmoji">💰</div>
-            <div class="modal-week" id="decisionWeek">WEEK 1</div>
-            <h2 class="modal-title" id="decisionTitle">Ready to stack?</h2>
+            <div class="modal-week" id="decisionWeekLabel">Week 1</div>
+            <h2 class="modal-title" id="decisionTitle">Ready?</h2>
 
             <div class="modal-amount">
                 <div class="modal-amount-value">$1,000</div>
-                <div class="modal-amount-label">to invest this week</div>
+                <div class="modal-amount-label">to invest</div>
             </div>
 
-            <button class="btn btn-stack" onclick="makeDecision('buy')">STACK IT 📈</button>
-            <button class="btn btn-cashout" id="cashoutBtn" style="display: none;" onclick="makeDecision('sell')">CASH OUT 💸</button>
+            <div class="modal-buttons" id="modalButtons">
+                <button class="btn btn-stack-full" id="stackFullBtn" onclick="makeDecision('buy')">STACK IT</button>
+            </div>
+            <div class="modal-buttons" id="modalButtonsSplit" style="display: none;">
+                <button class="btn btn-stack" onclick="makeDecision('buy')">STACK IT</button>
+                <button class="btn btn-sell" onclick="makeDecision('sell')">CASH OUT</button>
+            </div>
         </div>
     </div>
 
@@ -735,18 +653,13 @@
         <div class="modal">
             <div class="result-emoji" id="resultEmoji">🏆</div>
             <div class="result-badge" id="resultBadge">WINNER</div>
-
-            <div class="result-score">
-                <div class="result-score-label">FINAL STACK</div>
-                <div class="result-score-value" id="resultValue">$0</div>
-            </div>
-
-            <div class="result-profit" id="resultProfit">+$0 profit</div>
+            <div class="result-value" id="resultValue">$0</div>
+            <div class="result-profit" id="resultProfit">+$0</div>
 
             <div class="result-comparison" id="resultComparison">
                 <div class="comparison-label">If you stayed all 6 weeks</div>
                 <div class="comparison-value" id="comparisonValue">$0</div>
-                <div class="comparison-diff" id="comparisonDiff">You missed $0</div>
+                <div class="comparison-diff" id="comparisonDiff"></div>
             </div>
 
             <button class="btn btn-restart" onclick="restartGame()">PLAY AGAIN</button>
@@ -754,8 +667,8 @@
     </div>
 
     <script>
-        const TOTAL_WEEKS = 6;
-        const WEEKLY_INVESTMENT = 1000;
+        const WEEKS = 6;
+        const INVEST = 1000;
 
         const SCENARIOS = [
             [-8, -15, 12, 8, 10, 18],
@@ -766,41 +679,242 @@
             [-18, 8, 6, -6, 14, 22]
         ];
 
-        const EMOJIS = {
-            bigUp: ['🚀', '🔥', '💎', '⚡'],
-            smallUp: ['📈', '✨', '💪', '👍'],
-            smallDown: ['😅', '📉', '🤔', '😬'],
-            bigDown: ['😱', '💀', '🆘', '😰']
-        };
-
-        let state = {
-            week: 0,
-            price: 100,
-            priceHistory: [100],
-            allPrices: [],
-            playerShares: 0,
-            playerInvested: 0,
-            playerSoldValue: 0,
-            hasSold: false,
-            soldAtWeek: -1,
-            dcaShares: 0,
-            dcaInvested: 0,
-            marketMoves: [],
-            gameOver: false,
-            streak: 0
-        };
-
+        let state = {};
         const canvas = document.getElementById('chartCanvas');
         const ctx = canvas.getContext('2d');
 
-        function calcPrices(moves) {
+        function startGame() {
+            document.getElementById('introScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+
+            const moves = SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)];
             const prices = [100];
             let p = 100;
-            for (const m of moves) {
-                p = p * (1 + m / 100);
-                prices.push(p);
+            for (const m of moves) { p *= (1 + m/100); prices.push(p); }
+
+            state = {
+                week: 0,
+                price: 100,
+                history: [100],
+                allPrices: prices,
+                shares: 0,
+                invested: 0,
+                soldValue: 0,
+                sold: false,
+                soldWeek: -1,
+                dcaShares: 0,
+                dcaInvested: 0,
+                moves: moves,
+                done: false
+            };
+
+            document.getElementById('soldNotice').classList.remove('visible');
+            document.getElementById('weekCard').className = 'week-card';
+            document.getElementById('weekEmoji').textContent = '🎲';
+            document.getElementById('weekWaiting').style.display = 'block';
+            document.getElementById('weekChange').style.display = 'none';
+            document.getElementById('weekLabel').textContent = 'Week 1';
+
+            updateDots();
+            updateBalance(0, false);
+
+            setTimeout(() => {
+                resizeCanvas();
+                showDecision();
+            }, 100);
+        }
+
+        function updateDots() {
+            const dots = document.querySelectorAll('.week-dot');
+            dots.forEach((d, i) => {
+                d.className = 'week-dot';
+                if (i < state.week) d.classList.add(state.sold && i >= state.soldWeek ? 'sold' : 'done');
+                else if (i === state.week && state.week < WEEKS) d.classList.add('current');
+            });
+        }
+
+        function showDecision() {
+            const w = state.week + 1;
+            document.getElementById('decisionWeekLabel').textContent = `Week ${w}`;
+
+            if (state.week === 0) {
+                document.getElementById('decisionEmoji').textContent = '💰';
+                document.getElementById('decisionTitle').textContent = 'Ready to start?';
+                document.getElementById('modalButtons').style.display = 'flex';
+                document.getElementById('modalButtonsSplit').style.display = 'none';
+            } else {
+                const last = state.moves[state.week - 1];
+                if (last < -10) {
+                    document.getElementById('decisionEmoji').textContent = '😰';
+                    document.getElementById('decisionTitle').textContent = 'Oof! Keep going?';
+                } else if (last < 0) {
+                    document.getElementById('decisionEmoji').textContent = '🤔';
+                    document.getElementById('decisionTitle').textContent = 'Small dip. Stay in?';
+                } else if (last > 10) {
+                    document.getElementById('decisionEmoji').textContent = '🔥';
+                    document.getElementById('decisionTitle').textContent = 'Hot! Keep it up?';
+                } else {
+                    document.getElementById('decisionEmoji').textContent = '💪';
+                    document.getElementById('decisionTitle').textContent = 'Keep stacking?';
+                }
+                document.getElementById('modalButtons').style.display = 'none';
+                document.getElementById('modalButtonsSplit').style.display = 'flex';
             }
-            return prices;
+
+            document.getElementById('decisionModal').classList.add('visible');
+        }
+
+        function makeDecision(choice) {
+            document.getElementById('decisionModal').classList.remove('visible');
+
+            state.week++;
+            const move = state.moves[state.week - 1];
+            state.price = state.allPrices[state.week];
+            state.history.push(state.price);
+
+            // Update week card
+            const card = document.getElementById('weekCard');
+            const emoji = document.getElementById('weekEmoji');
+
+            card.className = 'week-card ' + (move >= 0 ? 'up' : 'down');
+            document.getElementById('weekLabel').textContent = `Week ${state.week}`;
+
+            emoji.textContent = move >= 10 ? '🚀' : move > 0 ? '📈' : move > -10 ? '📉' : '💀';
+            emoji.classList.remove('pop');
+            void emoji.offsetWidth;
+            emoji.classList.add('pop');
+
+            document.getElementById('weekWaiting').style.display = 'none';
+            const changeEl = document.getElementById('weekChange');
+            changeEl.style.display = 'block';
+            changeEl.textContent = (move >= 0 ? '+' : '') + move + '%';
+
+            const oldVal = state.sold ? state.soldValue : state.shares * state.allPrices[state.week - 1];
+
+            if (choice === 'buy') {
+                state.shares += INVEST / state.price;
+                state.invested += INVEST;
+            } else {
+                state.soldValue = state.shares * state.price;
+                state.sold = true;
+                state.soldWeek = state.week;
+                document.getElementById('soldNotice').classList.add('visible');
+            }
+
+            state.dcaShares += INVEST / state.price;
+            state.dcaInvested += INVEST;
+
+            const newVal = state.sold ? state.soldValue : state.shares * state.price;
+
+            updateDots();
+            updateBalance(newVal, true, newVal - oldVal);
+            drawChart();
+
+            const btn = document.getElementById('actionBtn');
+            if (state.week >= WEEKS) {
+                state.done = true;
+                btn.textContent = 'SEE RESULTS';
+                btn.className = 'btn btn-results';
+            } else {
+                btn.textContent = 'NEXT WEEK';
+                btn.className = 'btn btn-next';
+            }
+        }
+
+        function handleAction() {
+            if (state.done) { showResults(); return; }
+
+            if (state.sold) {
+                state.week++;
+                const move = state.moves[state.week - 1];
+                state.price = state.allPrices[state.week];
+                state.history.push(state.price);
+
+                const card = document.getElementById('weekCard');
+                const emoji = document.getElementById('weekEmoji');
+
+                card.className = 'week-card ' + (move >= 0 ? 'up' : 'down');
+                document.getElementById('weekLabel').textContent = `Week ${state.week}`;
+
+                emoji.textContent = move >= 10 ? '🚀' : move > 0 ? '📈' : move > -10 ? '📉' : '💀';
+                emoji.classList.remove('pop');
+                void emoji.offsetWidth;
+                emoji.classList.add('pop');
+
+                document.getElementById('weekChange').textContent = (move >= 0 ? '+' : '') + move + '%';
+
+                state.dcaShares += INVEST / state.price;
+                state.dcaInvested += INVEST;
+
+                updateDots();
+                updateBalance(state.soldValue, true, 0);
+                drawChart();
+
+                if (state.week >= WEEKS) {
+                    state.done = true;
+                    const btn = document.getElementById('actionBtn');
+                    btn.textContent = 'SEE RESULTS';
+                    btn.className = 'btn btn-results';
+                }
+            } else {
+                showDecision();
+            }
+        }
+
+        function updateBalance(value, animate, diff) {
+            const el = document.getElementById('balanceValue');
+
+            if (animate) {
+                animateNum(el, value);
+                if (diff && diff !== 0) showFloat(diff);
+            } else {
+                el.textContent = fmt(value);
+            }
+
+            if (state.sold) {
+                document.getElementById('balanceLabel').textContent = 'Cashed Out';
+                el.className = 'balance-value down';
+            } else if (value > state.invested) {
+                document.getElementById('balanceLabel').textContent = 'Your Balance';
+                el.className = 'balance-value up';
+            } else if (value < state.invested) {
+                document.getElementById('balanceLabel').textContent = 'Your Balance';
+                el.className = 'balance-value down';
+            } else {
+                document.getElementById('balanceLabel').textContent = 'Your Balance';
+                el.className = 'balance-value';
+            }
+
+            document.getElementById('investedValue').textContent = fmt(state.invested);
+
+            const profit = value - state.invested;
+            const profitEl = document.getElementById('profitValue');
+            profitEl.textContent = (profit >= 0 ? '+' : '') + fmt(profit);
+            profitEl.className = 'breakdown-value ' + (profit > 0 ? 'green' : profit < 0 ? 'red' : '');
+        }
+
+        function animateNum(el, target) {
+            const start = performance.now();
+            const startVal = parseInt(el.textContent.replace(/[$,\-]/g, '')) || 0;
+
+            function tick(now) {
+                const p = Math.min((now - start) / 500, 1);
+                const ease = 1 - Math.pow(1 - p, 3);
+                el.textContent = fmt(startVal + (target - startVal) * ease);
+                if (p < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        }
+
+        function showFloat(diff) {
+            const card = document.getElementById('balanceCard');
+            const f = document.createElement('div');
+            f.className = 'float-up ' + (diff > 0 ? 'gain' : 'loss');
+            f.textContent = (diff > 0 ? '+' : '') + fmt(diff);
+            f.style.cssText = 'left:50%;top:35%;transform:translateX(-50%)';
+            card.style.position = 'relative';
+            card.appendChild(f);
+            setTimeout(() => f.remove(), 800);
         }
 
         function resizeCanvas() {
@@ -811,427 +925,104 @@
             ctx.scale(dpr, dpr);
             canvas.style.width = wrap.offsetWidth + 'px';
             canvas.style.height = wrap.offsetHeight + 'px';
-            if (state.priceHistory.length > 1) drawChart();
+            if (state.history && state.history.length > 1) drawChart();
         }
 
         window.addEventListener('resize', resizeCanvas);
 
-        function startGame() {
-            document.getElementById('introScreen').classList.add('hidden');
-            document.getElementById('gameScreen').classList.remove('hidden');
-
-            const moves = SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)];
-
-            state = {
-                week: 0,
-                price: 100,
-                priceHistory: [100],
-                allPrices: calcPrices(moves),
-                playerShares: 0,
-                playerInvested: 0,
-                playerSoldValue: 0,
-                hasSold: false,
-                soldAtWeek: -1,
-                dcaShares: 0,
-                dcaInvested: 0,
-                marketMoves: moves,
-                gameOver: false,
-                streak: 0
-            };
-
-            // Reset UI
-            document.getElementById('soldBanner').classList.remove('visible');
-            document.getElementById('scoreCard').classList.remove('sold');
-            document.getElementById('marketCard').className = 'market-card waiting';
-            document.getElementById('marketEmoji').textContent = '🎲';
-            document.getElementById('marketText').textContent = 'Waiting...';
-            document.getElementById('marketText').style.display = 'block';
-            document.getElementById('marketChange').style.display = 'none';
-
-            updatePips();
-            updateScore(0, false);
-
-            setTimeout(() => {
-                resizeCanvas();
-                showDecision();
-            }, 100);
-        }
-
-        function updatePips() {
-            const pips = document.querySelectorAll('.pip');
-            pips.forEach((pip, i) => {
-                pip.className = 'pip';
-                if (i < state.week) {
-                    pip.classList.add(state.hasSold && i >= state.soldAtWeek ? 'sold' : 'done');
-                } else if (i === state.week && state.week < TOTAL_WEEKS) {
-                    pip.classList.add('current');
-                }
-            });
-        }
-
-        function getEmoji(pct) {
-            let cat;
-            if (pct >= 10) cat = EMOJIS.bigUp;
-            else if (pct > 0) cat = EMOJIS.smallUp;
-            else if (pct > -10) cat = EMOJIS.smallDown;
-            else cat = EMOJIS.bigDown;
-            return cat[Math.floor(Math.random() * cat.length)];
-        }
-
-        function showDecision() {
-            const weekNum = state.week + 1;
-            document.getElementById('decisionWeek').textContent = `WEEK ${weekNum}`;
-
-            if (state.week === 0) {
-                document.getElementById('decisionEmoji').textContent = '💰';
-                document.getElementById('decisionTitle').textContent = 'Ready to stack?';
-                document.getElementById('cashoutBtn').style.display = 'none';
-            } else {
-                const lastMove = state.marketMoves[state.week - 1];
-                if (lastMove < -10) {
-                    document.getElementById('decisionEmoji').textContent = '😰';
-                    document.getElementById('decisionTitle').textContent = 'Scary! Keep going?';
-                } else if (lastMove < 0) {
-                    document.getElementById('decisionEmoji').textContent = '🤔';
-                    document.getElementById('decisionTitle').textContent = 'A dip. Stay in?';
-                } else if (lastMove > 10) {
-                    document.getElementById('decisionEmoji').textContent = '🔥';
-                    document.getElementById('decisionTitle').textContent = 'On fire! More?';
-                } else {
-                    document.getElementById('decisionEmoji').textContent = '💪';
-                    document.getElementById('decisionTitle').textContent = 'Keep stacking?';
-                }
-                document.getElementById('cashoutBtn').style.display = 'block';
-            }
-
-            document.getElementById('decisionModal').classList.add('visible');
-        }
-
-        function makeDecision(decision) {
-            document.getElementById('decisionModal').classList.remove('visible');
-
-            state.week++;
-            document.getElementById('weekNum').textContent = state.week;
-
-            const move = state.marketMoves[state.week - 1];
-            state.price = state.allPrices[state.week];
-            state.priceHistory.push(state.price);
-
-            // Market card update
-            const marketCard = document.getElementById('marketCard');
-            const emoji = document.getElementById('marketEmoji');
-            const change = document.getElementById('marketChange');
-
-            marketCard.className = 'market-card ' + (move >= 0 ? 'up' : 'down');
-            emoji.textContent = getEmoji(move);
-            emoji.classList.remove('pop');
-            void emoji.offsetWidth;
-            emoji.classList.add('pop');
-
-            document.getElementById('marketText').style.display = 'none';
-            change.style.display = 'block';
-            change.textContent = (move >= 0 ? '+' : '') + move + '%';
-
-            let oldValue = state.hasSold ? state.playerSoldValue : state.playerShares * state.allPrices[state.week - 1];
-
-            if (decision === 'buy') {
-                state.playerShares += WEEKLY_INVESTMENT / state.price;
-                state.playerInvested += WEEKLY_INVESTMENT;
-                state.streak++;
-            } else {
-                state.playerSoldValue = state.playerShares * state.price;
-                state.hasSold = true;
-                state.soldAtWeek = state.week;
-                state.streak = 0;
-                document.getElementById('soldBanner').classList.add('visible');
-                document.getElementById('scoreCard').classList.add('sold');
-            }
-
-            state.dcaShares += WEEKLY_INVESTMENT / state.price;
-            state.dcaInvested += WEEKLY_INVESTMENT;
-
-            document.getElementById('streakCount').textContent = state.streak;
-
-            let newValue = state.hasSold ? state.playerSoldValue : state.playerShares * state.price;
-            let diff = newValue - oldValue;
-
-            updatePips();
-            updateScore(newValue, true, diff);
-            drawChart();
-
-            // Update button
-            const btn = document.getElementById('actionBtn');
-            if (state.week >= TOTAL_WEEKS) {
-                state.gameOver = true;
-                btn.textContent = 'SEE RESULTS 🏆';
-                btn.className = 'btn btn-results';
-            } else {
-                btn.textContent = 'NEXT WEEK →';
-                btn.className = 'btn btn-next';
-            }
-        }
-
-        function handleAction() {
-            if (state.gameOver) {
-                showResults();
-                return;
-            }
-
-            if (state.hasSold) {
-                // Auto advance
-                state.week++;
-                document.getElementById('weekNum').textContent = state.week;
-
-                const move = state.marketMoves[state.week - 1];
-                state.price = state.allPrices[state.week];
-                state.priceHistory.push(state.price);
-
-                const marketCard = document.getElementById('marketCard');
-                const emoji = document.getElementById('marketEmoji');
-                const change = document.getElementById('marketChange');
-
-                marketCard.className = 'market-card ' + (move >= 0 ? 'up' : 'down');
-                emoji.textContent = getEmoji(move);
-                emoji.classList.remove('pop');
-                void emoji.offsetWidth;
-                emoji.classList.add('pop');
-
-                change.textContent = (move >= 0 ? '+' : '') + move + '%';
-
-                state.dcaShares += WEEKLY_INVESTMENT / state.price;
-                state.dcaInvested += WEEKLY_INVESTMENT;
-
-                updatePips();
-                updateScore(state.playerSoldValue, true, 0);
-                drawChart();
-
-                if (state.week >= TOTAL_WEEKS) {
-                    state.gameOver = true;
-                    const btn = document.getElementById('actionBtn');
-                    btn.textContent = 'SEE RESULTS 🏆';
-                    btn.className = 'btn btn-results';
-                }
-            } else {
-                showDecision();
-            }
-        }
-
-        function updateScore(value, animate, diff) {
-            const scoreEl = document.getElementById('scoreValue');
-            const scoreCard = document.getElementById('scoreCard');
-
-            if (animate) {
-                animateValue(scoreEl, value);
-
-                // Float up effect
-                if (diff && diff !== 0) {
-                    showFloatUp(diff);
-                }
-            } else {
-                scoreEl.textContent = formatMoney(value);
-            }
-
-            // Color
-            if (state.hasSold) {
-                document.getElementById('scoreLabel').textContent = 'CASHED OUT';
-                scoreEl.className = 'score-value down';
-            } else if (value > state.playerInvested) {
-                document.getElementById('scoreLabel').textContent = 'YOUR STACK';
-                scoreEl.className = 'score-value up';
-            } else if (value < state.playerInvested) {
-                document.getElementById('scoreLabel').textContent = 'YOUR STACK';
-                scoreEl.className = 'score-value down';
-            } else {
-                document.getElementById('scoreLabel').textContent = 'YOUR STACK';
-                scoreEl.className = 'score-value neutral';
-            }
-
-            document.getElementById('investedText').textContent = formatMoney(state.playerInvested) + ' in';
-
-            const profit = value - state.playerInvested;
-            const profitDot = document.getElementById('profitDot');
-            const profitText = document.getElementById('profitText');
-
-            if (profit > 0) {
-                profitDot.className = 'detail-dot profit';
-                profitText.textContent = '+' + formatMoney(profit);
-            } else if (profit < 0) {
-                profitDot.className = 'detail-dot loss';
-                profitText.textContent = formatMoney(profit);
-            } else {
-                profitDot.className = 'detail-dot';
-                profitText.textContent = '$0';
-            }
-        }
-
-        function animateValue(el, target) {
-            const duration = 600;
-            const start = performance.now();
-            const startVal = parseInt(el.textContent.replace(/[$,\-]/g, '')) || 0;
-
-            function tick(now) {
-                const elapsed = now - start;
-                const progress = Math.min(elapsed / duration, 1);
-                const ease = 1 - Math.pow(1 - progress, 4);
-                const current = startVal + (target - startVal) * ease;
-                el.textContent = formatMoney(current);
-                if (progress < 1) requestAnimationFrame(tick);
-            }
-            requestAnimationFrame(tick);
-        }
-
-        function showFloatUp(diff) {
-            const scoreCard = document.getElementById('scoreCard');
-            const float = document.createElement('div');
-            float.className = 'float-up ' + (diff > 0 ? 'gain' : 'loss');
-            float.textContent = (diff > 0 ? '+' : '') + formatMoney(diff);
-            float.style.left = '50%';
-            float.style.top = '40%';
-            float.style.transform = 'translateX(-50%)';
-            scoreCard.appendChild(float);
-            setTimeout(() => float.remove(), 1000);
-        }
-
         function drawChart() {
-            const wrap = canvas.parentElement;
-            const w = wrap.offsetWidth;
-            const h = wrap.offsetHeight;
+            const w = canvas.parentElement.offsetWidth;
+            const h = canvas.parentElement.offsetHeight;
             if (!w || !h) return;
-
             ctx.clearRect(0, 0, w, h);
 
-            const prices = state.priceHistory;
+            const prices = state.history;
             if (prices.length < 2) return;
 
             const all = state.allPrices;
-            const min = Math.min(...all);
-            const max = Math.max(...all);
+            const min = Math.min(...all), max = Math.max(...all);
             const range = max - min;
-            const padMin = min - range * 0.2;
-            const padMax = max + range * 0.2;
-            const displayRange = padMax - padMin;
+            const padMin = min - range * 0.2, padMax = max + range * 0.2;
+            const disp = padMax - padMin;
 
-            const pad = { t: 10, r: 10, b: 20, l: 10 };
-            const gw = w - pad.l - pad.r;
-            const gh = h - pad.t - pad.b;
+            const pad = { t: 8, r: 8, b: 16, l: 8 };
+            const gw = w - pad.l - pad.r, gh = h - pad.t - pad.b;
+            const getY = p => pad.t + gh - ((p - padMin) / disp) * gh;
+            const getX = i => pad.l + (i / WEEKS) * gw;
 
-            const getY = p => pad.t + gh - ((p - padMin) / displayRange) * gh;
-            const getX = i => pad.l + (i / TOTAL_WEEKS) * gw;
+            const color = state.sold ? '#ef4444' : '#22c55e';
 
-            // Grid
-            ctx.strokeStyle = 'rgba(255,255,255,0.03)';
-            ctx.lineWidth = 1;
-            for (let i = 0; i <= 4; i++) {
-                const y = pad.t + (gh / 4) * i;
-                ctx.beginPath();
-                ctx.moveTo(pad.l, y);
-                ctx.lineTo(w - pad.r, y);
-                ctx.stroke();
-            }
-
-            // Line
-            const color = state.hasSold ? '#ef4444' : '#10b981';
             ctx.strokeStyle = color;
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 2.5;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
             ctx.beginPath();
-            prices.forEach((p, i) => {
-                const x = getX(i);
-                const y = getY(p);
-                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-            });
+            prices.forEach((p, i) => i === 0 ? ctx.moveTo(getX(i), getY(p)) : ctx.lineTo(getX(i), getY(p)));
             ctx.stroke();
 
-            // Fill
             ctx.beginPath();
-            prices.forEach((p, i) => {
-                const x = getX(i);
-                const y = getY(p);
-                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-            });
+            prices.forEach((p, i) => i === 0 ? ctx.moveTo(getX(i), getY(p)) : ctx.lineTo(getX(i), getY(p)));
             ctx.lineTo(getX(prices.length - 1), h - pad.b);
             ctx.lineTo(pad.l, h - pad.b);
             ctx.closePath();
             const grad = ctx.createLinearGradient(0, pad.t, 0, h - pad.b);
-            grad.addColorStop(0, state.hasSold ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)');
+            grad.addColorStop(0, state.sold ? 'rgba(239,68,68,0.2)' : 'rgba(34,197,94,0.2)');
             grad.addColorStop(1, 'transparent');
             ctx.fillStyle = grad;
             ctx.fill();
 
-            // Dots
             prices.forEach((p, i) => {
-                const x = getX(i);
-                const y = getY(p);
                 const last = i === prices.length - 1;
-
-                if (last) {
-                    ctx.beginPath();
-                    ctx.arc(x, y, 12, 0, Math.PI * 2);
-                    ctx.fillStyle = state.hasSold ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)';
-                    ctx.fill();
-                }
-
                 ctx.beginPath();
-                ctx.arc(x, y, last ? 6 : 3, 0, Math.PI * 2);
+                ctx.arc(getX(i), getY(p), last ? 5 : 2.5, 0, Math.PI * 2);
                 ctx.fillStyle = color;
                 ctx.fill();
             });
-
-            // Labels
-            ctx.fillStyle = 'rgba(255,255,255,0.25)';
-            ctx.font = '10px Outfit';
-            ctx.textAlign = 'center';
-            for (let i = 0; i <= TOTAL_WEEKS; i++) {
-                ctx.fillText(i === 0 ? 'Start' : 'W' + i, getX(i), h - 4);
-            }
         }
 
         function showResults() {
-            const playerFinal = state.hasSold ? state.playerSoldValue : state.playerShares * state.price;
-            const dcaFinal = state.dcaShares * state.price;
-            const profit = playerFinal - state.playerInvested;
-            const diff = dcaFinal - playerFinal;
+            const final = state.sold ? state.soldValue : state.shares * state.price;
+            const dca = state.dcaShares * state.price;
+            const profit = final - state.invested;
+            const missed = dca - final;
 
-            document.getElementById('resultValue').textContent = formatMoney(playerFinal);
-            document.getElementById('comparisonValue').textContent = formatMoney(dcaFinal);
+            document.getElementById('resultValue').textContent = fmt(final);
+            document.getElementById('comparisonValue').textContent = fmt(dca);
 
-            if (state.hasSold) {
+            if (state.sold) {
                 document.getElementById('resultEmoji').textContent = '😬';
                 document.getElementById('resultBadge').textContent = 'CASHED OUT';
                 document.getElementById('resultBadge').className = 'result-badge loss';
-                document.getElementById('resultValue').className = 'result-score-value loss';
-                document.getElementById('resultProfit').textContent = formatMoney(profit) + ' profit';
+                document.getElementById('resultValue').className = 'result-value loss';
+                document.getElementById('resultProfit').textContent = fmt(profit);
                 document.getElementById('resultProfit').className = 'result-profit ' + (profit >= 0 ? 'win' : 'loss');
-                document.getElementById('comparisonDiff').textContent = 'You missed ' + formatMoney(diff);
+                document.getElementById('comparisonDiff').textContent = 'You missed ' + fmt(missed);
                 document.getElementById('resultComparison').style.display = 'block';
             } else {
                 document.getElementById('resultEmoji').textContent = profit >= 0 ? '🏆' : '💪';
-                document.getElementById('resultBadge').textContent = profit >= 0 ? 'WINNER!' : 'HELD STRONG';
+                document.getElementById('resultBadge').textContent = profit >= 0 ? 'WINNER' : 'HELD STRONG';
                 document.getElementById('resultBadge').className = 'result-badge win';
-                document.getElementById('resultValue').className = 'result-score-value ' + (profit >= 0 ? 'win' : 'loss');
-                document.getElementById('resultProfit').textContent = (profit >= 0 ? '+' : '') + formatMoney(profit) + ' profit';
+                document.getElementById('resultValue').className = 'result-value ' + (profit >= 0 ? 'win' : 'loss');
+                document.getElementById('resultProfit').textContent = (profit >= 0 ? '+' : '') + fmt(profit);
                 document.getElementById('resultProfit').className = 'result-profit ' + (profit >= 0 ? 'win' : 'loss');
                 document.getElementById('resultComparison').style.display = 'none';
-
-                if (profit >= 0) spawnConfetti();
+                if (profit >= 0) confetti();
             }
 
             document.getElementById('resultModal').classList.add('visible');
         }
 
-        function spawnConfetti() {
-            const colors = ['#10b981', '#fbbf24', '#8b5cf6', '#ec4899', '#3b82f6'];
-            for (let i = 0; i < 50; i++) {
-                const piece = document.createElement('div');
-                piece.className = 'confetti-piece';
-                piece.style.left = Math.random() * 100 + 'vw';
-                piece.style.top = '-20px';
-                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-                piece.style.animationDelay = Math.random() * 0.5 + 's';
-                piece.style.animationDuration = (2 + Math.random()) + 's';
-                document.body.appendChild(piece);
-                setTimeout(() => piece.remove(), 3500);
+        function confetti() {
+            const colors = ['#22c55e', '#fbbf24', '#8b5cf6', '#ec4899', '#3b82f6'];
+            for (let i = 0; i < 40; i++) {
+                const p = document.createElement('div');
+                p.className = 'confetti-piece';
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.top = '-10px';
+                p.style.background = colors[Math.floor(Math.random() * colors.length)];
+                p.style.animationDelay = Math.random() * 0.3 + 's';
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 3000);
             }
         }
 
@@ -1240,10 +1031,9 @@
             startGame();
         }
 
-        function formatMoney(n) {
+        function fmt(n) {
             const r = Math.round(n);
-            if (r < 0) return '-$' + Math.abs(r).toLocaleString();
-            return '$' + r.toLocaleString();
+            return r < 0 ? '-$' + Math.abs(r).toLocaleString() : '$' + r.toLocaleString();
         }
     </script>
 </body>
