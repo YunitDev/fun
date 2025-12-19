@@ -33,7 +33,6 @@
             overflow: hidden;
             user-select: none;
             overscroll-behavior: none;
-            -webkit-overflow-scrolling: auto;
         }
 
         .container {
@@ -61,18 +60,18 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            gap: 32px;
+            gap: 40px;
         }
 
         .intro-header {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 16px;
         }
 
         .game-logo {
-            font-size: 4rem;
+            font-size: 5rem;
             animation: bounce 1.5s ease-in-out infinite;
         }
 
@@ -82,46 +81,15 @@
         }
 
         .game-title {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 900;
             letter-spacing: -1px;
         }
 
         .game-tagline {
-            font-size: 1rem;
+            font-size: 1.2rem;
             color: var(--text-dim);
-        }
-
-        .game-rules {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            width: 100%;
-        }
-
-        .rule {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            background: var(--card);
-            padding: 16px;
-            border-radius: 16px;
-        }
-
-        .rule-icon {
-            font-size: 1.5rem;
-            width: 32px;
-            text-align: center;
-        }
-
-        .rule-text {
-            font-size: 1rem;
-            color: var(--text-dim);
-            text-align: left;
-        }
-
-        .rule-text strong {
-            color: var(--text);
+            line-height: 1.4;
         }
 
         .btn {
@@ -141,8 +109,11 @@
 
         .btn-play {
             width: 100%;
+            max-width: 280px;
             background: var(--green);
             color: #000;
+            font-size: 1.3rem;
+            padding: 20px 40px;
         }
 
         /* ===== GAME ===== */
@@ -150,7 +121,6 @@
             gap: 12px;
         }
 
-        /* Header */
         .game-header {
             display: flex;
             justify-content: center;
@@ -177,8 +147,8 @@
             box-shadow: 0 0 12px #fbbf24;
         }
         .week-dot.sold { background: var(--red); }
+        .week-dot.reinvested { background: var(--green); }
 
-        /* Market Card */
         .market-card {
             background: var(--card);
             border-radius: 20px;
@@ -238,9 +208,7 @@
             color: var(--text-dim);
         }
 
-        /* Sold Notice */
-        .sold-notice {
-            background: var(--red);
+        .status-banner {
             padding: 12px;
             border-radius: 12px;
             text-align: center;
@@ -248,9 +216,10 @@
             display: none;
         }
 
-        .sold-notice.visible { display: block; }
+        .status-banner.visible { display: block; }
+        .status-banner.sold { background: var(--red); }
+        .status-banner.reinvested { background: var(--green); color: #000; }
 
-        /* Balance Card */
         .balance-card {
             background: var(--card);
             border-radius: 24px;
@@ -307,7 +276,6 @@
         .breakdown-value.green { color: var(--green); }
         .breakdown-value.red { color: var(--red); }
 
-        /* Chart */
         .chart-wrap {
             background: var(--card);
             border-radius: 16px;
@@ -320,7 +288,6 @@
             height: 100%;
         }
 
-        /* Action - Primary CTA */
         .action-area {
             margin-top: auto;
             padding-top: 12px;
@@ -342,7 +309,7 @@
             padding: 20px;
         }
 
-        /* ===== MODAL ===== */
+        /* ===== MODALS ===== */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -396,6 +363,13 @@
             margin-bottom: 24px;
         }
 
+        .modal-subtitle {
+            font-size: 1rem;
+            color: var(--text-dim);
+            margin-bottom: 24px;
+            line-height: 1.4;
+        }
+
         .modal-amount {
             background: var(--bg);
             border-radius: 16px;
@@ -415,7 +389,6 @@
             margin-top: 4px;
         }
 
-        /* Side by side buttons */
         .modal-buttons {
             display: flex;
             gap: 12px;
@@ -442,6 +415,18 @@
             width: 100%;
             background: var(--green);
             color: #000;
+        }
+
+        .btn-secondary {
+            background: var(--card);
+            color: var(--text);
+            border: 2px solid var(--text-dim);
+        }
+
+        .btn-danger {
+            background: var(--red-dim);
+            color: var(--red);
+            border: 2px solid var(--red);
         }
 
         /* ===== RESULTS ===== */
@@ -519,7 +504,6 @@
             color: var(--bg);
         }
 
-        /* Confetti */
         .confetti-piece {
             position: fixed;
             width: 10px;
@@ -536,7 +520,6 @@
             }
         }
 
-        /* Float animation */
         .float-up {
             position: absolute;
             font-size: 1.3rem;
@@ -563,25 +546,10 @@
             <div class="intro-header">
                 <div class="game-logo">💰</div>
                 <h1 class="game-title">STACK</h1>
-                <p class="game-tagline">How high can you stack it?</p>
+                <p class="game-tagline">Make as much money<br>as you can.</p>
             </div>
 
-            <div class="game-rules">
-                <div class="rule">
-                    <div class="rule-icon">📈</div>
-                    <div class="rule-text"><strong>6 weeks</strong> of market moves</div>
-                </div>
-                <div class="rule">
-                    <div class="rule-icon">💵</div>
-                    <div class="rule-text"><strong>$1,000</strong> to invest each week</div>
-                </div>
-                <div class="rule">
-                    <div class="rule-icon">🎯</div>
-                    <div class="rule-text">Stack as high as you can</div>
-                </div>
-            </div>
-
-            <button class="btn btn-play" onclick="startGame()">PLAY</button>
+            <button class="btn btn-play" onclick="startGame()">START</button>
         </div>
 
         <!-- GAME -->
@@ -597,7 +565,7 @@
                 </div>
             </div>
 
-            <div class="sold-notice" id="soldNotice">💸 You cashed out</div>
+            <div class="status-banner" id="statusBanner"></div>
 
             <div class="market-card" id="marketCard">
                 <div class="market-week" id="marketWeek">Week 1</div>
@@ -655,6 +623,39 @@
         </div>
     </div>
 
+    <!-- REINVEST MODAL -->
+    <div class="modal-overlay" id="reinvestModal">
+        <div class="modal">
+            <div class="modal-emoji">🤔</div>
+            <h2 class="modal-title">Want to get back in?</h2>
+            <p class="modal-subtitle">You have cash on the sidelines. The market is moving without you.</p>
+
+            <div class="modal-amount" id="reinvestAmount">
+                <div class="modal-amount-value" id="reinvestValue">$0</div>
+                <div class="modal-amount-label">available to reinvest</div>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn btn-invest" onclick="showReinvestConfirm()">REINVEST</button>
+                <button class="btn btn-secondary" onclick="stayOut()">STAY OUT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- REINVEST CONFIRM MODAL -->
+    <div class="modal-overlay" id="reinvestConfirmModal">
+        <div class="modal">
+            <div class="modal-emoji">😬</div>
+            <h2 class="modal-title">Are you sure?</h2>
+            <p class="modal-subtitle">Timing the market is risky. Are you sure you want to reinvest now?</p>
+
+            <div class="modal-buttons">
+                <button class="btn btn-danger" onclick="confirmReinvest()">YES, REINVEST</button>
+                <button class="btn btn-secondary" onclick="cancelReinvest()">NO, STAY OUT</button>
+            </div>
+        </div>
+    </div>
+
     <!-- RESULT MODAL -->
     <div class="modal-overlay" id="resultModal">
         <div class="modal">
@@ -664,7 +665,7 @@
             <div class="result-profit" id="resultProfit">+$0</div>
 
             <div class="result-comparison" id="resultComparison">
-                <div class="comparison-label">If you stayed all 6 weeks</div>
+                <div class="comparison-label">If you stayed invested all 6 weeks</div>
                 <div class="comparison-value" id="comparisonValue">$0</div>
                 <div class="comparison-diff" id="comparisonDiff"></div>
             </div>
@@ -674,7 +675,6 @@
     </div>
 
     <script>
-        // Prevent pull-to-refresh
         document.body.addEventListener('touchmove', function(e) {
             if (e.target.closest('.chart-wrap')) return;
             e.preventDefault();
@@ -683,6 +683,7 @@
         const WEEKS = 6;
         const INVEST = 1000;
 
+        // Base scenarios - we'll modify if reinvest happens
         const SCENARIOS = [
             [-8, -15, 12, 8, 10, 18],
             [5, -18, -10, 22, 10, 12],
@@ -700,7 +701,7 @@
             document.getElementById('introScreen').classList.add('hidden');
             document.getElementById('gameScreen').classList.remove('hidden');
 
-            const moves = SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)];
+            const moves = [...SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)]];
             const prices = [100];
             let p = 100;
             for (const m of moves) { p *= (1 + m/100); prices.push(p); }
@@ -712,16 +713,19 @@
                 allPrices: prices,
                 shares: 0,
                 invested: 0,
-                soldValue: 0,
+                cashOnSide: 0,
                 sold: false,
                 soldWeek: -1,
+                reinvested: false,
+                reinvestWeek: -1,
                 dcaShares: 0,
                 dcaInvested: 0,
                 moves: moves,
                 done: false
             };
 
-            document.getElementById('soldNotice').classList.remove('visible');
+            const banner = document.getElementById('statusBanner');
+            banner.classList.remove('visible', 'sold', 'reinvested');
             document.getElementById('marketCard').className = 'market-card';
             document.getElementById('marketEmoji').textContent = '🎲';
             document.getElementById('marketWaiting').style.display = 'block';
@@ -741,8 +745,15 @@
             const dots = document.querySelectorAll('.week-dot');
             dots.forEach((d, i) => {
                 d.className = 'week-dot';
-                if (i < state.week) d.classList.add(state.sold && i >= state.soldWeek ? 'sold' : 'done');
-                else if (i === state.week && state.week < WEEKS) d.classList.add('current');
+                if (i < state.week) {
+                    if (state.sold && i >= state.soldWeek && (!state.reinvested || i < state.reinvestWeek)) {
+                        d.classList.add('sold');
+                    } else {
+                        d.classList.add('done');
+                    }
+                } else if (i === state.week && state.week < WEEKS) {
+                    d.classList.add('current');
+                }
             });
         }
 
@@ -792,7 +803,36 @@
             state.price = state.allPrices[state.week];
             state.history.push(state.price);
 
-            // Update market card with clear message
+            updateMarketCard(move);
+
+            const oldVal = state.shares * state.allPrices[state.week - 1];
+
+            if (choice === 'buy') {
+                state.shares += INVEST / state.price;
+                state.invested += INVEST;
+            } else {
+                // Cash out - convert shares to cash
+                state.cashOnSide = state.shares * state.price;
+                state.sold = true;
+                state.soldWeek = state.week;
+
+                const banner = document.getElementById('statusBanner');
+                banner.textContent = '💸 You cashed out';
+                banner.className = 'status-banner sold visible';
+            }
+
+            state.dcaShares += INVEST / state.price;
+            state.dcaInvested += INVEST;
+
+            const newVal = state.sold ? state.cashOnSide : state.shares * state.price;
+
+            updateDots();
+            updateBalance(newVal, true, newVal - oldVal);
+            drawChart();
+            updateButton();
+        }
+
+        function updateMarketCard(move) {
             const card = document.getElementById('marketCard');
             const emoji = document.getElementById('marketEmoji');
             const msg = getMarketMessage(move);
@@ -809,28 +849,9 @@
             const textEl = document.getElementById('marketText');
             textEl.style.display = 'block';
             textEl.textContent = msg.text;
+        }
 
-            const oldVal = state.sold ? state.soldValue : state.shares * state.allPrices[state.week - 1];
-
-            if (choice === 'buy') {
-                state.shares += INVEST / state.price;
-                state.invested += INVEST;
-            } else {
-                state.soldValue = state.shares * state.price;
-                state.sold = true;
-                state.soldWeek = state.week;
-                document.getElementById('soldNotice').classList.add('visible');
-            }
-
-            state.dcaShares += INVEST / state.price;
-            state.dcaInvested += INVEST;
-
-            const newVal = state.sold ? state.soldValue : state.shares * state.price;
-
-            updateDots();
-            updateBalance(newVal, true, newVal - oldVal);
-            drawChart();
-
+        function updateButton() {
             const btn = document.getElementById('actionBtn');
             if (state.week >= WEEKS) {
                 state.done = true;
@@ -845,42 +866,74 @@
         function handleAction() {
             if (state.done) { showResults(); return; }
 
-            if (state.sold) {
-                state.week++;
-                const move = state.moves[state.week - 1];
-                state.price = state.allPrices[state.week];
-                state.history.push(state.price);
-
-                const card = document.getElementById('marketCard');
-                const emoji = document.getElementById('marketEmoji');
-                const msg = getMarketMessage(move);
-
-                card.className = 'market-card ' + (move >= 0 ? 'up' : 'down');
-                document.getElementById('marketWeek').textContent = `Week ${state.week}`;
-
-                emoji.textContent = msg.emoji;
-                emoji.classList.remove('pop');
-                void emoji.offsetWidth;
-                emoji.classList.add('pop');
-
-                document.getElementById('marketText').textContent = msg.text;
-
-                state.dcaShares += INVEST / state.price;
-                state.dcaInvested += INVEST;
-
-                updateDots();
-                updateBalance(state.soldValue, true, 0);
-                drawChart();
-
-                if (state.week >= WEEKS) {
-                    state.done = true;
-                    const btn = document.getElementById('actionBtn');
-                    btn.textContent = 'SEE RESULTS 🏆';
-                    btn.className = 'btn btn-results';
-                }
-            } else {
+            if (state.sold && !state.reinvested) {
+                // Show reinvest option
+                document.getElementById('reinvestValue').textContent = fmt(state.cashOnSide);
+                document.getElementById('reinvestModal').classList.add('visible');
+            } else if (state.reinvested || !state.sold) {
                 showDecision();
             }
+        }
+
+        function showReinvestConfirm() {
+            document.getElementById('reinvestModal').classList.remove('visible');
+            document.getElementById('reinvestConfirmModal').classList.add('visible');
+        }
+
+        function cancelReinvest() {
+            document.getElementById('reinvestConfirmModal').classList.remove('visible');
+            stayOut();
+        }
+
+        function confirmReinvest() {
+            document.getElementById('reinvestConfirmModal').classList.remove('visible');
+
+            // Force the next move to be negative (market drop after reinvesting)
+            if (state.week < WEEKS) {
+                const dropAmount = -12 - Math.floor(Math.random() * 8); // -12% to -20%
+                state.moves[state.week] = dropAmount;
+
+                // Recalculate prices from current point
+                let p = state.price;
+                for (let i = state.week; i < WEEKS; i++) {
+                    p *= (1 + state.moves[i] / 100);
+                    state.allPrices[i + 1] = p;
+                }
+            }
+
+            // Reinvest the cash
+            state.shares = state.cashOnSide / state.price;
+            state.reinvested = true;
+            state.reinvestWeek = state.week;
+            state.cashOnSide = 0;
+
+            const banner = document.getElementById('statusBanner');
+            banner.textContent = '📈 You reinvested';
+            banner.className = 'status-banner reinvested visible';
+
+            // Now advance to next week and show decision
+            showDecision();
+        }
+
+        function stayOut() {
+            document.getElementById('reinvestModal').classList.remove('visible');
+
+            // Advance the week without investing
+            state.week++;
+            const move = state.moves[state.week - 1];
+            state.price = state.allPrices[state.week];
+            state.history.push(state.price);
+
+            updateMarketCard(move);
+
+            // DCA would have invested
+            state.dcaShares += INVEST / state.price;
+            state.dcaInvested += INVEST;
+
+            updateDots();
+            updateBalance(state.cashOnSide, true, 0);
+            drawChart();
+            updateButton();
         }
 
         function updateBalance(value, animate, diff) {
@@ -893,9 +946,9 @@
                 el.textContent = fmt(value);
             }
 
-            if (state.sold) {
-                document.getElementById('balanceLabel').textContent = 'Cashed Out';
-                el.className = 'balance-value down';
+            if (state.sold && !state.reinvested) {
+                document.getElementById('balanceLabel').textContent = 'Cash (Not Invested)';
+                el.className = 'balance-value';
             } else if (value > state.invested) {
                 document.getElementById('balanceLabel').textContent = 'Your Balance';
                 el.className = 'balance-value up';
@@ -972,7 +1025,7 @@
             const getY = p => pad.t + gh - ((p - padMin) / disp) * gh;
             const getX = i => pad.l + (i / WEEKS) * gw;
 
-            const color = state.sold ? '#ef4444' : '#22c55e';
+            const color = (state.sold && !state.reinvested) ? '#ef4444' : '#22c55e';
 
             ctx.strokeStyle = color;
             ctx.lineWidth = 2.5;
@@ -988,7 +1041,7 @@
             ctx.lineTo(pad.l, h - pad.b);
             ctx.closePath();
             const grad = ctx.createLinearGradient(0, pad.t, 0, h - pad.b);
-            grad.addColorStop(0, state.sold ? 'rgba(239,68,68,0.2)' : 'rgba(34,197,94,0.2)');
+            grad.addColorStop(0, (state.sold && !state.reinvested) ? 'rgba(239,68,68,0.2)' : 'rgba(34,197,94,0.2)');
             grad.addColorStop(1, 'transparent');
             ctx.fillStyle = grad;
             ctx.fill();
@@ -1003,7 +1056,13 @@
         }
 
         function showResults() {
-            const final = state.sold ? state.soldValue : state.shares * state.price;
+            let final;
+            if (state.sold && !state.reinvested) {
+                final = state.cashOnSide;
+            } else {
+                final = state.shares * state.price;
+            }
+
             const dca = state.dcaShares * state.price;
             const profit = final - state.invested;
             const missed = dca - final;
@@ -1011,9 +1070,12 @@
             document.getElementById('resultValue').textContent = fmt(final);
             document.getElementById('comparisonValue').textContent = fmt(dca);
 
-            if (state.sold) {
+            const didCashOut = state.sold && !state.reinvested;
+            const triedTiming = state.reinvested;
+
+            if (didCashOut || triedTiming) {
                 document.getElementById('resultEmoji').textContent = '😬';
-                document.getElementById('resultBadge').textContent = 'CASHED OUT';
+                document.getElementById('resultBadge').textContent = triedTiming ? 'TRIED TO TIME IT' : 'CASHED OUT';
                 document.getElementById('resultBadge').className = 'result-badge loss';
                 document.getElementById('resultValue').className = 'result-value loss';
                 document.getElementById('resultProfit').textContent = fmt(profit);
