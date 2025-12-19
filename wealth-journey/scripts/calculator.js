@@ -381,13 +381,19 @@
 
   function moveGoalBubble(timeframe) {
     const goalBubble = document.getElementById('end-bubble');
-    if (!goalBubble) return;
+    const endDot = document.getElementById('journey-end-dot');
 
-    // Remove all position classes
-    goalBubble.classList.remove('position-short', 'position-medium', 'position-long');
+    // Move the goal bubble
+    if (goalBubble) {
+      goalBubble.classList.remove('position-short', 'position-medium', 'position-long');
+      goalBubble.classList.add(`position-${timeframe}`);
+    }
 
-    // Add the appropriate position class
-    goalBubble.classList.add(`position-${timeframe}`);
+    // Move the end dot on the SVG
+    if (endDot) {
+      endDot.classList.remove('position-short', 'position-medium', 'position-long');
+      endDot.classList.add(`position-${timeframe}`);
+    }
   }
 
   function setScenario(scenario) {
@@ -938,30 +944,15 @@
     const cards = carousel.querySelectorAll('.testimonial-card');
     const dotElements = dots.querySelectorAll('.dot');
 
-    // Remove active/exit classes
+    // Simply switch active class - CSS handles display and animation
     cards.forEach((card, i) => {
-      if (i === testimonialIndex) {
-        card.classList.add('exit');
-        card.classList.remove('active');
-      } else {
-        card.classList.remove('active', 'exit');
-      }
+      card.classList.toggle('active', i === index);
     });
 
     // Update dots
     dotElements.forEach((dot, i) => {
       dot.classList.toggle('active', i === index);
     });
-
-    // Show new card after brief delay for exit animation
-    setTimeout(() => {
-      cards.forEach((card, i) => {
-        card.classList.remove('exit');
-        if (i === index) {
-          card.classList.add('active');
-        }
-      });
-    }, 150);
 
     testimonialIndex = index;
   }

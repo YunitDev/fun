@@ -175,9 +175,16 @@
                 <stop offset="70%" style="stop-color:#ADEFD1;stop-opacity:1" />
                 <stop offset="100%" style="stop-color:#2D936C;stop-opacity:1" />
               </linearGradient>
+              <!-- Elegant vertical gradient for area fill - fades to transparent at bottom -->
+              <linearGradient id="areaFadeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#2D936C;stop-opacity:0.18" />
+                <stop offset="30%" style="stop-color:#4ECDC4;stop-opacity:0.12" />
+                <stop offset="60%" style="stop-color:#ADEFD1;stop-opacity:0.06" />
+                <stop offset="100%" style="stop-color:#ADEFD1;stop-opacity:0" />
+              </linearGradient>
             </defs>
 
-            <!-- Background area fill -->
+            <!-- Background area fill - elegant fade -->
             <path class="journey-area" d="M 30 180 Q 85 175, 120 155 Q 170 125, 200 90 Q 240 50, 310 40 L 310 220 L 30 220 Z" />
 
             <!-- Main journey path (background) -->
@@ -189,8 +196,8 @@
             <!-- Start point -->
             <circle class="journey-point journey-start" cx="30" cy="180" r="6" />
 
-            <!-- End point (goal) -->
-            <circle class="journey-point journey-end" cx="310" cy="40" r="8" />
+            <!-- End point (goal) - moves based on timeframe selection -->
+            <circle class="journey-point journey-end position-long" id="journey-end-dot" cx="310" cy="40" r="8" />
           </svg>
 
           <!-- Start Bubble -->

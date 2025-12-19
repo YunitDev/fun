@@ -736,12 +736,15 @@ body {
   overflow: visible;
 }
 
-/* Area fill under the curve */
+/* Area fill under the curve - elegant gradient fade */
 .journey-area {
-  fill: url(#pathGradient);
-  opacity: 0.08;
+  fill: url(#areaFadeGradient);
+  opacity: 0;
   transform-origin: bottom;
-  animation: area-reveal 1s ease-out 0.5s both;
+}
+
+.wealth-journey.animate .journey-area {
+  animation: area-reveal 1s ease-out 0.3s both;
 }
 
 @keyframes area-reveal {
@@ -750,7 +753,7 @@ body {
     transform: scaleY(0);
   }
   to {
-    opacity: 0.08;
+    opacity: 1;
     transform: scaleY(1);
   }
 }
@@ -771,6 +774,9 @@ body {
   stroke-linecap: round;
   stroke-dasharray: 400;
   stroke-dashoffset: 400;
+}
+
+.wealth-journey.animate .journey-path {
   animation: path-draw 1.2s ease-out 0.2s forwards;
 }
 
@@ -786,15 +792,14 @@ body {
   stroke: var(--text-muted);
   stroke-width: 1.5;
   opacity: 0;
-  animation: dot-appear 0.3s ease-out forwards;
 }
 
-.milestone-dot:nth-child(1) {
-  animation-delay: 0.6s;
+.wealth-journey.animate .milestone-dot:nth-child(1) {
+  animation: dot-appear 0.3s ease-out 0.6s forwards;
 }
 
-.milestone-dot:nth-child(2) {
-  animation-delay: 0.9s;
+.wealth-journey.animate .milestone-dot:nth-child(2) {
+  animation: dot-appear 0.3s ease-out 0.9s forwards;
 }
 
 @keyframes dot-appear {
@@ -806,6 +811,7 @@ body {
 /* Journey points (start/end) */
 .journey-point {
   filter: none;
+  transition: cx 0.5s var(--ease-out-expo), cy 0.5s var(--ease-out-expo);
 }
 
 .journey-start {
@@ -813,6 +819,9 @@ body {
   stroke: white;
   stroke-width: 2;
   opacity: 0;
+}
+
+.wealth-journey.animate .journey-start {
   animation: point-appear 0.4s ease-out 0.1s forwards;
 }
 
@@ -821,7 +830,27 @@ body {
   stroke: white;
   stroke-width: 2;
   opacity: 0;
+  filter: drop-shadow(0 0 8px var(--accent-glow));
+}
+
+.wealth-journey.animate .journey-end {
   animation: point-appear 0.4s ease-out 1.4s forwards;
+}
+
+/* End point positions based on timeframe */
+.journey-end.position-short {
+  cx: 120;
+  cy: 155;
+}
+
+.journey-end.position-medium {
+  cx: 200;
+  cy: 90;
+}
+
+.journey-end.position-long {
+  cx: 310;
+  cy: 40;
 }
 
 @keyframes point-appear {
@@ -848,18 +877,24 @@ body {
   bottom: 22%;
   padding: 0.5rem 0.75rem;
   border: 1.5px solid var(--aurora-coral);
+}
+
+.wealth-journey.animate .journey-bubble--start {
   animation: bubble-appear 0.5s ease-out 0.3s forwards;
 }
 
 .journey-bubble--goal {
   padding: 0.75rem 1rem;
   border: 2px solid var(--accent);
-  animation: bubble-appear 0.5s ease-out 1.2s forwards;
   transition: top 0.5s var(--ease-out-expo), right 0.5s var(--ease-out-expo), left 0.5s var(--ease-out-expo);
   /* Default position - long timeframe (age 65) */
   right: 0;
   top: 5%;
   left: auto;
+}
+
+.wealth-journey.animate .journey-bubble--goal {
+  animation: bubble-appear 0.5s ease-out 1.2s forwards;
 }
 
 /* Position for short timeframe (youngest age ~30) */
@@ -913,10 +948,11 @@ body {
 
 .bubble-amount {
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 6vw, 2rem);
+  font-size: clamp(1.75rem, 8vw, 2.5rem);
   font-weight: 700;
   color: var(--accent);
   line-height: 1;
+  text-shadow: 0 2px 12px var(--accent-glow);
 }
 
 .bubble-age-label {
@@ -954,12 +990,11 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   opacity: 0;
-  animation: milestone-appear 0.4s ease-out forwards;
 }
 
-.milestone-btn:nth-child(1) { animation-delay: 0.8s; }
-.milestone-btn:nth-child(2) { animation-delay: 1s; }
-.milestone-btn:nth-child(3) { animation-delay: 1.2s; }
+.wealth-journey.animate .milestone-btn:nth-child(1) { animation: milestone-appear 0.4s ease-out 0.8s forwards; }
+.wealth-journey.animate .milestone-btn:nth-child(2) { animation: milestone-appear 0.4s ease-out 1s forwards; }
+.wealth-journey.animate .milestone-btn:nth-child(3) { animation: milestone-appear 0.4s ease-out 1.2s forwards; }
 
 @keyframes milestone-appear {
   to { opacity: 1; }
@@ -1007,7 +1042,7 @@ body {
 
 /* Animation reset class for re-triggering */
 .wealth-journey.animate-reset .journey-path {
-  animation: none;
+  animation: none !important;
   stroke-dashoffset: 400;
 }
 
@@ -1016,46 +1051,9 @@ body {
 .wealth-journey.animate-reset .journey-start,
 .wealth-journey.animate-reset .journey-end,
 .wealth-journey.animate-reset .journey-bubble,
-.wealth-journey.animate-reset .journey-caption {
-  animation: none;
+.wealth-journey.animate-reset .milestone-btn {
+  animation: none !important;
   opacity: 0;
-}
-
-/* Re-animate class */
-.wealth-journey.animate .journey-path {
-  animation: path-draw 1.2s ease-out 0.2s forwards;
-}
-
-.wealth-journey.animate .journey-area {
-  animation: area-reveal 1s ease-out 0.5s both;
-}
-
-.wealth-journey.animate .journey-start {
-  animation: point-appear 0.4s ease-out 0.1s forwards;
-}
-
-.wealth-journey.animate .journey-end {
-  animation: point-appear 0.4s ease-out 1.4s forwards;
-}
-
-.wealth-journey.animate .journey-bubble--start {
-  animation: bubble-appear 0.5s ease-out 0.5s forwards;
-}
-
-.wealth-journey.animate .journey-bubble--end {
-  animation: bubble-appear 0.5s ease-out 1.8s forwards;
-}
-
-.wealth-journey.animate .journey-caption {
-  animation: caption-fade 0.4s ease-out 1.6s forwards;
-}
-
-.wealth-journey.animate .milestone-dot:nth-child(1) {
-  animation: dot-appear 0.3s ease-out 0.6s forwards;
-}
-
-.wealth-journey.animate .milestone-dot:nth-child(2) {
-  animation: dot-appear 0.3s ease-out 0.9s forwards;
 }
 
 .header-results .brand-logo {
@@ -2330,7 +2328,7 @@ input:focus-visible {
   .bubble-label { font-size: 0.5rem; }
   .bubble-age { font-size: 0.9rem; }
   .journey-bubble--goal { padding: 0.5rem 0.75rem; }
-  .bubble-amount { font-size: 1.1rem; }
+  .bubble-amount { font-size: 1.35rem; }
   .bubble-age-label { font-size: 0.65rem; }
   .milestone-buttons { gap: 0.5rem; }
   .milestone-btn { padding: 0.25rem 0.625rem; }
@@ -2385,7 +2383,7 @@ input:focus-visible {
   /* Results Page */
   .amount-control { padding: 0.875rem; margin-bottom: 0.625rem; }
   .journey-visualization { min-height: 220px; }
-  .bubble-amount { font-size: 1.25rem; }
+  .bubble-amount { font-size: 1.5rem; }
   .footer-results { padding: 0.375rem 0 1rem; }
 
   /* Final Page */
@@ -2401,7 +2399,7 @@ input:focus-visible {
 /* ---- MEDIUM SCREENS (700-800px height) ---- */
 @media (min-height: 700px) and (max-height: 800px) {
   .journey-visualization { min-height: 260px; }
-  .bubble-amount { font-size: clamp(1.5rem, 5vw, 1.75rem); }
+  .bubble-amount { font-size: clamp(1.65rem, 6vw, 2rem); }
 
   /* Final Page */
   .success-icon-elegant { width: 52px; height: 52px; }
@@ -2412,7 +2410,7 @@ input:focus-visible {
 /* ---- STANDARD SCREENS (800px+ height) ---- */
 @media (min-height: 800px) {
   .journey-visualization { min-height: 300px; }
-  .bubble-amount { font-size: clamp(1.75rem, 6vw, 2rem); }
+  .bubble-amount { font-size: clamp(2rem, 8vw, 2.5rem); }
 
   .final-content { padding: 3.5rem 0 1.5rem; }
   .success-icon-elegant { width: 56px; height: 56px; margin-bottom: 1.25rem; }
@@ -2424,7 +2422,7 @@ input:focus-visible {
 @media (min-height: 850px) {
   .journey-visualization { min-height: 340px; }
   .journey-bubble--goal { padding: 1rem 1.25rem; }
-  .bubble-amount { font-size: clamp(2rem, 7vw, 2.5rem); }
+  .bubble-amount { font-size: clamp(2.25rem, 8vw, 3rem); }
   .milestone-btn { padding: 0.625rem 1.25rem; }
   .milestone-age { font-size: 1.5rem; }
 }
@@ -2443,55 +2441,58 @@ input:focus-visible {
    ========================================================================== */
 .testimonial-section {
   flex-shrink: 0;
-  padding: 1.25rem 0;
-  margin-bottom: 1rem;
+  padding: 1rem 0;
+  margin-bottom: 0.75rem;
   width: 100%;
 }
 
 .testimonial-carousel {
   position: relative;
-  min-height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .testimonial-card {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  display: none;
   opacity: 0;
   transform: translateY(15px);
-  transition: all 0.6s var(--ease-out-expo);
-  pointer-events: none;
+  transition: opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo);
 }
 
 .testimonial-card.active {
+  display: block;
   opacity: 1;
   transform: translateY(0);
-  pointer-events: auto;
+  animation: testimonial-fade-in 0.5s var(--ease-out-expo);
 }
 
-.testimonial-card.exit {
-  opacity: 0;
-  transform: translateY(-15px);
+@keyframes testimonial-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .testimonial-content {
   text-align: center;
   padding: 0 0.5rem;
-  max-width: 340px;
+  max-width: 320px;
+  margin: 0 auto;
 }
 
 .testimonial-quote {
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 400;
-  line-height: 1.6;
+  line-height: 1.55;
   color: var(--text-medium);
-  margin-bottom: 0.625rem;
+  margin-bottom: 0.5rem;
   font-style: italic;
 }
 
@@ -2559,14 +2560,11 @@ input:focus-visible {
 @media (max-height: 600px) {
   .testimonial-section {
     padding: 0.5rem 0;
-    margin-bottom: 0.5rem;
-  }
-  .testimonial-carousel {
-    min-height: 75px;
+    margin-bottom: 0.375rem;
   }
   .testimonial-quote {
-    font-size: 0.8rem;
-    line-height: 1.5;
+    font-size: 0.78rem;
+    line-height: 1.45;
     margin-bottom: 0.375rem;
   }
   .author-name { font-size: 0.65rem; }
@@ -2576,22 +2574,17 @@ input:focus-visible {
 
 @media (min-height: 600px) and (max-height: 700px) {
   .testimonial-section {
-    padding: 0.75rem 0;
-    margin-bottom: 0.75rem;
-  }
-  .testimonial-carousel {
-    min-height: 85px;
+    padding: 0.625rem 0;
+    margin-bottom: 0.5rem;
   }
   .testimonial-quote {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
   }
 }
 
 @media (min-height: 850px) {
-  .testimonial-carousel {
-    min-height: 110px;
-  }
   .testimonial-quote {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 }
