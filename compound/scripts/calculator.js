@@ -75,18 +75,17 @@
   // Dynamic Timeframes - Calculate target ages based on user's age
   // ==========================================================================
   function calculateTimeframes(age) {
-    const yearsUntil65 = CONFIG.targetAge - age;
+    // For users 57+, guarantee at least 8 years of investing
+    const longAge = age >= 57 ? age + 8 : CONFIG.targetAge;
+    const yearsToTarget = longAge - age;
 
-    // Short: user's age + ~25% of time to 65, rounded to nice number
-    const shortYears = Math.max(3, Math.round(yearsUntil65 * 0.25));
+    // Short: user's age + ~25% of time to target
+    const shortYears = Math.max(3, Math.round(yearsToTarget * 0.25));
     const shortAge = age + shortYears;
 
-    // Medium: user's age + ~55% of time to 65
-    const mediumYears = Math.round(yearsUntil65 * 0.55);
+    // Medium: user's age + ~55% of time to target
+    const mediumYears = Math.round(yearsToTarget * 0.55);
     const mediumAge = age + mediumYears;
-
-    // Long: always 65
-    const longAge = CONFIG.targetAge;
 
     return { short: shortAge, medium: mediumAge, long: longAge };
   }
@@ -357,8 +356,8 @@
   }
 
   function showComparison(firstName) {
-    // Always calculate for age 65 (retirement)
-    const targetAge = CONFIG.targetAge;
+    // Calculate target age (57+ users get current age + 8 years)
+    const targetAge = state.age >= 57 ? state.age + 8 : CONFIG.targetAge;
     const years = targetAge - state.age;
     const value = calculateProjection(state.weeklyAmount, years, state.scenario);
 
