@@ -595,12 +595,84 @@
     const goalAmountEl = document.getElementById('goal-amount');
 
     if (userFirstNameEl) userFirstNameEl.textContent = firstName;
-    if (goalAmountEl) goalAmountEl.textContent = formatCurrency(value);
+
+    // Reset the goal amount for animation
+    if (goalAmountEl) goalAmountEl.textContent = '0';
 
     elements.pageForm.classList.remove('active');
     setTimeout(() => {
       elements.pageComparison.classList.add('active');
+
+      // Animate the final amount with dramatic counting
+      setTimeout(() => {
+        animateFinalAmount(goalAmountEl, value);
+        burstAmountParticles();
+      }, 800);
     }, 100);
+  }
+
+  // Animated counting for final amount with easing
+  function animateFinalAmount(element, endValue) {
+    if (!element) return;
+
+    const duration = 2000;
+    const startTime = performance.now();
+
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Dramatic ease-out with overshoot
+      const eased = 1 - Math.pow(1 - progress, 4);
+      const current = Math.round(endValue * eased);
+      element.textContent = formatNumber(current);
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        // Final shimmer burst
+        setTimeout(burstAmountParticles, 200);
+      }
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  // Create golden particles around the final amount
+  function burstAmountParticles() {
+    const container = document.getElementById('amount-particles');
+    if (!container) return;
+
+    const colors = ['#FFD700', '#2D936C', '#4ECDC4', '#FFCDB2'];
+
+    for (let i = 0; i < 12; i++) {
+      const particle = document.createElement('div');
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const size = 4 + Math.random() * 6;
+      const angle = (i / 12) * Math.PI * 2;
+      const distance = 60 + Math.random() * 40;
+      const endX = Math.cos(angle) * distance;
+      const endY = Math.sin(angle) * distance;
+
+      particle.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        background: ${color};
+        border-radius: 50%;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        box-shadow: 0 0 ${size}px ${color};
+        animation: particle-burst 0.8s ease-out forwards;
+        --end-x: ${endX}px;
+        --end-y: ${endY}px;
+      `;
+
+      container.appendChild(particle);
+      setTimeout(() => particle.remove(), 1000);
+    }
   }
 
   // ============================================================
