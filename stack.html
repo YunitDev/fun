@@ -32,6 +32,8 @@
             height: 100dvh;
             overflow: hidden;
             user-select: none;
+            overscroll-behavior: none;
+            -webkit-overflow-scrolling: auto;
         }
 
         .container {
@@ -43,6 +45,7 @@
             padding-bottom: max(16px, env(safe-area-inset-bottom));
             max-width: 400px;
             margin: 0 auto;
+            overflow: hidden;
         }
 
         .screen {
@@ -144,7 +147,7 @@
 
         /* ===== GAME ===== */
         .game-screen {
-            gap: 16px;
+            gap: 12px;
         }
 
         /* Header */
@@ -175,44 +178,44 @@
         }
         .week-dot.sold { background: var(--red); }
 
-        /* This Week Card */
-        .week-card {
+        /* Market Card */
+        .market-card {
             background: var(--card);
             border-radius: 20px;
             padding: 20px;
             text-align: center;
         }
 
-        .week-card.up {
+        .market-card.up {
             background: var(--green-dim);
             border: 2px solid var(--green);
         }
 
-        .week-card.down {
+        .market-card.down {
             background: var(--red-dim);
             border: 2px solid var(--red);
         }
 
-        .week-label {
-            font-size: 0.75rem;
+        .market-week {
+            font-size: 0.7rem;
             color: var(--text-dim);
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
-        .week-content {
+        .market-message {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
         }
 
-        .week-emoji {
-            font-size: 2.5rem;
+        .market-emoji {
+            font-size: 2rem;
         }
 
-        .week-emoji.pop {
+        .market-emoji.pop {
             animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
@@ -222,15 +225,15 @@
             100% { transform: scale(1); }
         }
 
-        .week-change {
-            font-size: 2.5rem;
-            font-weight: 900;
+        .market-text {
+            font-size: 1.4rem;
+            font-weight: 800;
         }
 
-        .week-card.up .week-change { color: var(--green); }
-        .week-card.down .week-change { color: var(--red); }
+        .market-card.up .market-text { color: var(--green); }
+        .market-card.down .market-text { color: var(--red); }
 
-        .week-waiting {
+        .market-waiting {
             font-size: 1.1rem;
             color: var(--text-dim);
         }
@@ -251,7 +254,7 @@
         .balance-card {
             background: var(--card);
             border-radius: 24px;
-            padding: 32px 24px;
+            padding: 28px 24px;
             text-align: center;
             flex: 1;
             display: flex;
@@ -269,7 +272,7 @@
         }
 
         .balance-value {
-            font-size: 3.5rem;
+            font-size: 3.2rem;
             font-weight: 900;
             line-height: 1;
             margin-bottom: 16px;
@@ -309,7 +312,7 @@
             background: var(--card);
             border-radius: 16px;
             padding: 12px;
-            height: 120px;
+            height: 100px;
         }
 
         #chartCanvas {
@@ -317,7 +320,7 @@
             height: 100%;
         }
 
-        /* Action */
+        /* Action - Primary CTA */
         .action-area {
             margin-top: auto;
             padding-top: 12px;
@@ -325,14 +328,18 @@
 
         .btn-next {
             width: 100%;
-            background: var(--card);
-            color: var(--text);
+            background: #fbbf24;
+            color: #000;
+            font-size: 1.2rem;
+            padding: 20px;
         }
 
         .btn-results {
             width: 100%;
             background: #fbbf24;
             color: #000;
+            font-size: 1.2rem;
+            padding: 20px;
         }
 
         /* ===== MODAL ===== */
@@ -417,21 +424,21 @@
         .modal-buttons .btn {
             flex: 1;
             padding: 16px 12px;
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
 
-        .btn-stack {
+        .btn-invest {
             background: var(--green);
             color: #000;
         }
 
-        .btn-sell {
+        .btn-cashout {
             background: var(--red-dim);
             color: var(--red);
             border: 2px solid var(--red);
         }
 
-        .btn-stack-full {
+        .btn-invest-full {
             width: 100%;
             background: var(--green);
             color: #000;
@@ -592,12 +599,12 @@
 
             <div class="sold-notice" id="soldNotice">💸 You cashed out</div>
 
-            <div class="week-card" id="weekCard">
-                <div class="week-label" id="weekLabel">Week 1</div>
-                <div class="week-content">
-                    <div class="week-emoji" id="weekEmoji">🎲</div>
-                    <div class="week-waiting" id="weekWaiting">Waiting...</div>
-                    <div class="week-change" id="weekChange" style="display: none;"></div>
+            <div class="market-card" id="marketCard">
+                <div class="market-week" id="marketWeek">Week 1</div>
+                <div class="market-message">
+                    <div class="market-emoji" id="marketEmoji">🎲</div>
+                    <div class="market-waiting" id="marketWaiting">Waiting for market...</div>
+                    <div class="market-text" id="marketText" style="display: none;"></div>
                 </div>
             </div>
 
@@ -621,7 +628,7 @@
             </div>
 
             <div class="action-area">
-                <button class="btn btn-next" id="actionBtn" onclick="handleAction()">NEXT WEEK</button>
+                <button class="btn btn-next" id="actionBtn" onclick="handleAction()">NEXT WEEK →</button>
             </div>
         </div>
     </div>
@@ -639,11 +646,11 @@
             </div>
 
             <div class="modal-buttons" id="modalButtons">
-                <button class="btn btn-stack-full" id="stackFullBtn" onclick="makeDecision('buy')">STACK IT</button>
+                <button class="btn btn-invest-full" onclick="makeDecision('buy')">INVEST</button>
             </div>
             <div class="modal-buttons" id="modalButtonsSplit" style="display: none;">
-                <button class="btn btn-stack" onclick="makeDecision('buy')">STACK IT</button>
-                <button class="btn btn-sell" onclick="makeDecision('sell')">CASH OUT</button>
+                <button class="btn btn-invest" onclick="makeDecision('buy')">INVEST</button>
+                <button class="btn btn-cashout" onclick="makeDecision('sell')">CASH OUT</button>
             </div>
         </div>
     </div>
@@ -667,6 +674,12 @@
     </div>
 
     <script>
+        // Prevent pull-to-refresh
+        document.body.addEventListener('touchmove', function(e) {
+            if (e.target.closest('.chart-wrap')) return;
+            e.preventDefault();
+        }, { passive: false });
+
         const WEEKS = 6;
         const INVEST = 1000;
 
@@ -709,11 +722,11 @@
             };
 
             document.getElementById('soldNotice').classList.remove('visible');
-            document.getElementById('weekCard').className = 'week-card';
-            document.getElementById('weekEmoji').textContent = '🎲';
-            document.getElementById('weekWaiting').style.display = 'block';
-            document.getElementById('weekChange').style.display = 'none';
-            document.getElementById('weekLabel').textContent = 'Week 1';
+            document.getElementById('marketCard').className = 'market-card';
+            document.getElementById('marketEmoji').textContent = '🎲';
+            document.getElementById('marketWaiting').style.display = 'block';
+            document.getElementById('marketText').style.display = 'none';
+            document.getElementById('marketWeek').textContent = 'Week 1';
 
             updateDots();
             updateBalance(0, false);
@@ -733,6 +746,13 @@
             });
         }
 
+        function getMarketMessage(pct) {
+            if (pct >= 10) return { emoji: '🚀', text: `Market up ${pct}%` };
+            if (pct > 0) return { emoji: '📈', text: `Market up ${pct}%` };
+            if (pct > -10) return { emoji: '📉', text: `Market down ${Math.abs(pct)}%` };
+            return { emoji: '💀', text: `Market down ${Math.abs(pct)}%` };
+        }
+
         function showDecision() {
             const w = state.week + 1;
             document.getElementById('decisionWeekLabel').textContent = `Week ${w}`;
@@ -746,16 +766,16 @@
                 const last = state.moves[state.week - 1];
                 if (last < -10) {
                     document.getElementById('decisionEmoji').textContent = '😰';
-                    document.getElementById('decisionTitle').textContent = 'Oof! Keep going?';
+                    document.getElementById('decisionTitle').textContent = 'Ouch! Keep going?';
                 } else if (last < 0) {
                     document.getElementById('decisionEmoji').textContent = '🤔';
                     document.getElementById('decisionTitle').textContent = 'Small dip. Stay in?';
                 } else if (last > 10) {
                     document.getElementById('decisionEmoji').textContent = '🔥';
-                    document.getElementById('decisionTitle').textContent = 'Hot! Keep it up?';
+                    document.getElementById('decisionTitle').textContent = 'Hot streak! More?';
                 } else {
                     document.getElementById('decisionEmoji').textContent = '💪';
-                    document.getElementById('decisionTitle').textContent = 'Keep stacking?';
+                    document.getElementById('decisionTitle').textContent = 'Keep going?';
                 }
                 document.getElementById('modalButtons').style.display = 'none';
                 document.getElementById('modalButtonsSplit').style.display = 'flex';
@@ -772,22 +792,23 @@
             state.price = state.allPrices[state.week];
             state.history.push(state.price);
 
-            // Update week card
-            const card = document.getElementById('weekCard');
-            const emoji = document.getElementById('weekEmoji');
+            // Update market card with clear message
+            const card = document.getElementById('marketCard');
+            const emoji = document.getElementById('marketEmoji');
+            const msg = getMarketMessage(move);
 
-            card.className = 'week-card ' + (move >= 0 ? 'up' : 'down');
-            document.getElementById('weekLabel').textContent = `Week ${state.week}`;
+            card.className = 'market-card ' + (move >= 0 ? 'up' : 'down');
+            document.getElementById('marketWeek').textContent = `Week ${state.week}`;
 
-            emoji.textContent = move >= 10 ? '🚀' : move > 0 ? '📈' : move > -10 ? '📉' : '💀';
+            emoji.textContent = msg.emoji;
             emoji.classList.remove('pop');
             void emoji.offsetWidth;
             emoji.classList.add('pop');
 
-            document.getElementById('weekWaiting').style.display = 'none';
-            const changeEl = document.getElementById('weekChange');
-            changeEl.style.display = 'block';
-            changeEl.textContent = (move >= 0 ? '+' : '') + move + '%';
+            document.getElementById('marketWaiting').style.display = 'none';
+            const textEl = document.getElementById('marketText');
+            textEl.style.display = 'block';
+            textEl.textContent = msg.text;
 
             const oldVal = state.sold ? state.soldValue : state.shares * state.allPrices[state.week - 1];
 
@@ -813,10 +834,10 @@
             const btn = document.getElementById('actionBtn');
             if (state.week >= WEEKS) {
                 state.done = true;
-                btn.textContent = 'SEE RESULTS';
+                btn.textContent = 'SEE RESULTS 🏆';
                 btn.className = 'btn btn-results';
             } else {
-                btn.textContent = 'NEXT WEEK';
+                btn.textContent = 'NEXT WEEK →';
                 btn.className = 'btn btn-next';
             }
         }
@@ -830,18 +851,19 @@
                 state.price = state.allPrices[state.week];
                 state.history.push(state.price);
 
-                const card = document.getElementById('weekCard');
-                const emoji = document.getElementById('weekEmoji');
+                const card = document.getElementById('marketCard');
+                const emoji = document.getElementById('marketEmoji');
+                const msg = getMarketMessage(move);
 
-                card.className = 'week-card ' + (move >= 0 ? 'up' : 'down');
-                document.getElementById('weekLabel').textContent = `Week ${state.week}`;
+                card.className = 'market-card ' + (move >= 0 ? 'up' : 'down');
+                document.getElementById('marketWeek').textContent = `Week ${state.week}`;
 
-                emoji.textContent = move >= 10 ? '🚀' : move > 0 ? '📈' : move > -10 ? '📉' : '💀';
+                emoji.textContent = msg.emoji;
                 emoji.classList.remove('pop');
                 void emoji.offsetWidth;
                 emoji.classList.add('pop');
 
-                document.getElementById('weekChange').textContent = (move >= 0 ? '+' : '') + move + '%';
+                document.getElementById('marketText').textContent = msg.text;
 
                 state.dcaShares += INVEST / state.price;
                 state.dcaInvested += INVEST;
@@ -853,7 +875,7 @@
                 if (state.week >= WEEKS) {
                     state.done = true;
                     const btn = document.getElementById('actionBtn');
-                    btn.textContent = 'SEE RESULTS';
+                    btn.textContent = 'SEE RESULTS 🏆';
                     btn.className = 'btn btn-results';
                 }
             } else {
@@ -945,7 +967,7 @@
             const padMin = min - range * 0.2, padMax = max + range * 0.2;
             const disp = padMax - padMin;
 
-            const pad = { t: 8, r: 8, b: 16, l: 8 };
+            const pad = { t: 8, r: 8, b: 12, l: 8 };
             const gw = w - pad.l - pad.r, gh = h - pad.t - pad.b;
             const getY = p => pad.t + gh - ((p - padMin) / disp) * gh;
             const getX = i => pad.l + (i / WEEKS) * gw;
