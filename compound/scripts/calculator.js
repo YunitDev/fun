@@ -40,7 +40,6 @@
     btnBack: document.getElementById('btn-back'),
     btnShowHow: document.getElementById('btn-show-how'),
     btnBackForm: document.getElementById('btn-back-form'),
-    displayAge: document.getElementById('display-age'),
     displayAmount: document.getElementById('display-amount'),
     amountSlider: document.getElementById('amount-slider'),
     valueMain: document.getElementById('value-main'),
@@ -231,8 +230,7 @@
     state.timeframes = calculateTimeframes(age);
     state.selectedTimeframe = 'long'; // Default to max (age 65)
 
-    // Update header display
-    elements.displayAge.textContent = age;
+    // Update display
     updateAmountDisplay();
 
     // Configure amount slider
