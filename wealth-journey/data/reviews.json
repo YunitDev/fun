@@ -1,0 +1,378 @@
+{
+  "appStoreRating": 4.9,
+  "totalReviews": 127,
+  "reviews": [
+    {
+      "id": 1,
+      "title": "Beginner",
+      "rating": 5,
+      "author": "Invest2025",
+      "date": "Nov 29",
+      "excerpt": "My first time investing in stocks. Portfolio is up 20%. Benson will do the work for you!",
+      "fullText": "My first time investing in stocks. I was skeptical with Benson at first. I signed up in early 2025 but I didn't start contributing until June after I continue watching his LIVE! Just in a few months, my Portfolio is up 20%. I highly recommend using Benson AI for beginners. Benson will do the work for you! It analyses the data and pick the best stocks to invest for you. You will meet the CEO of the company and he is a text or phone call away.",
+      "highlight": "Portfolio up 20%"
+    },
+    {
+      "id": 2,
+      "title": "Taking the guest work and worry out",
+      "rating": 5,
+      "author": "kennyonorman",
+      "date": "Oct 30",
+      "excerpt": "Reached a six figure portfolio with 70% return while I'm not doing anything extra.",
+      "fullText": "Greetings, I'm personally sending a top tier recommendation for Benson because over the last 11 months of this volatile market, Benson has allowed me to reach a six figure portfolio to capture a 70% return while I'm not doing anything extra.",
+      "highlight": "70% return"
+    },
+    {
+      "id": 3,
+      "title": "Reliable recommendations, real results!",
+      "rating": 5,
+      "author": "Ju-Wood",
+      "date": "Oct 30",
+      "excerpt": "Stock picks have far exceeded stocks I would've purchased on my own. Portfolio is up nicely!",
+      "fullText": "I've been using Benson for a while now - and honestly I'm really impressed! So much that I've increased my weekly contributions and will continue to do so. The stock picks have far exceeded stocks that I would've purchased on my own and as a result, my portfolio is up nicely! It also helps that I'm no longer stressing over when to get in & out of stocks as the app handles it all. Definitely worth checking out! I'm highly pleased and grateful that I stumbled upon it!",
+      "highlight": "Portfolio up nicely"
+    },
+    {
+      "id": 4,
+      "title": "Trading experience",
+      "rating": 5,
+      "author": "CathyJut",
+      "date": "Oct 30",
+      "excerpt": "I never knew trading could be so easy and stress free until I encountered Benson.",
+      "fullText": "I never knew trading could be so easy and stress free until I encountered Benson. From downloading the app to choosing the stocks that have been researched using AI is amazing. My portfolio has increased over a very short period of time.",
+      "highlight": "Easy and stress free"
+    },
+    {
+      "id": 5,
+      "title": "Smart way to invest",
+      "rating": 5,
+      "author": "Invest11122",
+      "date": "Oct 30",
+      "excerpt": "Benson Investment is a smart tool that helps you invest wisely.",
+      "fullText": "I've been using Benson Investment for a few months and I'm genuinely impressed. Benson Investment is a smart tool that helps you invest.",
+      "highlight": "Smart investing"
+    },
+    {
+      "id": 6,
+      "title": "The best investment app ever",
+      "rating": 5,
+      "author": "Mubah12",
+      "date": "Nov 1",
+      "excerpt": "Big shoutout to Philip!!! He is such a great mentor! I've never felt more confident about investing.",
+      "fullText": "I can't say enough good things about Benson! The platform makes understanding investments so much easier, and the tools they've built have genuinely helped me feel more confident about where my money is going. Big shoutout to Philip!!! He is such a great mentor! He breaks everything down super clearly and really helps me understand the why behind each move. I've never felt more confident about investing thanks to him.",
+      "highlight": "Great mentor"
+    },
+    {
+      "id": 7,
+      "title": "Growth",
+      "rating": 5,
+      "author": "William Amay",
+      "date": "Oct 30",
+      "excerpt": "Simply easy to use, without prior knowledge. Wish I would've known about Benson earlier.",
+      "fullText": "I'm not a knowledgeable person in stock or investment but have been thinking a lot about retirement and wealth especially now that I'm getting older. I wish I would've known or came across Benson earlier because it's simply and easy to use, without prior knowledge.",
+      "highlight": "Easy to use"
+    },
+    {
+      "id": 8,
+      "title": "Smart and Reliable investment partner",
+      "rating": 5,
+      "author": "Masalakie",
+      "date": "Oct 30",
+      "excerpt": "AI features help me stay on top of the market without having to constantly monitor things myself.",
+      "fullText": "I've been using Benson AI Investing for a while now, and I'm really impressed with how easy it makes managing my portfolio. The AI features help me stay on top of the market without having to constantly monitor things myself.",
+      "highlight": "AI-powered"
+    },
+    {
+      "id": 9,
+      "title": "Awesome App for the working professional!",
+      "rating": 5,
+      "author": "hsvdvshajansba",
+      "date": "Oct 30",
+      "excerpt": "Great for working professionals that don't have the time to research stocks.",
+      "fullText": "This is a great app, something I been wanting for a long time. It's great for working professionals that don't have the time to research stocks, monitor trends and trade. Benson does all of this for you. My stocks are currently up and since I started. They very proactive and extremely informative on the market. Very happy that I made the decision to sign up. I string recommend everyone to do the same.",
+      "highlight": "For professionals"
+    },
+    {
+      "id": 10,
+      "title": "Pleasant Surprise",
+      "rating": 5,
+      "author": "Sapphire929",
+      "date": "Oct 30",
+      "excerpt": "Clear, data-driven insights easy to interpret, even when markets are volatile.",
+      "fullText": "I've been using this stock investing tool a while, and it's proven to be valuable for analyzing market trends and making smarter investment decisions. The insights are clear, data-driven, and easy to interpret, even when markets are volatile.",
+      "highlight": "Data-driven"
+    },
+    {
+      "id": 11,
+      "title": "Benson is a good app",
+      "rating": 5,
+      "author": "Thorne 2",
+      "date": "Oct 30",
+      "excerpt": "Benson has made investing easy because it does everything for me.",
+      "fullText": "I have been using Benson for a couple of months now I like benson because it makes investing easy. another good thing about benson is if you are having problems you can just click on the microphone in some one will respond asap. Benson has made investing easy because it those every thing for me, Benson is a new app in I like what it is doing.",
+      "highlight": "Does everything"
+    },
+    {
+      "id": 12,
+      "title": "Trust the process!!",
+      "rating": 5,
+      "author": "Mo64Jack",
+      "date": "Oct 30",
+      "excerpt": "The most successful investment I've ever made. Please don't sleep on Benson.",
+      "fullText": "I must say that this is one of the best investments I've made in a long time. Ever since I placed my trust in Benson, I've had no complaints. I've tried several different platforms, but none of them have been successful. However, I must say that Benson is the most successful investment I've ever made. Please don't sleep on Benson. Just trust the process, and you won't regret it.",
+      "highlight": "Most successful"
+    },
+    {
+      "id": 13,
+      "title": "Simple and effective",
+      "rating": 5,
+      "author": "KingKy11",
+      "date": "Oct 30",
+      "excerpt": "Secure, easy to use, and completely automated. Now I just watch my money grow.",
+      "fullText": "Seriously, if you're on the fence, just do it. This app makes investing a no-brainer. It's secure, easy to use, and completely automated. Linked my brokerage account and now I just watch my money grow.",
+      "highlight": "Automated"
+    },
+    {
+      "id": 14,
+      "title": "Only going up",
+      "rating": 5,
+      "author": "Bensonai",
+      "date": "Nov 7",
+      "excerpt": "Portfolio has only gone up, and I haven't had to do a thing!",
+      "fullText": "I've been using this app for a few months just to begin investing and my portfolio has only gone up, and I haven't had to do a thing! Would definitely recommend to people who want to start investing and don't have the time to research every stock as the app does it for you!",
+      "highlight": "Only going up"
+    },
+    {
+      "id": 15,
+      "title": "Great app for stocks",
+      "rating": 5,
+      "author": "Tiff11222",
+      "date": "Oct 30",
+      "excerpt": "Easy to navigate with a lot of helpful features. I've learned a lot about the market.",
+      "fullText": "I've been using this app for almost a year and it's been a great tool for trading stocks. The platform is easy to navigate and has a lot of helpful features. I've learned a lot about the market because of this app. I highly recommend Benson to anyone looking for a reliable trading platform.",
+      "highlight": "Learned a lot"
+    },
+    {
+      "id": 16,
+      "title": "Fantastic app",
+      "rating": 5,
+      "author": "King Amos Gee",
+      "date": "Oct 30",
+      "excerpt": "Literally shocked at the growth I have so far experienced in my portfolio.",
+      "fullText": "I started using Benson in June and am literally shocked at the growth I have so far experienced in my portfolio. This automation makes my work so much easier. I do not need to worry about spending countless hours glued to the screen. Benson does all the heavy lifting.",
+      "highlight": "Shocked at growth"
+    },
+    {
+      "id": 17,
+      "title": "This best investing app!",
+      "rating": 5,
+      "author": "JordaneMarie",
+      "date": "Nov 4",
+      "excerpt": "Allows you to sit back and watch your portfolio balance grow.",
+      "fullText": "This app is amazing when it comes to taking charge of your financial life. The app allows you to sit back and watch your portfolio balance grow. The app does a great job educating you on general market trends as well as individual stock overviews.",
+      "highlight": "Watch it grow"
+    },
+    {
+      "id": 18,
+      "title": "Awesome app! Easy to use!",
+      "rating": 5,
+      "author": "GK2 Designs",
+      "date": "Oct 30",
+      "excerpt": "Fast forward a couple weeks and my account had grown with not much effort on my part.",
+      "fullText": "I came across a Live where the guy who started the app was doing a Q&A and explaining how the app works and how it can benefit the average user. I was very impressed and decided to try it! Fast forward a couple weeks and my account had grown with not much effort on my part.",
+      "highlight": "Account grew"
+    },
+    {
+      "id": 19,
+      "title": "I Definitely recommend Benson",
+      "rating": 5,
+      "author": "Ricki0657",
+      "date": "Oct 30",
+      "excerpt": "App is super easy to use and has AI keep you updated on market news.",
+      "fullText": "I've been wanting to start investing for the future long term but doesn't know how to start. App is super easy to use and has AI keep you updated on currents news that affect the market as well as how it could be affecting your investments.",
+      "highlight": "Super easy"
+    },
+    {
+      "id": 20,
+      "title": "Investment learning growth",
+      "rating": 5,
+      "author": "Kevs comments",
+      "date": "Nov 17",
+      "excerpt": "This Benson AI investing app has truly been a game changer for me.",
+      "fullText": "As someone who began as a novice in this investment space this Benson AI investing app has truly been a game changer for me. It is allowed me to totally expand my knowledge and ability to navigate in this space. I look forward to what's ahead and how I can increase my investments.",
+      "highlight": "Game changer"
+    },
+    {
+      "id": 21,
+      "title": "Great experience so far really impressive",
+      "rating": 5,
+      "author": "Winter Chronicles",
+      "date": "Nov 19",
+      "excerpt": "Tremendous growth in a short time. Benson quietly handles the heavy lifting.",
+      "fullText": "I have been using Benson for a little under a year with a small investment, and I have seen tremendous growth in a short time. I like that I can pick my stocks from the top recommendations while Benson quietly handles the heavy lifting in the background.",
+      "highlight": "Tremendous growth"
+    },
+    {
+      "id": 22,
+      "title": "Satisfied",
+      "rating": 5,
+      "author": "MorganOde",
+      "date": "Oct 30",
+      "excerpt": "A 59-year-old single mother close to retirement - I wasn't sure at first but now I'm satisfied.",
+      "fullText": "I was a skeptic at first. Me being a 59-year-old single mother close to retirement, I wasn't sure at first but now I'm satisfied with my results.",
+      "highlight": "Satisfied results"
+    },
+    {
+      "id": 23,
+      "title": "Would recommend, absolutely blown away",
+      "rating": 5,
+      "author": "xBryan05",
+      "date": "Oct 30",
+      "excerpt": "Absolutely blown away by the returns. The AI literally does the buying and selling automatically.",
+      "fullText": "When I first heard about this app, I was a bit skeptical because I wasn't too sure how well AI would do when it comes to making investments, however after trying the app for a couple of months, I'm absolutely blown away by the returns that I'm currently seeing. I honestly didn't expect it to be this good, specially for the low $20 monthly subscription fee. I like how the app has a really clean and unique UI as well, super easy to navigate, appealing, but most importantly, gets to the point, doesn't have a bunch of unnecessary pages or tabs, just the stuff you need in order to monitor your stocks and control the AI. I would recommend it to anyone starting out with stocks so they can get a feel for it, specially since it takes away the emotions part (the AI literally does the buying and selling automatically) you pretty much just add money into your WeBull wallet and let the AI do it's magic.",
+      "highlight": "Blown away"
+    },
+    {
+      "id": 24,
+      "title": "Great For Beginners",
+      "rating": 5,
+      "author": "Sunshne!!",
+      "date": "Oct 30",
+      "excerpt": "In just 3 months my portfolio is up about 10%. More knowledgeable about the market.",
+      "fullText": "In just 3 months my portfolio is up about 10%. I find myself much more knowledgeable about the market and stocks overall. I know there is much more to come and am excited that Benson helped check one of my goals off the check list.",
+      "highlight": "Up 10% in 3 months"
+    },
+    {
+      "id": 25,
+      "title": "Perfect app for getting started with investing",
+      "rating": 5,
+      "author": "Axel desu",
+      "date": "Oct 30",
+      "excerpt": "Benson does a lot of the homework for me and I get to choose what to invest in.",
+      "fullText": "One of the hardest things for me to do is keep up with company trends and figuring out when to buy and when to sell. It's a chore that I don't nearly make enough time for. Benson is great because it does a lot of the homework for me and then I get to choose what to invest in.",
+      "highlight": "Does the homework"
+    },
+    {
+      "id": 26,
+      "title": "Very Transparent",
+      "rating": 5,
+      "author": "561 South",
+      "date": "Oct 30",
+      "excerpt": "My first time investing in stocks. Benson completely changed my approach.",
+      "fullText": "This is my first time investing in stocks. I was initially hesitant after struggling on my own without a real strategy, but Benson completely changed that. The app makes it easy to understand what each company does, the risk involved, and even provides clear weekly insights.",
+      "highlight": "Changed approach"
+    },
+    {
+      "id": 27,
+      "title": "Awesome app",
+      "rating": 5,
+      "author": "SpicerJ.",
+      "date": "Oct 30",
+      "excerpt": "I ran across videos of Mr. Audrey talking about Benson and I gave it a try.",
+      "fullText": "I was at a loss before I found this awesome app called Benson. I was trading nothing but dividend stocks and I was in the hole for the first four months of the year and I was watching TikTok and I ran across videos of Mr. Audrey talking about Benson and I gave it a try.",
+      "highlight": "Found success"
+    },
+    {
+      "id": 28,
+      "title": "Satisfied Customer",
+      "rating": 5,
+      "author": "Denisha Jacobs",
+      "date": "Oct 30",
+      "excerpt": "Outstanding experience investing with Benson, under the leadership of CEO Phillip Aubrey.",
+      "fullText": "I have had an outstanding experience investing with Benson, under the leadership of CEO Phillip Aubrey. It's not a get-rich-quick tool. It's more of a disciplined, AI-guided system that keeps you investing even when you're busy.",
+      "highlight": "Outstanding"
+    },
+    {
+      "id": 29,
+      "title": "An AI investing app that actually delivers!",
+      "rating": 5,
+      "author": "AI Investor",
+      "date": "Oct 31",
+      "excerpt": "My annual returns have jumped to 60%+. Absolutely game-changing.",
+      "fullText": "I've been investing on my own for over a decade with solid results, averaging around 25% returns. But I constantly struggled with the same questions: Which stocks should I buy? When's the right time to get in? And hardest of all, when should I sell? Two years ago, I decided to give Benson a shot. I was skeptical about whether AI could really solve these problems, but I figured it was worth testing. The results? Absolutely game-changing. Benson has consistently picked winners, helping me build a truly diverse portfolio. My annual returns have jumped to 60%+. Let me repeat that: 60%+ returns. I've recommended this app to everyone in my network, from complete beginners to seasoned investors, and they're all seeing incredible results too.",
+      "highlight": "60%+ returns"
+    },
+    {
+      "id": 30,
+      "title": "Great if you're just starting out!",
+      "rating": 5,
+      "author": "mikerv6a",
+      "date": "Oct 31",
+      "excerpt": "In my late 50s and never really invested. I like the idea of somebody local helping.",
+      "fullText": "I'm in my late 50s and I never really invested into the stock market like I should have and I just recently started doing this about a year ago started using this app cause I really didn't know what I was doing. I could've gotten somebody local but I like the idea of somebody local helping.",
+      "highlight": "Never too late"
+    },
+    {
+      "id": 31,
+      "title": "The Best Investing App Period",
+      "rating": 5,
+      "author": "fatherofpeace",
+      "date": "Oct 30",
+      "excerpt": "The personal touch - Phillip Aubrey, the founder, actually reaches out to help.",
+      "fullText": "Benson AI has honestly been a game changer for me. The app is super easy to use and helps me stay on top of my portfolio without overthinking every move. What really makes it stand out is the personal touch — Phillip Aubrey, the founder, actually reaches out to help.",
+      "highlight": "Personal touch"
+    },
+    {
+      "id": 32,
+      "title": "Autopilot is an understatement",
+      "rating": 5,
+      "author": "ucejuice",
+      "date": "Oct 30",
+      "excerpt": "The CEO will literally text or call you if he sees ways to help you out.",
+      "fullText": "By far the easiest way to invest. I constantly tell my friends about the app and the ease of use. I've been on Benson for a few months now, and originally would watch it closely week by week but honestly now I don't even worry about how it's performing. Using this app also broadened my horizon to look into other companies that were never on my radar. My favorite part of using this app is honestly probably the owner and CEO. He will literally shoot you a text or call you if he sees ways to help you out.",
+      "highlight": "CEO helps personally"
+    },
+    {
+      "id": 33,
+      "title": "Benson AI is the future",
+      "rating": 5,
+      "author": "MzPar",
+      "date": "Oct 30",
+      "excerpt": "Advanced automation handles every aspect of trading. Secure, efficient, and well worth it.",
+      "fullText": "Benson AI is a powerful and innovative platform that simplifies the process of buying and selling stocks. The app's advanced automation handles every aspect of trading, allowing users to stay ahead of the market without the need for constant monitoring or effort. Its intelligent system ensures that you're always positioned for the best investment opportunities. The platform is secure, efficient, and well worth the investment.",
+      "highlight": "The future"
+    },
+    {
+      "id": 34,
+      "title": "Best choice",
+      "rating": 5,
+      "author": "Mrg-a-l",
+      "date": "Oct 30",
+      "excerpt": "Profit has exceeded the market (S&P 500) by several multiples. Exceptional product.",
+      "fullText": "I've been using this app close to a year now and have been very pleased with the results. My profit has exceeded the market (S&P 500) by several multiples. Additionally, the owner is very engaged with his customers and is readily accessible for answering questions and providing useful market insights. The combination of app performance and owner engagement equals an exceptional product. I've been a investor for decades and I'm hard pressed to recall ever performing as well in the market than I'm doing with this app.",
+      "highlight": "Beat S&P 500"
+    }
+  ],
+  "featuredTestimonials": [
+    {
+      "quote": "Portfolio up 70% return in 11 months",
+      "author": "kennyonorman",
+      "metric": "70%",
+      "metricLabel": "return"
+    },
+    {
+      "quote": "My annual returns have jumped to 60%+",
+      "author": "AI Investor",
+      "metric": "60%",
+      "metricLabel": "annual returns"
+    },
+    {
+      "quote": "Portfolio is up 20% in just a few months",
+      "author": "Invest2025",
+      "metric": "20%",
+      "metricLabel": "growth"
+    },
+    {
+      "quote": "Up 10% in just 3 months",
+      "author": "Sunshne!!",
+      "metric": "10%",
+      "metricLabel": "in 3 months"
+    },
+    {
+      "quote": "Profit exceeded the S&P 500 by several multiples",
+      "author": "Mrg-a-l",
+      "metric": "Beat",
+      "metricLabel": "S&P 500"
+    }
+  ]
+}

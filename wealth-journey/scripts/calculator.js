@@ -796,6 +796,105 @@
   }
 
   // ============================================================
+  // Testimonial Carousel
+  // ============================================================
+  let testimonialIndex = 0;
+  let testimonialInterval = null;
+
+  function initTestimonialCarousel() {
+    const carousel = document.getElementById('testimonial-carousel');
+    const dots = document.getElementById('testimonial-dots');
+    if (!carousel || !dots) return;
+
+    const cards = carousel.querySelectorAll('.testimonial-card');
+    const dotElements = dots.querySelectorAll('.dot');
+
+    if (cards.length === 0) return;
+
+    // Set first card as active
+    cards[0].classList.add('active');
+
+    // Auto-rotate every 4 seconds
+    testimonialInterval = setInterval(() => {
+      showTestimonial((testimonialIndex + 1) % cards.length);
+    }, 4000);
+
+    // Click handlers for dots
+    dotElements.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        showTestimonial(index);
+        // Reset interval on manual navigation
+        clearInterval(testimonialInterval);
+        testimonialInterval = setInterval(() => {
+          showTestimonial((testimonialIndex + 1) % cards.length);
+        }, 4000);
+      });
+    });
+
+    // Touch/swipe support
+    let touchStartX = 0;
+    carousel.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+
+    carousel.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const diff = touchStartX - touchEndX;
+
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          // Swipe left - next
+          showTestimonial((testimonialIndex + 1) % cards.length);
+        } else {
+          // Swipe right - prev
+          showTestimonial((testimonialIndex - 1 + cards.length) % cards.length);
+        }
+        // Reset interval on swipe
+        clearInterval(testimonialInterval);
+        testimonialInterval = setInterval(() => {
+          showTestimonial((testimonialIndex + 1) % cards.length);
+        }, 4000);
+      }
+    }, { passive: true });
+  }
+
+  function showTestimonial(index) {
+    const carousel = document.getElementById('testimonial-carousel');
+    const dots = document.getElementById('testimonial-dots');
+    if (!carousel || !dots) return;
+
+    const cards = carousel.querySelectorAll('.testimonial-card');
+    const dotElements = dots.querySelectorAll('.dot');
+
+    // Remove active/exit classes
+    cards.forEach((card, i) => {
+      if (i === testimonialIndex) {
+        card.classList.add('exit');
+        card.classList.remove('active');
+      } else {
+        card.classList.remove('active', 'exit');
+      }
+    });
+
+    // Update dots
+    dotElements.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+
+    // Show new card after brief delay for exit animation
+    setTimeout(() => {
+      cards.forEach((card, i) => {
+        card.classList.remove('exit');
+        if (i === index) {
+          card.classList.add('active');
+        }
+      });
+    }, 150);
+
+    testimonialIndex = index;
+  }
+
+  // ============================================================
   // Initialization
   // ============================================================
   function init() {
@@ -817,6 +916,9 @@
 
     // Setup events
     setupEventListeners();
+
+    // Initialize testimonial carousel
+    initTestimonialCarousel();
 
     // Start typewriter
     typewriterEffect();
