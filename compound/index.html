@@ -124,15 +124,37 @@
 
       <!-- Footer with CTA -->
       <footer class="footer-results">
-        <p class="footer-insight">
-          You put in <span id="total-contributed">$0</span> → grows to <span id="total-final">$0</span>
-        </p>
-        <div class="scenario-toggle">
-          <button class="scenario-btn" data-scenario="low">Low risk</button>
-          <button class="scenario-btn scenario-btn--active" data-scenario="normal">Normal risk</button>
-          <button class="scenario-btn" data-scenario="high">High risk</button>
+        <!-- Calculation Explainer -->
+        <div class="calc-explainer">
+          <button class="calc-trigger" id="calc-trigger">
+            <span class="calc-trigger-text">How we calculated this</span>
+            <svg class="calc-trigger-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+          <div class="calc-panel" id="calc-panel">
+            <p class="calc-summary">
+              Based on investing <strong id="calc-weekly">$25</strong>/week from age <strong id="calc-age">25</strong> to <strong id="calc-target-age">65</strong>, assuming:
+            </p>
+            <div class="risk-selector">
+              <button class="risk-btn" data-scenario="low">
+                <span class="risk-label">Low</span>
+                <span class="risk-rate">10%/yr</span>
+              </button>
+              <button class="risk-btn risk-btn--active" data-scenario="normal">
+                <span class="risk-label">Normal</span>
+                <span class="risk-rate">12%/yr</span>
+              </button>
+              <button class="risk-btn" data-scenario="high">
+                <span class="risk-label">High</span>
+                <span class="risk-rate">14%/yr</span>
+              </button>
+            </div>
+            <p class="calc-note">Compound growth. Simple math, real results.</p>
+          </div>
         </div>
-        <button class="btn-cta" id="btn-show-how">👀 Show me how</button>
+
+        <button class="btn-cta" id="btn-show-how">Show me how</button>
       </footer>
 
     </div>

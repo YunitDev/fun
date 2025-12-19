@@ -48,9 +48,13 @@
     ageMedium: document.getElementById('age-medium'),
     ageLong: document.getElementById('age-long'),
     timeframeButtons: document.querySelectorAll('.timeframe-btn'),
-    scenarioButtons: document.querySelectorAll('.scenario-btn'),
-    totalContributed: document.getElementById('total-contributed'),
-    totalFinal: document.getElementById('total-final'),
+    riskButtons: document.querySelectorAll('.risk-btn'),
+    // Calc explainer elements
+    calcTrigger: document.getElementById('calc-trigger'),
+    calcExplainer: document.querySelector('.calc-explainer'),
+    calcWeekly: document.getElementById('calc-weekly'),
+    calcAge: document.getElementById('calc-age'),
+    calcTargetAge: document.getElementById('calc-target-age'),
     // Comparison page elements
     userFirstName: document.getElementById('user-first-name'),
     goalAmount: document.getElementById('goal-amount')
@@ -135,10 +139,10 @@
 
     animateValue(elements.valueMain, value);
 
-    // Update footer insight
-    const totalContributed = state.weeklyAmount * 52 * years;
-    elements.totalContributed.textContent = formatCurrency(totalContributed);
-    elements.totalFinal.textContent = formatCurrency(value);
+    // Update calc explainer panel values
+    if (elements.calcWeekly) elements.calcWeekly.textContent = formatCurrency(state.weeklyAmount);
+    if (elements.calcAge) elements.calcAge.textContent = state.age;
+    if (elements.calcTargetAge) elements.calcTargetAge.textContent = targetAge;
   }
 
   function updateTimeframeDisplay() {
@@ -165,9 +169,9 @@
   function setScenario(scenario) {
     state.scenario = scenario;
 
-    elements.scenarioButtons.forEach(btn => {
+    elements.riskButtons.forEach(btn => {
       const isActive = btn.dataset.scenario === scenario;
-      btn.classList.toggle('scenario-btn--active', isActive);
+      btn.classList.toggle('risk-btn--active', isActive);
     });
 
     updateProjection();
@@ -411,8 +415,15 @@
       btn.addEventListener('click', () => setTimeframe(btn.dataset.timeframe));
     });
 
-    // Scenario buttons
-    elements.scenarioButtons.forEach(btn => {
+    // Calc explainer toggle
+    if (elements.calcTrigger && elements.calcExplainer) {
+      elements.calcTrigger.addEventListener('click', () => {
+        elements.calcExplainer.classList.toggle('open');
+      });
+    }
+
+    // Risk buttons in calc explainer
+    elements.riskButtons.forEach(btn => {
       btn.addEventListener('click', () => setScenario(btn.dataset.scenario));
     });
 
