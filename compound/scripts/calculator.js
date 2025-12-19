@@ -482,42 +482,46 @@
   // Wealth Visualization - Immersive Particle System
   // ==========================================================================
   function createWealthVisualization() {
-    const canvas = document.getElementById('wealth-canvas');
-    if (!canvas) return;
+    // Create orbs on all canvases
+    const canvases = document.querySelectorAll('.wealth-canvas');
 
-    // Create floating bokeh orbs
-    const orbCount = 12;
-    const orbTypes = ['--primary', '--secondary', '--gold', '--primary', '--primary', '--secondary'];
+    canvases.forEach(canvas => {
+      // Vary orb count based on page (fewer on inner pages for subtlety)
+      const isMainCanvas = canvas.id === 'wealth-canvas';
+      const orbCount = isMainCanvas ? 12 : 8;
+      const orbTypes = ['--primary', '--secondary', '--gold', '--primary', '--primary', '--secondary'];
 
-    for (let i = 0; i < orbCount; i++) {
-      const orb = document.createElement('div');
-      const type = orbTypes[Math.floor(Math.random() * orbTypes.length)];
-      orb.className = `wealth-orb wealth-orb${type}`;
+      for (let i = 0; i < orbCount; i++) {
+        const orb = document.createElement('div');
+        const type = orbTypes[Math.floor(Math.random() * orbTypes.length)];
+        orb.className = `wealth-orb wealth-orb${type}`;
 
-      const size = 60 + Math.random() * 140;
-      const left = Math.random() * 100;
-      const top = Math.random() * 100;
-      const duration = 15 + Math.random() * 20;
-      const delay = Math.random() * -20;
-      const driftX = 20 + Math.random() * 60;
-      const driftY = 30 + Math.random() * 80;
-      const opacity = 0.3 + Math.random() * 0.4;
+        const size = 60 + Math.random() * 140;
+        const left = Math.random() * 100;
+        const top = Math.random() * 100;
+        const duration = 15 + Math.random() * 20;
+        const delay = Math.random() * -20;
+        const driftX = 20 + Math.random() * 60;
+        const driftY = 30 + Math.random() * 80;
+        // Slightly lower opacity on inner pages for subtlety
+        const baseOpacity = isMainCanvas ? 0.3 : 0.2;
+        const opacity = baseOpacity + Math.random() * 0.3;
 
-      orb.style.cssText = `
-        width: ${size}px;
-        height: ${size}px;
-        left: ${left}%;
-        top: ${top}%;
-        --drift-duration: ${duration}s;
-        --drift-delay: ${delay}s;
-        --drift-x: ${driftX}px;
-        --drift-y: ${driftY}px;
-        --orb-opacity: ${opacity};
-      `;
+        orb.style.cssText = `
+          width: ${size}px;
+          height: ${size}px;
+          left: ${left}%;
+          top: ${top}%;
+          --drift-duration: ${duration}s;
+          --drift-delay: ${delay}s;
+          --drift-x: ${driftX}px;
+          --drift-y: ${driftY}px;
+          --orb-opacity: ${opacity};
+        `;
 
-      canvas.appendChild(orb);
-    }
-
+        canvas.appendChild(orb);
+      }
+    });
   }
 
   // ==========================================================================
