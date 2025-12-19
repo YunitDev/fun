@@ -104,6 +104,25 @@
           <span class="value-currency">$</span>
           <span class="value-number" id="value-main">0</span>
         </div>
+        <!-- Calculation Explainer - directly below projection -->
+        <div class="calc-explainer">
+          <button class="calc-trigger" id="calc-trigger">
+            <span class="calc-trigger-text">How we calculated this</span>
+            <svg class="calc-trigger-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+          <div class="calc-panel" id="calc-panel">
+            <p class="calc-summary">
+              Based on investing <strong id="calc-weekly">$25</strong>/week from age <strong id="calc-age">25</strong> to <strong id="calc-target-age">65</strong>
+            </p>
+            <div class="risk-selector">
+              <button class="risk-btn" data-scenario="low">Low growth</button>
+              <button class="risk-btn risk-btn--active" data-scenario="normal">Normal growth</button>
+              <button class="risk-btn" data-scenario="high">Higher growth</button>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- Timeframe Options -->
@@ -124,36 +143,6 @@
 
       <!-- Footer with CTA -->
       <footer class="footer-results">
-        <!-- Calculation Explainer -->
-        <div class="calc-explainer">
-          <button class="calc-trigger" id="calc-trigger">
-            <span class="calc-trigger-text">How we calculated this</span>
-            <svg class="calc-trigger-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M6 9l6 6 6-6"/>
-            </svg>
-          </button>
-          <div class="calc-panel" id="calc-panel">
-            <p class="calc-summary">
-              Based on investing <strong id="calc-weekly">$25</strong>/week from age <strong id="calc-age">25</strong> to <strong id="calc-target-age">65</strong>, assuming:
-            </p>
-            <div class="risk-selector">
-              <button class="risk-btn" data-scenario="low">
-                <span class="risk-label">Low</span>
-                <span class="risk-rate">10%/yr</span>
-              </button>
-              <button class="risk-btn risk-btn--active" data-scenario="normal">
-                <span class="risk-label">Normal</span>
-                <span class="risk-rate">12%/yr</span>
-              </button>
-              <button class="risk-btn" data-scenario="high">
-                <span class="risk-label">High</span>
-                <span class="risk-rate">14%/yr</span>
-              </button>
-            </div>
-            <p class="calc-note">Compound growth. Simple math, real results.</p>
-          </div>
-        </div>
-
         <button class="btn-cta" id="btn-show-how">Show me how</button>
       </footer>
 
@@ -213,62 +202,29 @@
     </div>
   </main>
 
-  <!-- ========== PAGE 4: The Obvious Choice ========== -->
+  <!-- ========== PAGE 4: Final CTA ========== -->
   <main class="page page--comparison" id="page-comparison">
-    <div class="comparison-container">
+    <div class="final-container">
 
-      <!-- Personalized Header -->
-      <header class="comparison-header">
-        <p class="comparison-greeting">Hey <span id="user-first-name">there</span>,</p>
-        <div class="comparison-goal">
-          <span class="goal-label">Your goal:</span>
-          <span class="goal-amount" id="goal-amount">$0</span>
-        </div>
-      </header>
+      <!-- Hero Section -->
+      <div class="final-hero">
+        <p class="final-greeting">Nice work, <span id="user-first-name">there</span>.</p>
+        <h1 class="final-headline">Your path to</h1>
+        <div class="final-amount" id="goal-amount">$0</div>
+        <p class="final-subtext">starts with one tap.</p>
+      </div>
 
-      <!-- The Choice -->
-      <div class="choice-wrapper">
-
-        <!-- HARD WAY: The rejected option -->
-        <div class="choice-hard">
-          <div class="choice-hard-content">
-            <span class="choice-hard-label">Do it yourself</span>
-            <span class="choice-hard-stat">8% succeed</span>
-          </div>
-          <div class="choice-hard-strike"></div>
-        </div>
-
-        <!-- Divider -->
-        <div class="choice-divider">
-          <span class="divider-text">or</span>
-        </div>
-
-        <!-- EASY WAY: The hero CTA -->
-        <a href="https://apps.apple.com/us/app/benson-ai-stock-trading/id6470971278" class="choice-easy" target="_blank">
-          <div class="choice-easy-badge">RECOMMENDED</div>
-          <div class="choice-easy-main">
-            <div class="choice-easy-header">
-              <span class="choice-easy-title">Let Benson do it</span>
-              <span class="choice-easy-stat">87% succeed</span>
-            </div>
-            <ul class="choice-easy-benefits">
-              <li>Auto-invests weekly</li>
-              <li>AI picks stocks</li>
-              <li>Set & forget</li>
-            </ul>
-          </div>
-          <div class="choice-easy-cta">
-            <span class="cta-text">Download Benson</span>
-            <svg class="cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </div>
-          <div class="choice-easy-proof">
-            <span class="proof-users">47,000+ users</span>
-            <span class="proof-rating">⭐ 4.8</span>
-          </div>
+      <!-- CTA Section -->
+      <div class="final-cta-section">
+        <a href="https://apps.apple.com/us/app/benson-ai-stock-trading/id6470971278" class="final-cta" target="_blank">
+          <span class="final-cta-text">Download Benson</span>
+          <span class="final-cta-arrow">→</span>
         </a>
-
+        <div class="final-proof">
+          <span class="proof-item">⭐ 4.8 rating</span>
+          <span class="proof-divider">•</span>
+          <span class="proof-item">47,000+ investors</span>
+        </div>
       </div>
 
     </div>
