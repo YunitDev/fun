@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Your Future Wealth | Benson</title>
+  <meta name="description" content="Discover how much you could have. Takes 30 seconds.">
+
+  <meta property="og:site_name" content="Benson">
+  <meta property="og:title" content="Your Future Wealth">
+  <meta property="og:description" content="Discover how much you could have.">
+  <meta property="og:type" content="website">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <!-- Aurora Background -->
+  <div class="aurora-bg">
+    <div class="aurora-layer aurora-1"></div>
+    <div class="aurora-layer aurora-2"></div>
+    <div class="aurora-layer aurora-3"></div>
+    <div class="noise-overlay"></div>
+  </div>
+
+  <!-- Floating Particles Container -->
+  <div class="particles-container" id="particles"></div>
+
+  <!-- ========== PAGE 1: Setup ========== -->
+  <main class="page page--setup" id="page-setup">
+    <div class="page-inner">
+
+      <header class="header">
+        <a href="https://www.meetbenson.com" class="brand-logo" target="_blank">
+          <img src="assets/benson-logo.png" alt="Benson" height="38">
+        </a>
+      </header>
+
+      <section class="setup-section">
+        <div class="magic-badge" id="welcome-badge">
+          <div class="badge-glow"></div>
+          <span class="badge-icon">&#10022;</span>
+          <span class="badge-text">Wealth Oracle</span>
+        </div>
+
+        <h1 class="main-question" id="main-question">
+          <span class="typewriter-text" id="typewriter-text"></span>
+          <span class="typewriter-cursor"></span>
+        </h1>
+
+        <div class="glass-card setup-card" id="setup-card">
+          <div class="card-shine"></div>
+          <div class="setup-inputs" id="setup-inputs">
+            <div class="input-group">
+              <label class="input-label" for="age-input">
+                <span class="label-icon">&#9734;</span>
+                Your age
+              </label>
+              <div class="input-field">
+                <input type="number" id="age-input" min="16" max="64" placeholder="25" inputmode="numeric">
+                <span class="input-suffix">years</span>
+                <div class="input-glow"></div>
+              </div>
+            </div>
+
+            <div class="input-divider">
+              <div class="divider-orb">
+                <span>&</span>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label class="input-label" for="amount-input">
+                <span class="label-icon">&#10026;</span>
+                Weekly investment
+              </label>
+              <div class="input-field input-field--money">
+                <span class="input-prefix">$</span>
+                <input type="number" id="amount-input" min="10" max="2000" step="5" placeholder="50" inputmode="numeric">
+                <span class="input-suffix">/week</span>
+                <div class="input-glow"></div>
+              </div>
+              <span class="input-hint" id="amount-hint">Minimum $10/week</span>
+            </div>
+          </div>
+
+          <button class="btn-magic" id="btn-go" type="button">
+            <span class="btn-bg"></span>
+            <span class="btn-content">
+              <span class="btn-text">Reveal My Fortune</span>
+              <span class="btn-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </span>
+            </span>
+            <div class="btn-particles"></div>
+          </button>
+        </div>
+      </section>
+
+      <footer class="footer-setup" id="footer-setup">
+        <div class="trust-badge">
+          <div class="trust-icon-wrap">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <span class="trust-text">Your information is secure</span>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <!-- ========== PAGE 2: Results ========== -->
+  <main class="page page--results" id="page-results">
+    <div class="page-inner">
+
+      <header class="header-results">
+        <button class="back-btn glass-btn" id="btn-back" aria-label="Go back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </button>
+        <a href="https://www.meetbenson.com" class="brand-logo" target="_blank">
+          <img src="assets/benson-logo.png" alt="Benson" height="32">
+        </a>
+        <div class="header-spacer"></div>
+      </header>
+
+      <!-- Amount Control -->
+      <div class="amount-control glass-card">
+        <div class="card-shine"></div>
+        <div class="amount-display">
+          <span class="amount-label">Investing weekly</span>
+          <div class="amount-value-wrap">
+            <span class="amount-currency">$</span>
+            <span class="amount-value" id="display-amount">50</span>
+          </div>
+        </div>
+        <div class="slider-container">
+          <input type="range" id="amount-slider" min="10" max="2000" step="5" value="50" class="amount-slider">
+          <div class="slider-track-bg"></div>
+          <div class="slider-track-fill" id="slider-track"></div>
+          <div class="slider-glow" id="slider-glow"></div>
+        </div>
+        <div class="amount-labels">
+          <span>$10</span>
+          <span>$2,000</span>
+        </div>
+      </div>
+
+      <!-- Wealth Journey Visualization - Main Display -->
+      <section class="wealth-journey" id="wealth-journey">
+        <div class="journey-header">
+          <span class="journey-title">Your wealth journey</span>
+          <button class="scenario-badge" id="growth-badge">
+            <span class="badge-dot"></span>
+            <span class="growth-text">Balanced Growth</span>
+          </button>
+        </div>
+
+        <div class="journey-visualization">
+          <!-- SVG Path Container -->
+          <svg class="journey-svg" viewBox="0 0 340 240" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <!-- Gradient for the path -->
+              <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#FFB4A2;stop-opacity:1" />
+                <stop offset="40%" style="stop-color:#FFCDB2;stop-opacity:1" />
+                <stop offset="70%" style="stop-color:#ADEFD1;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#2D936C;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+
+            <!-- Background area fill -->
+            <path class="journey-area" d="M 30 180 Q 85 175, 120 155 Q 170 125, 200 90 Q 240 50, 310 40 L 310 220 L 30 220 Z" />
+
+            <!-- Main journey path (background) -->
+            <path class="journey-path-bg" d="M 30 180 Q 85 175, 120 155 Q 170 125, 200 90 Q 240 50, 310 40" />
+
+            <!-- Main journey path (animated) -->
+            <path class="journey-path" id="journey-path" d="M 30 180 Q 85 175, 120 155 Q 170 125, 200 90 Q 240 50, 310 40" />
+
+            <!-- Start point -->
+            <circle class="journey-point journey-start" cx="30" cy="180" r="6" />
+
+            <!-- End point (goal) -->
+            <circle class="journey-point journey-end" cx="310" cy="40" r="8" />
+          </svg>
+
+          <!-- Start Bubble -->
+          <div class="journey-bubble journey-bubble--start" id="start-bubble">
+            <span class="bubble-label">Today</span>
+            <span class="bubble-age" id="start-age-display">20</span>
+          </div>
+
+          <!-- Goal Bubble - Main display -->
+          <div class="journey-bubble journey-bubble--goal position-long" id="end-bubble">
+            <span class="bubble-amount" id="journey-goal-amount">$0</span>
+            <span class="bubble-age-label">by age <span id="goal-age-display">65</span></span>
+          </div>
+
+          <!-- Milestone Buttons - Clickable age selectors -->
+          <div class="milestone-buttons">
+            <button class="milestone-btn" data-timeframe="short" id="milestone-short">
+              <span class="milestone-label">Age</span>
+              <span class="milestone-age" id="age-short">30</span>
+            </button>
+            <button class="milestone-btn" data-timeframe="medium" id="milestone-medium">
+              <span class="milestone-label">Age</span>
+              <span class="milestone-age" id="age-medium">45</span>
+            </button>
+            <button class="milestone-btn milestone-btn--active" data-timeframe="long" id="milestone-long">
+              <span class="milestone-label">Age</span>
+              <span class="milestone-age" id="age-long">65</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Hidden elements for JS compatibility -->
+      <span id="value-main" style="display:none">0</span>
+      <span id="target-age-display" style="display:none">65</span>
+      <span id="calc-weekly" style="display:none">$50</span>
+      <span id="calc-age" style="display:none">25</span>
+      <span id="calc-target-age" style="display:none">65</span>
+
+      <!-- Footer CTA -->
+      <footer class="footer-results">
+        <button class="btn-cta" id="btn-show-how">
+          <span class="btn-bg"></span>
+          <span class="btn-content">
+            <span class="cta-text">Start My Journey</span>
+            <span class="cta-icon">&#10140;</span>
+          </span>
+        </button>
+      </footer>
+
+    </div>
+  </main>
+
+  <!-- ========== PAGE 3: Form ========== -->
+  <main class="page page--form" id="page-form">
+    <div class="page-inner">
+      <header class="header-form">
+        <button class="back-btn glass-btn" id="btn-back-form" aria-label="Go back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </button>
+        <a href="https://www.meetbenson.com" class="brand-logo" target="_blank">
+          <img src="assets/benson-logo.png" alt="Benson" height="28">
+        </a>
+        <div class="step-indicator">
+          <div class="step-orbs">
+            <div class="step-orb step-orb--active" data-step="1"></div>
+            <div class="step-orb" data-step="2"></div>
+            <div class="step-orb" data-step="3"></div>
+          </div>
+          <span class="step-text"><span id="current-step">1</span> of 3</span>
+        </div>
+      </header>
+
+      <section class="form-section">
+        <!-- Step 1 -->
+        <div class="form-step form-step--active" id="step-1">
+          <div class="form-icon-wrap">
+            <div class="form-icon-glow"></div>
+            <div class="form-icon">&#128075;</div>
+          </div>
+          <h2 class="form-title">What's your first name?</h2>
+          <p class="form-subtitle">Let's make this personal.</p>
+          <div class="form-field glass-card">
+            <div class="card-shine"></div>
+            <input type="text" id="first-name" placeholder="Your first name" required autocomplete="given-name">
+            <div class="input-glow"></div>
+          </div>
+          <button type="button" class="btn-next" id="btn-step-1">
+            <span class="btn-bg"></span>
+            <span class="btn-content">
+              <span>Continue</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </button>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="form-step" id="step-2">
+          <div class="form-icon-wrap">
+            <div class="form-icon-glow"></div>
+            <div class="form-icon">&#9997;</div>
+          </div>
+          <h2 class="form-title">And your last name?</h2>
+          <p class="form-subtitle">Almost there!</p>
+          <div class="form-field glass-card">
+            <div class="card-shine"></div>
+            <input type="text" id="last-name" placeholder="Your last name" required autocomplete="family-name">
+            <div class="input-glow"></div>
+          </div>
+          <button type="button" class="btn-next" id="btn-step-2">
+            <span class="btn-bg"></span>
+            <span class="btn-content">
+              <span>Continue</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </button>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="form-step" id="step-3">
+          <div class="form-icon-wrap">
+            <div class="form-icon-glow"></div>
+            <div class="form-icon">&#128241;</div>
+          </div>
+          <h2 class="form-title">Your phone number?</h2>
+          <p class="form-subtitle">We'll text your personalized plan.</p>
+          <div class="form-field glass-card">
+            <div class="card-shine"></div>
+            <input type="tel" id="phone" placeholder="(555) 555-5555" required autocomplete="tel">
+            <div class="input-glow"></div>
+          </div>
+          <button type="button" class="btn-next btn-next--final" id="btn-step-3">
+            <span class="btn-bg"></span>
+            <span class="btn-content">
+              <span class="btn-emoji">&#127873;</span>
+              <span>Reveal My Plan</span>
+            </span>
+          </button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ========== PAGE 4: Final ========== -->
+  <main class="page page--final" id="page-comparison">
+    <div class="page-inner">
+
+      <header class="header-final">
+        <a href="https://www.meetbenson.com" class="brand-logo" target="_blank">
+          <img src="assets/benson-logo.png" alt="Benson" height="36">
+        </a>
+      </header>
+
+      <div class="final-content">
+        <!-- Success Animation -->
+        <div class="success-animation">
+          <div class="success-rings">
+            <div class="success-ring ring-1"></div>
+            <div class="success-ring ring-2"></div>
+            <div class="success-ring ring-3"></div>
+          </div>
+          <div class="success-icon">
+            <svg viewBox="0 0 52 52">
+              <circle class="success-circle" cx="26" cy="26" r="24"/>
+              <path class="success-check" d="M14 27l8 8 16-16"/>
+            </svg>
+          </div>
+        </div>
+
+        <p class="final-greeting">
+          <span id="user-first-name">Friend</span>, your future awaits
+        </p>
+
+        <h1 class="final-headline">Together we'll reach</h1>
+
+        <div class="final-amount-wrap">
+          <div class="amount-aura"></div>
+          <div class="final-amount-card glass-card">
+            <div class="card-shine"></div>
+            <span class="final-amount" id="goal-amount">$0</span>
+          </div>
+        </div>
+
+        <p class="final-subtitle">Your personalized wealth plan is ready</p>
+
+        <!-- CTA Section -->
+        <div class="final-cta-section">
+          <a href="https://apps.apple.com/us/app/benson-ai-stock-trading/id6470971278" class="final-cta" target="_blank">
+            <span class="cta-bg"></span>
+            <span class="cta-content">
+              <span class="cta-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+              </span>
+              <span class="cta-text-wrap">
+                <span class="cta-small">Download on the</span>
+                <span class="cta-big">App Store</span>
+              </span>
+            </span>
+          </a>
+
+          <div class="social-proof">
+            <div class="proof-item">
+              <div class="stars">
+                <span class="star">&#9733;</span>
+                <span class="star">&#9733;</span>
+                <span class="star">&#9733;</span>
+                <span class="star">&#9733;</span>
+                <span class="star">&#9733;</span>
+              </div>
+              <span class="proof-text">4.8 rating</span>
+            </div>
+            <div class="proof-divider"></div>
+            <div class="proof-item">
+              <span class="proof-count">47,000+</span>
+              <span class="proof-text">investors</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="scripts/calculator.js"></script>
+</body>
+</html>
