@@ -191,59 +191,59 @@
     </div>
   </main>
 
-  <!-- ========== PAGE 4: Hard vs Easy Comparison ========== -->
+  <!-- ========== PAGE 4: The Obvious Choice ========== -->
   <main class="page page--comparison" id="page-comparison">
     <div class="comparison-container">
+
       <!-- Personalized Header -->
       <header class="comparison-header">
-        <p class="comparison-greeting">Hey <span id="user-first-name">there</span> 👋</p>
-        <h1 class="comparison-headline">Your path to</h1>
+        <p class="comparison-greeting">Hey <span id="user-first-name">there</span>,</p>
         <div class="comparison-goal">
+          <span class="goal-label">Your goal:</span>
           <span class="goal-amount" id="goal-amount">$0</span>
-          <span class="goal-subtext">by age 65</span>
         </div>
       </header>
 
-      <!-- Path Cards -->
-      <div class="path-options">
+      <!-- The Choice -->
+      <div class="choice-wrapper">
 
-        <!-- Hard Way - Minimal Warning -->
-        <div class="path-card path-card--hard">
-          <div class="hard-way-header">
-            <span class="hard-way-badge">😰 The Hard Way</span>
-            <span class="hard-way-stat"><span class="stat-bad">8%</span> success</span>
+        <!-- HARD WAY: The rejected option -->
+        <div class="choice-hard">
+          <div class="choice-hard-content">
+            <span class="choice-hard-label">Do it yourself</span>
+            <span class="choice-hard-stat">8% succeed</span>
           </div>
-          <div class="hard-way-points">
-            <span>❌ DIY investing</span>
-            <span>❌ Pick stocks yourself</span>
-            <span>❌ 92% give up</span>
-          </div>
+          <div class="choice-hard-strike"></div>
         </div>
 
-        <!-- Easy Way - The Main CTA -->
-        <a href="https://apps.apple.com/us/app/benson-ai-stock-trading/id6470971278" class="path-card path-card--easy" target="_blank">
-          <div class="easy-way-header">
-            <span class="path-card-badge path-card-badge--recommended">✨ The Easy Way</span>
-            <span class="easy-way-stat"><span class="stat-good">87%</span> success</span>
-          </div>
-          <ul class="path-card-list path-card-list--easy">
-            <li><span class="list-icon">✓</span> Set it once, invest automatically</li>
-            <li><span class="list-icon">✓</span> AI picks stocks for you</li>
-            <li><span class="list-icon">✓</span> 24/7 monitoring while you sleep</li>
-          </ul>
-          <div class="easy-way-cta">
-            <span class="cta-button">Download Benson</span>
-            <span class="cta-arrow">→</span>
-          </div>
-          <div class="easy-way-footer">
-            <div class="path-card-social">
-              <span class="social-avatars">👤👤👤</span>
-              <span class="social-text"><strong id="social-count">47,000+</strong> people chose this</span>
+        <!-- Divider -->
+        <div class="choice-divider">
+          <span class="divider-text">or</span>
+        </div>
+
+        <!-- EASY WAY: The hero CTA -->
+        <a href="https://apps.apple.com/us/app/benson-ai-stock-trading/id6470971278" class="choice-easy" target="_blank">
+          <div class="choice-easy-badge">RECOMMENDED</div>
+          <div class="choice-easy-main">
+            <div class="choice-easy-header">
+              <span class="choice-easy-title">Let Benson do it</span>
+              <span class="choice-easy-stat">87% succeed</span>
             </div>
-            <div class="cta-trust">
-              <span class="trust-item">🔒 Secure</span>
-              <span class="trust-item">⭐ 4.8</span>
-            </div>
+            <ul class="choice-easy-benefits">
+              <li>Auto-invests weekly</li>
+              <li>AI picks stocks</li>
+              <li>Set & forget</li>
+            </ul>
+          </div>
+          <div class="choice-easy-cta">
+            <span class="cta-text">Download Benson</span>
+            <svg class="cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </div>
+          <div class="choice-easy-proof">
+            <span class="proof-users">47,000+ users</span>
+            <span class="proof-rating">⭐ 4.8</span>
           </div>
         </a>
 
