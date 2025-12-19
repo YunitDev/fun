@@ -227,14 +227,22 @@ body {
   flex-shrink: 0;
 }
 
-.brand {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-dim);
+/* Brand Logo - consistent across all pages */
+.brand-logo {
+  display: inline-block;
   opacity: 0;
   animation: fade-in 1s var(--ease-out) 0.2s forwards;
+  transition: opacity 0.2s ease;
+}
+
+.brand-logo:hover {
+  opacity: 0.8;
+}
+
+.brand-logo img {
+  display: block;
+  height: 28px;
+  width: auto;
 }
 
 .setup-section {
@@ -494,9 +502,18 @@ body {
 .header-results {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: space-between;
   padding-bottom: 0.75rem;
   flex-shrink: 0;
+}
+
+.header-results .brand-logo {
+  opacity: 1;
+  animation: none;
+}
+
+.header-results .brand-logo img {
+  height: 22px;
 }
 
 .back-btn {
@@ -894,6 +911,15 @@ body {
   flex-shrink: 0;
 }
 
+.header-form .brand-logo {
+  opacity: 1;
+  animation: none;
+}
+
+.header-form .brand-logo img {
+  height: 22px;
+}
+
 /* Step Indicator */
 .step-indicator {
   display: flex;
@@ -1096,6 +1122,24 @@ body {
   padding-top: calc(env(safe-area-inset-top, 0px) + 1.5rem);
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 2rem);
   text-align: center;
+}
+
+/* ===== HEADER ===== */
+.header-final {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 1rem);
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.header-final .brand-logo {
+  opacity: 1;
+  animation: none;
+}
+
+.header-final .brand-logo img {
+  height: 22px;
 }
 
 /* ===== HERO SECTION ===== */
