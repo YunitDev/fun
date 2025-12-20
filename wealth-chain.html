@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>The Chain | See Your Fortune</title>
+  <meta name="description" content="Someone thought you should see this.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #FDFBF7;
+      --bg-warm: #FAF6F0;
+      --accent: #2D936C;
+      --accent-light: #4ECDC4;
+      --accent-glow: rgba(45, 147, 108, 0.3);
+      --text-dark: #1A1A1A;
+      --text-medium: #4A4A4A;
+      --text-soft: #7A7A7A;
+      --text-muted: #ABABAB;
+      --chain-color: #2D936C;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'DM Sans', -apple-system, sans-serif;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-dark);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ========== OPENING ANIMATION ========== */
+    .page-counting {
+      background: linear-gradient(180deg, #0a0a0a 0%, #111 100%);
+    }
+
+    #particleCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .speed-lines {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 2;
+    }
+
+    .speed-lines.active {
+      opacity: 1;
+    }
+
+    .speed-line {
+      position: absolute;
+      left: 50%;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(45, 147, 108, 0.4), transparent);
+      animation: speedLine 0.4s linear infinite;
+    }
+
+    @keyframes speedLine {
+      0% { transform: translateX(-50%) translateY(-100vh); }
+      100% { transform: translateX(-50%) translateY(100vh); }
+    }
+
+    .counting-display {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+    }
+
+    .counting-number {
+      font-family: var(--font-display);
+      font-size: clamp(100px, 30vw, 160px);
+      font-weight: 700;
+      letter-spacing: -6px;
+      line-height: 1;
+      background: linear-gradient(180deg, #ffffff 0%, var(--accent-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+    }
+
+    .counting-number::after {
+      content: '';
+      position: absolute;
+      inset: -50px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      z-index: -1;
+      animation: glowPulse 0.25s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.08); }
+    }
+
+    .counting-label {
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.4);
+      letter-spacing: 1px;
+      margin-top: 16px;
+    }
+
+    .progress-container {
+      position: fixed;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+
+    .progress-bar {
+      width: 180px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      border-radius: 2px;
+      transition: width 0.05s linear;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .skip-btn {
+      position: fixed;
+      bottom: 48px;
+      right: 32px;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.2);
+      padding: 10px 20px;
+      border-radius: 100px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      z-index: 20;
+    }
+
+    .skip-btn:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* ========== SHARED ELEMENTS ========== */
+    .page {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
+    }
+
+    .page.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .page.exit {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    /* ========== PAGE 1: CHAIN INTRO ========== */
+    .page-chain-intro {
+      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-warm) 100%);
+    }
+
+    .chain-number-display {
+      text-align: center;
+    }
+
+    .chain-label-top {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-soft);
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      opacity: 0;
+      animation: fadeUp 0.6s var(--ease-out-expo) 0.3s forwards;
+    }
+
+    .chain-big-number {
+      font-family: var(--font-display);
+      font-size: clamp(80px, 25vw, 140px);
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      letter-spacing: -4px;
+      position: relative;
+    }
+
+    .chain-big-number::after {
+      content: '';
+      position: absolute;
+      inset: -30px -50px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      z-index: -1;
+      opacity: 0.5;
+    }
+
+    .chain-label-bottom {
+      font-family: var(--font-body);
+      font-size: 16px;
+      color: var(--text-medium);
+      margin-top: 12px;
+      opacity: 0;
+      animation: fadeUp 0.6s var(--ease-out-expo) 0.5s forwards;
+    }
+
+    .chain-label-bottom strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .chain-dots-preview {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      margin-top: 32px;
+      opacity: 0;
+      animation: fadeUp 0.6s var(--ease-out-expo) 0.7s forwards;
+    }
+
+    .chain-dot-small {
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      opacity: 0.3;
+    }
+
+    .chain-dot-small.you {
+      width: 10px;
+      height: 10px;
+      background: var(--accent);
+      opacity: 1;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .chain-dot-small.next {
+      width: 10px;
+      height: 10px;
+      background: transparent;
+      border: 2px dashed var(--text-muted);
+      opacity: 0.6;
+    }
+
+    .intro-message {
+      max-width: 320px;
+      text-align: center;
+      margin-top: 48px;
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--text-medium);
+      opacity: 0;
+      animation: fadeUp 0.6s var(--ease-out-expo) 0.9s forwards;
+    }
+
+    .intro-message em {
+      color: var(--text-dark);
+      font-style: normal;
+      font-weight: 500;
+    }
+
+    .intro-cta {
+      margin-top: 40px;
+      opacity: 0;
+      animation: fadeUp 0.6s var(--ease-out-expo) 1.1s forwards;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 40px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.3s var(--ease-out-back);
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 8px 30px var(--accent-glow);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========== PAGE 2: INPUT ========== */
+    .page-input {
+      background: var(--bg);
+    }
+
+    .input-card {
+      background: white;
+      border-radius: 24px;
+      padding: 32px;
+      max-width: 360px;
+      width: 100%;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .input-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .input-header h2 {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .input-header p {
+      font-size: 14px;
+      color: var(--text-soft);
+    }
+
+    .input-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .field-input {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg);
+      border: 1.5px solid rgba(0, 0, 0, 0.06);
+      border-radius: 12px;
+      padding: 14px 16px;
+      transition: all 0.25s ease;
+    }
+
+    .field-input:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .field-input input {
+      flex: 1;
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-dark);
+      background: transparent;
+      border: none;
+      outline: none;
+      min-width: 0;
+      -moz-appearance: textfield;
+    }
+
+    .field-input input::-webkit-outer-spin-button,
+    .field-input input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+
+    .field-prefix, .field-suffix {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text-soft);
+    }
+
+    .field-prefix {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* ========== PAGE 3: PROJECTION ========== */
+    .page-projection {
+      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-warm) 100%);
+    }
+
+    .projection-content {
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .projection-label {
+      font-size: 14px;
+      color: var(--text-soft);
+      margin-bottom: 8px;
+    }
+
+    .projection-amount {
+      font-family: var(--font-display);
+      font-size: clamp(48px, 15vw, 80px);
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      letter-spacing: -2px;
+      margin-bottom: 12px;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.8s var(--ease-out-expo);
+    }
+
+    .projection-amount.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .projection-context {
+      font-size: 16px;
+      color: var(--text-medium);
+      margin-bottom: 40px;
+    }
+
+    .projection-context strong {
+      color: var(--text-dark);
+      font-weight: 600;
+    }
+
+    /* Mini Journey Visualization */
+    .mini-journey {
+      position: relative;
+      height: 120px;
+      margin-bottom: 40px;
+    }
+
+    .mini-journey svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .mini-path {
+      fill: none;
+      stroke: url(#miniGradient);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 300;
+      stroke-dashoffset: 300;
+      transition: stroke-dashoffset 1.5s var(--ease-out-expo);
+    }
+
+    .mini-path.animate {
+      stroke-dashoffset: 0;
+    }
+
+    .mini-area {
+      fill: url(#miniAreaGradient);
+      opacity: 0;
+      transition: opacity 0.8s ease 0.5s;
+    }
+
+    .mini-area.animate {
+      opacity: 1;
+    }
+
+    .mini-dot {
+      fill: var(--accent);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .mini-dot.animate {
+      opacity: 1;
+    }
+
+    .mini-dot.start {
+      fill: #FFB4A2;
+      transition-delay: 0.2s;
+    }
+
+    .mini-dot.end {
+      transition-delay: 1.2s;
+      filter: drop-shadow(0 0 6px var(--accent-glow));
+    }
+
+    .age-labels {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 12px;
+      margin-top: -8px;
+    }
+
+    .age-label {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .age-label.end {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .projection-footer {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s var(--ease-out-expo) 1.5s;
+    }
+
+    .projection-footer.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Download Button - Primary CTA */
+    .btn-download {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      width: 100%;
+      padding: 18px 28px;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+      border-radius: 16px;
+      text-decoration: none;
+      transition: all 0.3s var(--ease-out-back);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-download:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn-download .apple-icon {
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .download-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+    }
+
+    .download-small {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.6);
+      letter-spacing: 0.3px;
+    }
+
+    .download-big {
+      font-size: 17px;
+      font-weight: 600;
+      color: white;
+      letter-spacing: -0.3px;
+    }
+
+    .download-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-soft);
+      background: transparent;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .btn-secondary:hover {
+      color: var(--text-dark);
+      border-color: rgba(0, 0, 0, 0.15);
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    /* ========== PAGE 4: CHAIN REVEAL ========== */
+    .page-chain-reveal {
+      background: var(--bg);
+    }
+
+    .reveal-content {
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .chain-visual {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: 36px;
+      min-height: 40px;
+    }
+
+    .chain-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      opacity: 0;
+      transform: scale(0);
+      animation: dotPop 0.15s var(--ease-out-back) forwards;
+    }
+
+    @keyframes dotPop {
+      to { opacity: 0.4; transform: scale(1); }
+    }
+
+    .chain-dot.you-dot {
+      width: 14px;
+      height: 14px;
+      opacity: 1;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+      box-shadow: 0 0 16px var(--accent-glow);
+      animation: youPop 0.5s var(--ease-out-back) forwards;
+    }
+
+    @keyframes youPop {
+      0% { opacity: 0; transform: scale(0); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .chain-dot.next-dot {
+      width: 14px;
+      height: 14px;
+      background: transparent;
+      border: 2px dashed var(--text-muted);
+      animation: nextPop 0.4s var(--ease-out-expo) forwards;
+    }
+
+    @keyframes nextPop {
+      0% { opacity: 0; transform: scale(0); }
+      100% { opacity: 0.6; transform: scale(1); }
+    }
+
+    .reveal-headline {
+      margin-bottom: 32px;
+    }
+
+    .reveal-stat {
+      font-family: var(--font-display);
+      font-size: 56px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: revealStat 0.6s var(--ease-out-expo) forwards;
+    }
+
+    @keyframes revealStat {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal-text {
+      font-size: 16px;
+      color: var(--text-medium);
+      margin-top: 8px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.2s forwards;
+    }
+
+    .reveal-text strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .your-position {
+      background: rgba(45, 147, 108, 0.06);
+      border: 1px solid rgba(45, 147, 108, 0.15);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 28px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: revealStat 0.6s var(--ease-out-expo) 0.3s forwards;
+    }
+
+    .position-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+
+    .position-number {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .position-number span {
+      font-size: 24px;
+      color: var(--text-muted);
+    }
+
+    .obligation-message {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--text-medium);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.5s forwards;
+    }
+
+    .obligation-message em {
+      color: var(--text-dark);
+      font-style: normal;
+      font-weight: 500;
+    }
+
+    .share-section {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: revealStat 0.6s var(--ease-out-expo) 0.6s forwards;
+    }
+
+    .share-btn {
+      width: 100%;
+      gap: 12px;
+    }
+
+    .share-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .share-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 12px;
+    }
+
+    /* Dual CTA Section */
+    .dual-cta {
+      width: 100%;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: revealStat 0.6s var(--ease-out-expo) 0.6s forwards;
+    }
+
+    .reveal-download {
+      margin-bottom: 0;
+      background: linear-gradient(135deg, var(--accent) 0%, #1a8560 100%);
+      box-shadow: 0 4px 24px var(--accent-glow), 0 8px 32px rgba(45, 147, 108, 0.2);
+    }
+
+    .reveal-download:hover {
+      box-shadow: 0 8px 32px var(--accent-glow), 0 12px 48px rgba(45, 147, 108, 0.3);
+    }
+
+    .cta-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.08), transparent);
+    }
+
+    .divider-text {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-chain {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 28px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-dark);
+      background: white;
+      border: 2px solid rgba(0, 0, 0, 0.08);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.3s var(--ease-out-back);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .btn-chain:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+      box-shadow: 0 6px 24px rgba(45, 147, 108, 0.15);
+    }
+
+    .btn-chain svg {
+      width: 20px;
+      height: 20px;
+      color: var(--accent);
+    }
+
+    .break-warning {
+      margin-top: 48px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.9s forwards;
+    }
+
+    .break-warning p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .break-warning .break {
+      color: #E76F51;
+    }
+
+    /* ========== BENSON BRANDING ========== */
+    .benson-brand {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      opacity: 0;
+      animation: fadeUp 0.6s var(--ease-out-expo) 0.2s forwards;
+    }
+
+    .benson-brand img {
+      height: 32px;
+      width: auto;
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-height: 700px) {
+      .page { padding: 20px; }
+      .chain-big-number { font-size: clamp(60px, 20vw, 100px); }
+      .intro-message { margin-top: 32px; font-size: 15px; }
+      .intro-cta { margin-top: 28px; }
+      .projection-amount { font-size: clamp(40px, 12vw, 64px); }
+      .mini-journey { height: 100px; margin-bottom: 28px; }
+      .reveal-stat { font-size: 44px; }
+      .position-number { font-size: 40px; }
+    }
+
+    @media (max-height: 600px) {
+      .chain-dots-preview { margin-top: 20px; }
+      .intro-message { margin-top: 24px; }
+      .input-card { padding: 24px; }
+      .mini-journey { height: 80px; margin-bottom: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== PAGE 0: COUNTING ANIMATION ========== -->
+  <div class="page page-counting active" id="page-counting">
+    <canvas id="particleCanvas"></canvas>
+
+    <div class="speed-lines" id="speedLines">
+      <div class="speed-line" style="left: 12%; height: 80px;"></div>
+      <div class="speed-line" style="left: 28%; height: 120px; animation-delay: 0.1s;"></div>
+      <div class="speed-line" style="left: 42%; height: 160px; animation-delay: 0.05s;"></div>
+      <div class="speed-line" style="left: 58%; height: 140px; animation-delay: 0.12s;"></div>
+      <div class="speed-line" style="left: 72%; height: 100px; animation-delay: 0.07s;"></div>
+      <div class="speed-line" style="left: 88%; height: 90px; animation-delay: 0.15s;"></div>
+    </div>
+
+    <div class="counting-display">
+      <div class="counting-number" id="countingNumber">0</div>
+      <div class="counting-label">people before you</div>
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <button class="skip-btn" id="skipBtn">Skip</button>
+  </div>
+
+  <!-- Benson Logo (shows after counting) -->
+  <a href="https://www.meetbenson.com" class="benson-brand" id="bensonBrand" target="_blank" style="opacity: 0; pointer-events: none;">
+    <img src="assets/benson-logo.png" alt="Benson" onerror="this.style.display='none'">
+  </a>
+
+  <!-- ========== PAGE 1: CHAIN INTRO ========== -->
+  <div class="page page-chain-intro" id="page-intro">
+    <div class="chain-number-display">
+      <div class="chain-label-top">You are link</div>
+      <div class="chain-big-number" id="chain-position">#188</div>
+      <div class="chain-label-bottom">in <strong>the chain</strong></div>
+    </div>
+
+    <div class="chain-dots-preview">
+      <span class="chain-dot-small"></span>
+      <span class="chain-dot-small"></span>
+      <span class="chain-dot-small"></span>
+      <span class="chain-dot-small"></span>
+      <span class="chain-dot-small"></span>
+      <span class="chain-dot-small you"></span>
+      <span class="chain-dot-small next"></span>
+    </div>
+
+    <div class="intro-message">
+      <em>Someone thought you should see this.</em><br>
+      187 people before you discovered something about their future.
+    </div>
+
+    <div class="intro-cta">
+      <button class="btn-primary" id="btn-see-fortune">
+        See my fortune
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========== PAGE 2: INPUT ========== -->
+  <div class="page page-input" id="page-input">
+    <div class="input-card">
+      <div class="input-header">
+        <h2>Quick question</h2>
+        <p>This takes 10 seconds</p>
+      </div>
+
+      <div class="input-fields">
+        <div class="field-group">
+          <label class="field-label">Your age</label>
+          <div class="field-input">
+            <input type="number" id="input-age" placeholder="25" min="16" max="64" inputmode="numeric">
+            <span class="field-suffix">years old</span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Weekly investment</label>
+          <div class="field-input">
+            <span class="field-prefix">$</span>
+            <input type="number" id="input-amount" placeholder="50" min="10" max="2000" inputmode="numeric">
+            <span class="field-suffix">/ week</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="btn-calculate" style="width: 100%;">
+        Show my fortune
+      </button>
+    </div>
+  </div>
+
+  <!-- ========== PAGE 3: PROJECTION ========== -->
+  <div class="page page-projection" id="page-projection">
+    <div class="projection-content">
+      <div class="projection-label">By age <span id="target-age">65</span>, you could have</div>
+
+      <div class="projection-amount" id="projection-amount">$0</div>
+
+      <div class="projection-context">
+        Investing just <strong>$<span id="display-weekly">50</span>/week</strong>
+      </div>
+
+      <div class="mini-journey">
+        <svg viewBox="0 0 320 120" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="miniGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:#FFB4A2"/>
+              <stop offset="100%" style="stop-color:#2D936C"/>
+            </linearGradient>
+            <linearGradient id="miniAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#2D936C;stop-opacity:0.15"/>
+              <stop offset="100%" style="stop-color:#2D936C;stop-opacity:0"/>
+            </linearGradient>
+          </defs>
+          <path class="mini-area" d="M 20 90 Q 80 85, 120 70 Q 180 45, 240 25 Q 280 15, 300 10 L 300 110 L 20 110 Z"/>
+          <path class="mini-path" d="M 20 90 Q 80 85, 120 70 Q 180 45, 240 25 Q 280 15, 300 10"/>
+          <circle class="mini-dot start" cx="20" cy="90" r="5"/>
+          <circle class="mini-dot end" cx="300" cy="10" r="6"/>
+        </svg>
+        <div class="age-labels">
+          <span class="age-label">Today (<span id="current-age">25</span>)</span>
+          <span class="age-label end">Age <span id="goal-age">65</span></span>
+        </div>
+      </div>
+
+      <div class="projection-footer" id="projection-footer">
+        <a href="https://apps.apple.com/us/app/benson-ai-stock-trading/id6470971278" class="btn-download" target="_blank">
+          <svg class="apple-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+          </svg>
+          <span class="download-text">
+            <span class="download-small">Download Benson to reach</span>
+            <span class="download-big">Start My Journey</span>
+          </span>
+        </a>
+        <div class="download-note">Free to start. Cancel anytime.</div>
+
+        <button class="btn-secondary" id="btn-continue">
+          Continue
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== PAGE 4: CHAIN REVEAL ========== -->
+  <div class="page page-chain-reveal" id="page-reveal">
+    <div class="reveal-content">
+      <div class="chain-visual" id="chain-visual"></div>
+
+      <div class="reveal-headline">
+        <div class="reveal-stat" id="reveal-stat">187</div>
+        <div class="reveal-text">people <strong>didn't break the chain</strong></div>
+      </div>
+
+      <div class="your-position">
+        <div class="position-label">You are</div>
+        <div class="position-number"><span>#</span><span id="your-number">188</span></div>
+      </div>
+
+      <div class="obligation-message">
+        <em>They all saw what's possible.</em><br>
+        Now it's time to make it real.
+      </div>
+
+      <div class="dual-cta">
+        <!-- Primary: Download Benson -->
+        <a href="https://apps.apple.com/us/app/benson-ai-stock-trading/id6470971278" class="btn-download reveal-download" target="_blank">
+          <svg class="apple-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+          </svg>
+          <span class="download-text">
+            <span class="download-small">Start building your fortune</span>
+            <span class="download-big">Download Benson</span>
+          </span>
+        </a>
+
+        <div class="cta-divider">
+          <span class="divider-line"></span>
+          <span class="divider-text">and</span>
+          <span class="divider-line"></span>
+        </div>
+
+        <!-- Secondary: Pass the chain -->
+        <button class="btn-chain" id="btn-share">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </svg>
+          Pass the chain to a friend
+        </button>
+        <div class="share-sub">Don't let it end with you.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // ============ CHAIN STATE ============
+      const CHAIN_KEY = 'benson_chain_v1';
+
+      function getChainFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        const chainData = params.get('c');
+        if (chainData) {
+          try {
+            const decoded = atob(chainData);
+            const [position, timestamp, id] = decoded.split('-');
+            return { position: parseInt(position), timestamp, id };
+          } catch (e) {
+            return null;
+          }
+        }
+        return null;
+      }
+
+      function generateChainID() {
+        return Math.random().toString(36).substring(2, 10);
+      }
+
+      function createShareURL(newPosition) {
+        const chainData = `${newPosition}-${Date.now()}-${generateChainID()}`;
+        const encoded = btoa(chainData);
+        const baseURL = window.location.href.split('?')[0];
+        return `${baseURL}?c=${encoded}`;
+      }
+
+      // Initialize chain position
+      const urlChain = getChainFromURL();
+      let chainPosition = urlChain ? urlChain.position : 187;
+      let userPosition = chainPosition + 1;
+
+      // Check if user already participated
+      const participated = localStorage.getItem(CHAIN_KEY);
+      if (participated && !urlChain) {
+        const stored = JSON.parse(participated);
+        userPosition = stored.position;
+        chainPosition = stored.position - 1;
+      }
+
+      // ============ DOM ELEMENTS ============
+      const pageCounting = document.getElementById('page-counting');
+      const pageIntro = document.getElementById('page-intro');
+      const pageInput = document.getElementById('page-input');
+      const pageProjection = document.getElementById('page-projection');
+      const pageReveal = document.getElementById('page-reveal');
+      const bensonBrand = document.getElementById('bensonBrand');
+
+      const countingNumber = document.getElementById('countingNumber');
+      const progressFill = document.getElementById('progressFill');
+      const speedLines = document.getElementById('speedLines');
+      const skipBtn = document.getElementById('skipBtn');
+
+      const chainPositionEl = document.getElementById('chain-position');
+      const btnSeeFortune = document.getElementById('btn-see-fortune');
+      const inputAge = document.getElementById('input-age');
+      const inputAmount = document.getElementById('input-amount');
+      const btnCalculate = document.getElementById('btn-calculate');
+      const projectionAmount = document.getElementById('projection-amount');
+      const targetAgeEl = document.getElementById('target-age');
+      const currentAgeEl = document.getElementById('current-age');
+      const goalAgeEl = document.getElementById('goal-age');
+      const displayWeekly = document.getElementById('display-weekly');
+      const projectionFooter = document.getElementById('projection-footer');
+      const btnContinue = document.getElementById('btn-continue');
+      const chainVisual = document.getElementById('chain-visual');
+      const revealStat = document.getElementById('reveal-stat');
+      const yourNumber = document.getElementById('your-number');
+      const btnShare = document.getElementById('btn-share');
+
+      // ============ PARTICLE SYSTEM ============
+      const canvas = document.getElementById('particleCanvas');
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      let animatingParticles = true;
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      class Particle {
+        constructor() { this.reset(); }
+        reset() {
+          this.x = Math.random() * canvas.width;
+          this.y = canvas.height + 10;
+          this.speed = Math.random() * 5 + 2;
+          this.size = Math.random() * 2.5 + 0.5;
+          this.opacity = Math.random() * 0.5 + 0.1;
+        }
+        update(mult) {
+          this.y -= this.speed * mult;
+          if (this.y < -10) this.reset();
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(45, 147, 108, ${this.opacity})`;
+          ctx.fill();
+        }
+      }
+
+      // Create particles
+      for (let i = 0; i < 60; i++) {
+        const p = new Particle();
+        p.y = Math.random() * canvas.height;
+        particles.push(p);
+      }
+
+      function animateParticles(speedMult = 1) {
+        if (!animatingParticles) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => { p.update(speedMult); p.draw(); });
+        requestAnimationFrame(() => animateParticles(speedMult));
+      }
+
+      // ============ COUNTING ANIMATION ============
+      let skipped = false;
+
+      async function runCountingAnimation() {
+        const DURATION = 2800;
+        const startTime = performance.now();
+
+        animateParticles(1);
+
+        function easeOutExpo(t) {
+          return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+        }
+
+        return new Promise(resolve => {
+          function animate(timestamp) {
+            if (skipped) {
+              resolve();
+              return;
+            }
+
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / DURATION, 1);
+            const current = Math.floor(easeOutExpo(progress) * chainPosition);
+
+            countingNumber.textContent = current;
+            progressFill.style.width = `${(current / chainPosition) * 100}%`;
+
+            // Speed lines active during fast counting
+            speedLines.classList.toggle('active', progress > 0.05 && progress < 0.7);
+
+            // Adjust particle speed based on counting progress
+            const speedMult = progress < 0.6 ? 1.5 + progress * 3 : 1.5;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(speedMult); p.draw(); });
+
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            } else {
+              speedLines.classList.remove('active');
+              setTimeout(resolve, 500);
+            }
+          }
+          requestAnimationFrame(animate);
+        });
+      }
+
+      function showIntroPage() {
+        animatingParticles = false;
+        pageCounting.classList.remove('active');
+        pageCounting.classList.add('exit');
+
+        setTimeout(() => {
+          pageCounting.style.display = 'none';
+          pageIntro.classList.add('active');
+          bensonBrand.style.opacity = '1';
+          bensonBrand.style.pointerEvents = 'auto';
+          bensonBrand.style.transition = 'opacity 0.6s ease';
+        }, 400);
+      }
+
+      skipBtn.addEventListener('click', () => {
+        skipped = true;
+        countingNumber.textContent = chainPosition;
+        progressFill.style.width = '100%';
+        speedLines.classList.remove('active');
+        showIntroPage();
+      });
+
+      // ============ CALCULATIONS ============
+      function calculateProjection(weeklyAmount, years) {
+        const annualReturn = 0.12;
+        const weeklyReturn = Math.pow(1 + annualReturn, 1/52) - 1;
+        const totalWeeks = years * 52;
+        return Math.round(weeklyAmount * ((Math.pow(1 + weeklyReturn, totalWeeks) - 1) / weeklyReturn));
+      }
+
+      function formatNumber(num) {
+        return num.toLocaleString('en-US');
+      }
+
+      function animateValue(element, endValue, duration = 1500) {
+        const startTime = performance.now();
+
+        function update(currentTime) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 4);
+          const current = Math.round(endValue * eased);
+          element.textContent = '$' + formatNumber(current);
+
+          if (progress < 1) {
+            requestAnimationFrame(update);
+          }
+        }
+
+        requestAnimationFrame(update);
+      }
+
+      // ============ PAGE TRANSITIONS ============
+      function showPage(page) {
+        document.querySelectorAll('.page:not(.page-counting)').forEach(p => {
+          p.classList.remove('active');
+          p.classList.add('exit');
+        });
+
+        setTimeout(() => {
+          document.querySelectorAll('.page').forEach(p => p.classList.remove('exit'));
+          page.classList.add('active');
+        }, 300);
+      }
+
+      // ============ EVENT HANDLERS ============
+      btnSeeFortune.addEventListener('click', () => {
+        showPage(pageInput);
+        setTimeout(() => inputAge.focus(), 400);
+      });
+
+      inputAge.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') inputAmount.focus();
+      });
+
+      inputAmount.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') btnCalculate.click();
+      });
+
+      btnCalculate.addEventListener('click', () => {
+        const age = parseInt(inputAge.value) || 25;
+        const amount = parseInt(inputAmount.value) || 50;
+
+        if (age < 16 || age > 64) {
+          inputAge.focus();
+          return;
+        }
+        if (amount < 10) {
+          inputAmount.focus();
+          return;
+        }
+
+        const targetAge = age >= 57 ? age + 8 : 65;
+        const years = targetAge - age;
+        const projection = calculateProjection(amount, years);
+
+        targetAgeEl.textContent = targetAge;
+        currentAgeEl.textContent = age;
+        goalAgeEl.textContent = targetAge;
+        displayWeekly.textContent = amount;
+
+        showPage(pageProjection);
+
+        setTimeout(() => {
+          projectionAmount.classList.add('visible');
+          animateValue(projectionAmount, projection);
+
+          document.querySelector('.mini-path').classList.add('animate');
+          document.querySelector('.mini-area').classList.add('animate');
+          document.querySelectorAll('.mini-dot').forEach(d => d.classList.add('animate'));
+
+          setTimeout(() => {
+            projectionFooter.classList.add('visible');
+          }, 1200);
+        }, 400);
+
+        localStorage.setItem(CHAIN_KEY, JSON.stringify({
+          position: userPosition,
+          age: age,
+          amount: amount,
+          projection: projection,
+          timestamp: Date.now()
+        }));
+      });
+
+      btnContinue.addEventListener('click', () => {
+        showPage(pageReveal);
+
+        revealStat.textContent = chainPosition;
+        yourNumber.textContent = userPosition;
+
+        setTimeout(() => {
+          let dotIndex = 0;
+          const totalDots = Math.min(chainPosition, 60);
+
+          const interval = setInterval(() => {
+            if (dotIndex >= totalDots) {
+              clearInterval(interval);
+
+              setTimeout(() => {
+                const youDot = document.createElement('div');
+                youDot.className = 'chain-dot you-dot';
+                chainVisual.appendChild(youDot);
+
+                setTimeout(() => {
+                  const nextDot = document.createElement('div');
+                  nextDot.className = 'chain-dot next-dot';
+                  chainVisual.appendChild(nextDot);
+                }, 300);
+              }, 100);
+              return;
+            }
+
+            for (let i = 0; i < 4 && dotIndex < totalDots; i++, dotIndex++) {
+              const dot = document.createElement('div');
+              dot.className = 'chain-dot';
+              dot.style.animationDelay = `${i * 0.03}s`;
+              chainVisual.appendChild(dot);
+            }
+          }, 30);
+        }, 400);
+      });
+
+      btnShare.addEventListener('click', () => {
+        const shareURL = createShareURL(userPosition + 1);
+        const shareData = {
+          title: 'The Chain',
+          text: `I'm #${userPosition} in the chain. See what your future could look like.`,
+          url: shareURL
+        };
+
+        if (navigator.share) {
+          navigator.share(shareData).catch(() => {
+            copyToClipboard(shareURL);
+          });
+        } else {
+          copyToClipboard(shareURL);
+        }
+      });
+
+      function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+          btnShare.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            Link copied!
+          `;
+          setTimeout(() => {
+            btnShare.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+              </svg>
+              Pass the chain
+            `;
+          }, 2000);
+        });
+      }
+
+      // ============ INITIALIZE ============
+      // Update UI with chain position
+      chainPositionEl.textContent = `#${userPosition}`;
+      document.querySelector('.intro-message').innerHTML =
+        `<em>Someone thought you should see this.</em><br>${chainPosition} people before you discovered something about their future.`;
+
+      // Start the experience
+      async function init() {
+        await new Promise(r => setTimeout(r, 300));
+        await runCountingAnimation();
+        if (!skipped) {
+          showIntroPage();
+        }
+      }
+
+      init();
+
+    })();
+  </script>
+</body>
+</html>
