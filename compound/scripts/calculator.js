@@ -589,6 +589,18 @@
   }
 
   // ==========================================================================
+  // Reviews Auto-Scroll Setup
+  // ==========================================================================
+  function setupReviewsScroll() {
+    const track = document.getElementById('reviews-track');
+    if (!track) return;
+
+    // Duplicate all cards to create seamless infinite loop
+    const cards = track.innerHTML;
+    track.innerHTML = cards + cards;
+  }
+
+  // ==========================================================================
   // Init
   // ==========================================================================
   function init() {
@@ -598,6 +610,7 @@
     setupEventListeners();
     createWealthVisualization();
     typewriterEffect();
+    setupReviewsScroll();
   }
 
   if (document.readyState === 'loading') {
