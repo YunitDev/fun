@@ -6,6 +6,21 @@
 (function() {
   'use strict';
 
+  // API Configuration
+  const ENVIRONMENT = 'prod';
+  const API_URLS = {
+    local: 'https://b17215738b69.ngrok-free.app',
+    dev: 'https://dev.meetbenson.com',
+    prod: 'https://prod.meetbenson.com'
+  };
+  const API_KEYS = {
+    local: 'W7AuqoXQL8LHoFVCLu3NNCwEUzQ94tBmwSvCSFdjBgoSPZXh1oF54mwZNj3tvXWS8l0wCfPuAfbk5zlSbAwap4KZ7vKCqHvUL9R3jMYvuMj8UHYdxXcXuwaKXx56ft9A',
+    dev: 'W7AuqoXQL8LHoFVCLu3NNCwEUzQ94tBmwSvCSFdjBgoSPZXh1oF54mwZNj3tvXWS8l0wCfPuAfbk5zlSbAwap4KZ7vKCqHvUL9R3jMYvuMj8UHYdxXcXuwaKXx56ft9A',
+    prod: 'ymnrqytAJMHUrSFLPaOSFSyjEi7Z6OKjKdjFtCRkFohWjGGmktidljiylN4w9dW69UGLwwGsAFvXhC9kKyoJWPlg8JgrNfi1I5ZMGi5qLD39plc0JfRGpW3F51WAgE9M'
+  };
+  const BASE_API_URL = API_URLS[ENVIRONMENT];
+  const API_KEY = API_KEYS[ENVIRONMENT];
+
   const CONFIG = {
     targetAge: 65,
     minAge: 16,
@@ -18,7 +33,10 @@
       low: 0.10,
       normal: 0.12,
       high: 0.14
-    }
+    },
+    // Webhook configuration
+    webhookUrl: `${BASE_API_URL}/api/v1/webhook/benson`,
+    webhookApiKey: API_KEY
   };
 
   const state = {
@@ -98,6 +116,51 @@
 
   function formatCurrency(num) {
     return '$' + formatNumber(num);
+  }
+
+  // ==========================================================================
+  // Webhook Integration
+  // ==========================================================================
+  async function sendToWebhook(userData) {
+    // Format phone number: remove formatting, add +1 prefix for US numbers
+    let phone = userData.phone.replace(/\D/g, '');
+    if (phone.length === 10) {
+      phone = '+1' + phone;
+    } else if (!phone.startsWith('+')) {
+      phone = '+' + phone;
+    }
+
+    const payload = {
+      phone: phone,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      exactWeeklyBudget: state.weeklyAmount,
+      yearOfBirth: new Date().getFullYear() - state.age
+    };
+
+    try {
+      const response = await fetch(CONFIG.webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': CONFIG.webhookApiKey
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'ok') {
+        console.log('Webhook sent successfully', result);
+      } else {
+        console.error('Webhook error:', result.message);
+      }
+
+      return result;
+    } catch (error) {
+      console.error('Failed to send webhook:', error);
+      return { status: 'error', message: error.message };
+    }
   }
 
   // ==========================================================================
@@ -365,6 +428,9 @@
 
     if (userFirstNameEl) userFirstNameEl.textContent = firstName;
     if (goalAmountEl) goalAmountEl.textContent = formatCurrency(value);
+
+    // Send data to webhook (fire and forget - don't block UI)
+    sendToWebhook(state.userData);
 
     // Show comparison page
     elements.pageForm.classList.remove('active');
