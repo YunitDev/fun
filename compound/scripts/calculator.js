@@ -36,8 +36,31 @@
     },
     // Webhook configuration
     webhookUrl: `${BASE_API_URL}/api/v1/webhook/benson`,
-    webhookApiKey: API_KEY
+    webhookApiKey: API_KEY,
+    // Default App Store URL
+    defaultAppUrl: 'https://apps.apple.com/us/app/benson-ai-stock-trading/id6470971278'
   };
+
+  // ==========================================================================
+  // Parse hash query parameter to extract custom URL
+  // Hash format: base64(firstName|url)
+  // ==========================================================================
+  function getAppUrlFromHash() {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const hash = urlParams.get('hash');
+      if (!hash) return CONFIG.defaultAppUrl;
+
+      const decoded = atob(hash);
+      const parts = decoded.split('|');
+      if (parts.length >= 2 && parts[1]) {
+        return parts[1];
+      }
+    } catch (e) {
+      console.error('Failed to parse hash parameter:', e);
+    }
+    return CONFIG.defaultAppUrl;
+  }
 
   const state = {
     age: 25,
@@ -677,6 +700,12 @@
     createWealthVisualization();
     typewriterEffect();
     setupReviewsScroll();
+
+    // Set the download URL from hash parameter or use default
+    const downloadLink = document.querySelector('.final-cta');
+    if (downloadLink) {
+      downloadLink.href = getAppUrlFromHash();
+    }
   }
 
   if (document.readyState === 'loading') {
