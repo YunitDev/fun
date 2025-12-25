@@ -851,7 +851,7 @@
             state.dcaShares += INVEST / state.price;
             state.dcaInvested += INVEST;
 
-            const newVal = state.sold ? state.cashOnSide : state.shares * state.price;
+            const newVal = (state.sold && !state.reinvested) ? state.cashOnSide : state.shares * state.price;
 
             updateDots();
             updateBalance(newVal, true, newVal - oldVal);
@@ -928,8 +928,9 @@
                 }
             }
 
-            // Reinvest the cash
-            state.shares = state.cashOnSide / state.price;
+            // Reinvest the cash - convert cash back to shares at current price
+            const cashToReinvest = state.cashOnSide;
+            state.shares = cashToReinvest / state.price;
             state.reinvested = true;
             state.reinvestWeek = state.week;
             state.cashOnSide = 0;
@@ -938,7 +939,13 @@
             banner.textContent = '📈 You reinvested';
             banner.className = 'status-banner reinvested visible';
 
-            // Now advance to next week and show decision
+            // Update the UI to show the reinvested balance
+            const newBalance = state.shares * state.price;
+            updateBalance(newBalance, true, 0);
+            updateDots();
+            drawChart();
+
+            // Now show decision for next week's investment
             showDecision();
         }
 
