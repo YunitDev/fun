@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Native Benson - Complete Guide</title>
+    <meta name="description" content="The complete playbook for Benson's AI-native transformation. From traditional development to superhuman operations.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --black: #09090b;
+            --dark: #141416;
+            --darker: #0f0f11;
+            --gray: #71717a;
+            --light: #a1a1aa;
+            --lighter: #d4d4d8;
+            --white: #fafafa;
+            --green: #22c55e;
+            --green-dim: #16a34a;
+            --green-glow: rgba(34, 197, 94, 0.15);
+            --green-subtle: rgba(34, 197, 94, 0.08);
+            --orange: #f97316;
+            --purple: #a855f7;
+            --blue: #3b82f6;
+            --red: #ef4444;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--black);
+            color: var(--lighter);
+            line-height: 1.7;
+            font-size: 17px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: var(--green);
+            color: var(--black);
+        }
+
+        /* Ambient background */
+        .ambient {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            animation: float 25s ease-in-out infinite;
+        }
+
+        .ambient-orb-1 {
+            width: 800px;
+            height: 800px;
+            background: var(--green);
+            top: -300px;
+            right: -300px;
+            opacity: 0.06;
+        }
+
+        .ambient-orb-2 {
+            width: 600px;
+            height: 600px;
+            background: var(--green);
+            bottom: 20%;
+            left: -200px;
+            opacity: 0.04;
+            animation-delay: -12s;
+        }
+
+        .ambient-orb-3 {
+            width: 500px;
+            height: 500px;
+            background: var(--purple);
+            top: 50%;
+            right: -150px;
+            opacity: 0.03;
+            animation-delay: -8s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(40px, -40px) scale(1.05); }
+            66% { transform: translate(-30px, 30px) scale(0.95); }
+        }
+
+        /* Layout */
+        .layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sidebar / TOC */
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 3rem 2rem;
+            border-right: 1px solid rgba(255,255,255,0.04);
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(20px);
+            scrollbar-width: thin;
+            scrollbar-color: var(--gray) transparent;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--gray);
+            border-radius: 2px;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+            text-decoration: none;
+        }
+
+        .sidebar-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--green);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--black);
+            font-size: 14px;
+        }
+
+        .sidebar-logo-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--white);
+            letter-spacing: -0.02em;
+        }
+
+        .toc-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .toc-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--gray);
+            margin-bottom: 0.75rem;
+            padding-left: 0.75rem;
+        }
+
+        .toc-link {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.85rem;
+            color: var(--light);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            border-left: 2px solid transparent;
+            margin-left: -2px;
+        }
+
+        .toc-link:hover {
+            color: var(--white);
+            background: rgba(255,255,255,0.03);
+        }
+
+        .toc-link.active {
+            color: var(--green);
+            background: var(--green-subtle);
+            border-left-color: var(--green);
+        }
+
+        .toc-link.part {
+            font-weight: 600;
+            color: var(--white);
+            margin-top: 0.5rem;
+        }
+
+        /* Main content */
+        .main {
+            padding: 4rem 5rem 8rem;
+            max-width: 900px;
+        }
+
+        /* Hero */
+        .hero {
+            margin-bottom: 5rem;
+            padding-bottom: 4rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--green-subtle);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--green);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 2rem;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .hero h1 {
+            font-family: 'Instrument Serif', serif;
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 400;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 .green {
+            color: var(--green);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--light);
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .hero-meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .hero-meta-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray);
+        }
+
+        .hero-meta-value {
+            font-size: 0.9rem;
+            color: var(--white);
+            font-weight: 500;
+        }
+
+        /* Typography */
+        .serif {
+            font-family: 'Instrument Serif', serif;
+            font-weight: 400;
+        }
+
+        h2 {
+            font-family: 'Instrument Serif', serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            color: var(--white);
+            margin: 4rem 0 1.5rem;
+            scroll-margin-top: 2rem;
+        }
+
+        h2:first-of-type {
+            margin-top: 0;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--white);
+            margin: 2.5rem 0 1rem;
+            letter-spacing: -0.01em;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--white);
+            margin: 2rem 0 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+        }
+
+        strong {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .green { color: var(--green); }
+        .italic { font-style: italic; }
+
+        /* Highlight box */
+        .highlight-box {
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin: 2rem 0;
+        }
+
+        .highlight-box.green {
+            background: var(--green-subtle);
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+
+        .highlight-box h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+        }
+
+        .highlight-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Quote callout */
+        .callout {
+            border-left: 3px solid var(--green);
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+            font-style: italic;
+            color: var(--light);
+            font-size: 1.1rem;
+        }
+
+        .callout strong {
+            font-style: normal;
+        }
+
+        /* Section divider */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            margin: 4rem 0;
+        }
+
+        /* Part headers */
+        .part-header {
+            margin: 5rem 0 3rem;
+            padding: 3rem 0;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+        }
+
+        .part-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--green);
+            margin-bottom: 1rem;
+        }
+
+        .part-header h2 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .part-header p {
+            color: var(--gray);
+            margin: 1rem 0 0;
+            font-style: italic;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1.25rem 0;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        li::marker {
+            color: var(--green);
+        }
+
+        /* Tables */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 2rem 0;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: var(--dark);
+            color: var(--white);
+            font-weight: 600;
+            text-align: left;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            color: var(--light);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255,255,255,0.02);
+        }
+
+        /* Code blocks */
+        pre {
+            background: var(--darker);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--light);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            background: rgba(255,255,255,0.05);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            color: var(--green);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        /* Cards grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.25rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(255,255,255,0.12);
+            transform: translateY(-2px);
+        }
+
+        .card-icon {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h4 {
+            margin: 0 0 0.5rem;
+            font-size: 1rem;
+        }
+
+        .card p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        /* Team cards */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .team-card {
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .team-card:hover {
+            border-color: rgba(255,255,255,0.12);
+        }
+
+        .team-bar {
+            width: 40px;
+            height: 4px;
+            border-radius: 2px;
+            margin-bottom: 1.25rem;
+        }
+
+        .team-card.orange .team-bar { background: var(--orange); }
+        .team-card.purple .team-bar { background: var(--purple); }
+        .team-card.blue .team-bar { background: var(--blue); }
+        .team-card.green .team-bar { background: var(--green); }
+
+        .team-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.25rem;
+        }
+
+        .team-role {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.25rem;
+        }
+
+        .team-card.orange .team-role { color: var(--orange); }
+        .team-card.purple .team-role { color: var(--purple); }
+        .team-card.blue .team-role { color: var(--blue); }
+        .team-card.green .team-role { color: var(--green); }
+
+        .team-transform {
+            padding-top: 1.25rem;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .team-from {
+            font-size: 0.85rem;
+            color: var(--gray);
+            text-decoration: line-through;
+            margin-bottom: 0.35rem;
+        }
+
+        .team-to {
+            font-size: 0.9rem;
+            color: var(--white);
+            font-weight: 500;
+        }
+
+        /* Timeline */
+        .timeline {
+            margin: 2rem 0;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 2rem;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-week {
+            text-align: center;
+        }
+
+        .timeline-num {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--green);
+            line-height: 1;
+        }
+
+        .timeline-dates {
+            font-size: 0.7rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+
+        .timeline-content h4 {
+            margin: 0 0 0.5rem;
+        }
+
+        .timeline-content p {
+            margin: 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .timeline-item.milestone {
+            background: var(--green-subtle);
+            margin: 0 -1.5rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .milestone-badge {
+            display: inline-block;
+            background: var(--green);
+            color: var(--black);
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Workflow diagram */
+        .workflow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+            justify-content: center;
+            margin: 2.5rem 0;
+            padding: 2rem;
+            background: var(--dark);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .workflow-node {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 0.875rem 1.25rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-node:hover {
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .workflow-node.highlight {
+            border-color: var(--green);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.15);
+        }
+
+        .workflow-node .num {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 0.15rem;
+        }
+
+        .workflow-node .title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .workflow-arrow {
+            color: var(--gray);
+            font-size: 1.25rem;
+            opacity: 0.4;
+        }
+
+        .workflow-arrow.back {
+            color: var(--green);
+            opacity: 0.8;
+        }
+
+        /* Comparison boxes */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .comparison-box {
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .comparison-box.bad {
+            background: rgba(239, 68, 68, 0.05);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .comparison-box.good {
+            background: var(--green-subtle);
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+
+        .comparison-box h4 {
+            margin: 0 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .comparison-box.bad h4 { color: var(--red); }
+        .comparison-box.good h4 { color: var(--green); }
+
+        .comparison-box p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--light);
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+        }
+
+        .checklist li::before {
+            content: '';
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--gray);
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Report box */
+        .report-box {
+            background: var(--darker);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            margin: 2rem 0;
+        }
+
+        .report-header {
+            color: var(--green);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .report-section {
+            margin-bottom: 1rem;
+        }
+
+        .report-section h5 {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .report-section p {
+            color: var(--light);
+            font-size: 0.8rem;
+            margin: 0.25rem 0;
+        }
+
+        /* Summary box */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .summary-col {
+            background: var(--dark);
+            padding: 1.5rem;
+        }
+
+        .summary-col h4 {
+            margin: 0 0 1rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .summary-col.ai h4 { color: var(--green); }
+        .summary-col.human h4 { color: var(--white); }
+
+        .summary-col ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .summary-col li {
+            padding: 0.4rem 0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .summary-col li::before {
+            content: '→';
+            color: var(--gray);
+            flex-shrink: 0;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 5rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            text-align: center;
+        }
+
+        .footer p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .footer-version {
+            display: inline-block;
+            background: var(--dark);
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            color: var(--light);
+            margin-top: 1rem;
+        }
+
+        /* Back to slides link */
+        .slides-link {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.75rem 1.25rem;
+            border-radius: 100px;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .slides-link:hover {
+            background: var(--green);
+            color: var(--black);
+            border-color: var(--green);
+            transform: translateY(-2px);
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--green);
+            z-index: 1000;
+            transition: width 0.1s ease;
+        }
+
+        /* Scroll animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile styles */
+        @media (max-width: 1100px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                padding: 2rem 1.5rem 6rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .team-grid,
+            .comparison,
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .workflow {
+                flex-direction: column;
+            }
+
+            .workflow-arrow {
+                transform: rotate(90deg);
+            }
+
+            .slides-link {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Mobile TOC toggle */
+        .mobile-toc-toggle {
+            display: none;
+            position: fixed;
+            bottom: 1rem;
+            left: 1rem;
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.75rem 1rem;
+            border-radius: 100px;
+            color: var(--white);
+            font-size: 0.85rem;
+            z-index: 100;
+            cursor: pointer;
+        }
+
+        @media (max-width: 1100px) {
+            .mobile-toc-toggle {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .sidebar.mobile-open {
+                display: block;
+                position: fixed;
+                inset: 0;
+                z-index: 200;
+                background: var(--black);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Ambient Background -->
+    <div class="ambient">
+        <div class="ambient-orb ambient-orb-1"></div>
+        <div class="ambient-orb ambient-orb-2"></div>
+        <div class="ambient-orb ambient-orb-3"></div>
+    </div>
+
+    <div class="layout">
+        <!-- Sidebar / Table of Contents -->
+        <aside class="sidebar" id="sidebar">
+            <a href="#" class="sidebar-logo">
+                <div class="sidebar-logo-icon">B</div>
+                <span class="sidebar-logo-text">Benson Playbook</span>
+            </a>
+
+            <nav>
+                <div class="toc-section">
+                    <div class="toc-label">Overview</div>
+                    <a href="#executive-summary" class="toc-link">Executive Summary</a>
+                    <a href="#quarterly-milestones" class="toc-link">Quarterly Milestones</a>
+                </div>
+
+                <div class="toc-section">
+                    <div class="toc-label">Part A: The Why</div>
+                    <a href="#part-a" class="toc-link part">The Why</a>
+                    <a href="#why-now" class="toc-link">1. Why Now</a>
+                    <a href="#what-ai-native-means" class="toc-link">2. What AI-Native Means</a>
+                    <a href="#radical-vision" class="toc-link">3. The Radical Vision</a>
+                    <a href="#bigger-vision" class="toc-link">4. The Bigger Vision</a>
+                    <a href="#what-this-unlocks" class="toc-link">5. What This Unlocks</a>
+                    <a href="#team-sync" class="toc-link">6. Team Synchronization</a>
+                    <a href="#code-source-truth" class="toc-link">7. Code Is the Source</a>
+                </div>
+
+                <div class="toc-section">
+                    <div class="toc-label">Part B: The How</div>
+                    <a href="#part-b" class="toc-link part">The How</a>
+                    <a href="#technical-foundation" class="toc-link">8. Technical Foundation</a>
+                    <a href="#keeping-sync" class="toc-link">9. Keeping the Team Sync'd</a>
+                    <a href="#dev-workflow" class="toc-link">10. Development Workflow</a>
+                    <a href="#the-team" class="toc-link">11. The Team</a>
+                    <a href="#ai-tools-budget" class="toc-link">12. AI Tools Budget</a>
+                    <a href="#sprint-plan" class="toc-link">13. Sprint Plan</a>
+                    <a href="#post-february" class="toc-link">14. Post-February</a>
+                    <a href="#weekly-ops" class="toc-link">15. Weekly Operations</a>
+                    <a href="#handling-mistakes" class="toc-link">16. Handling AI Mistakes</a>
+                </div>
+
+                <div class="toc-section">
+                    <div class="toc-label">Summary</div>
+                    <a href="#summary" class="toc-link">Final Summary</a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Hero -->
+            <header class="hero">
+                <div class="hero-badge">Internal Playbook</div>
+                <h1 class="serif">AI <span class="green">Native</span> Benson</h1>
+                <p class="hero-subtitle">
+                    The complete playbook for transforming from a traditional development team
+                    into an AI-native organization. From ideas to production at the speed of thought.
+                </p>
+                <div class="hero-meta">
+                    <div class="hero-meta-item">
+                        <span class="hero-meta-label">Target Date</span>
+                        <span class="hero-meta-value">February 2026</span>
+                    </div>
+                    <div class="hero-meta-item">
+                        <span class="hero-meta-label">Timeline</span>
+                        <span class="hero-meta-value">7 Weeks</span>
+                    </div>
+                    <div class="hero-meta-item">
+                        <span class="hero-meta-label">Version</span>
+                        <span class="hero-meta-value">2.0</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Executive Summary -->
+            <section id="executive-summary" class="reveal">
+                <h2>Executive Summary</h2>
+                <p>
+                    Benson is transforming from a traditional development team into an AI-native organization.
+                    This document outlines the complete vision, strategy, execution plan, and individual roles
+                    for this transformation.
+                </p>
+
+                <div class="highlight-box green">
+                    <h4>The Goal</h4>
+                    <p>
+                        By the end of February 2026, Benson will be fully AI-native. Phillip (Product) can
+                        describe a feature in plain English and ship it to production—with AI handling the
+                        implementation and the team providing judgment, taste, and quality assurance.
+                    </p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>The Outcome</h4>
+                    <p>
+                        A team of superhumans. Less stress. High-level architectural thinking. Rapid
+                        experimentation on distribution. A hyper-personalized product. And a fundraising
+                        story that leaves competitors in the dust.
+                    </p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>The Bigger Vision</h4>
+                    <p>
+                        We are building AI that optimizes and grows people's money—all the way through.
+                        To do that, we need to become the most AI-native team in fintech.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Quarterly Milestones -->
+            <section id="quarterly-milestones" class="reveal">
+                <h2>Quarterly Milestones</h2>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Quarter</th>
+                                <th>Milestone</th>
+                                <th>Success Metrics</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Q1 2026</strong></td>
+                                <td>Fully AI-native operations</td>
+                                <td>Phillip ships features without engineering involvement on routine tasks. Team stress decreases measurably.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Q2 2026</strong></td>
+                                <td>Hyper-personalization layer</td>
+                                <td>Every user has an AI-generated investment personality. Product feels custom-built for each person.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Q3 2026</strong></td>
+                                <td>Distribution experimentation at scale</td>
+                                <td>10x more marketing experiments run than Q1. CAC drops by 30%+.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Q4 2026</strong></td>
+                                <td>Agent ecosystem</td>
+                                <td>Multiple AI agents handling support, recommendations, rebalancing, and user communication autonomously.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>Business Impact Targets</h4>
+                <ul>
+                    <li>Ship <strong>4x more features</strong> in 2026 than 2025</li>
+                    <li>Reduce engineering time on routine tasks by <strong>70%</strong></li>
+                    <li>Increase user retention through personalization</li>
+                    <li>Create a fundraising narrative that demonstrates <strong>10x team leverage</strong></li>
+                </ul>
+            </section>
+
+            <!-- PART A: THE WHY -->
+            <div id="part-a" class="part-header reveal">
+                <div class="part-label">Part A</div>
+                <h2>The Why</h2>
+                <p>The reasoning, principles, and vision behind our AI-native transformation.</p>
+            </div>
+
+            <!-- Section 1: Why Now -->
+            <section id="why-now" class="reveal">
+                <h2>1. Why Now</h2>
+
+                <h3>The Moment Has Arrived</h3>
+                <p>Something fundamental changed in the last 12 months.</p>
+
+                <p>
+                    In 2024, AI tools were promising but clunky. You could use ChatGPT to draft emails
+                    or generate boilerplate code, but it felt like a novelty—a productivity boost, not
+                    a transformation.
+                </p>
+
+                <p>
+                    In 2025, the ceiling broke. Claude 3.5 Sonnet shipped. Then Claude Code. Then the
+                    agent SDKs. Suddenly, AI could:
+                </p>
+
+                <ul>
+                    <li>Read and understand entire codebases—frontend, backend, database—all at once</li>
+                    <li>Generate production-quality code that matches your existing patterns exactly</li>
+                    <li>Trace bugs across the full stack in seconds</li>
+                    <li>Hold context across multi-hour work sessions</li>
+                    <li>Learn your team's design system, voice, and conventions</li>
+                    <li>Build features from plain English descriptions</li>
+                </ul>
+
+                <div class="callout">
+                    <strong>This is not a gradual improvement. This is a step change.</strong>
+                </div>
+
+                <p>
+                    The companies that recognized this in 2023 with GPT-4 are now 18 months ahead.
+                    The companies recognizing it now with Claude Code will be 18 months ahead of
+                    everyone else. The window is open, but it won't stay open forever.
+                </p>
+
+                <h3>The Hard Truth</h3>
+                <p>
+                    Here's what we need to acknowledge: <strong>AI is now smarter, more creative,
+                    and more tireless than any of us.</strong>
+                </p>
+
+                <p>
+                    It can work 24 hours a day. It doesn't get tired. It doesn't have bad days.
+                    It can hold more context in its head than any human. It can write code faster
+                    than any engineer.
+                </p>
+
+                <p>We have two options:</p>
+
+                <div class="comparison">
+                    <div class="comparison-box bad">
+                        <h4>Option 1: Pretend things aren't changing</h4>
+                        <p>
+                            Assume we'll always be as smart as we are. Assume our current pace is
+                            sustainable. Assume our competitors won't figure this out. Get left behind.
+                        </p>
+                    </div>
+                    <div class="comparison-box good">
+                        <h4>Option 2: Become superhumans</h4>
+                        <p>
+                            Acknowledge the shift. Embrace the tools. Turn every person on this team
+                            into someone who operates at <strong>10x their current capacity</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <p><strong>We're choosing Option 2.</strong></p>
+
+                <h3>Why We Can Move Faster Than Everyone</h3>
+                <p>Most companies can't do this. They have:</p>
+                <ul>
+                    <li>Legacy codebases too tangled for AI to understand</li>
+                    <li>Organizational inertia and approval processes</li>
+                    <li>Engineers threatened by the change</li>
+                    <li>No one willing to make the call</li>
+                </ul>
+
+                <p>
+                    We have none of that. We're lean. We're hungry. We have a team that's smart
+                    enough to see what's happening and brave enough to act on it.
+                </p>
+
+                <div class="callout">
+                    <strong>Our size is our advantage.</strong> By the time larger competitors
+                    figure out how to have meetings about AI transformation, we'll have shipped 50 features.
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Section 2: What AI-Native Means -->
+            <section id="what-ai-native-means" class="reveal">
+                <h2>2. What AI-Native Actually Means</h2>
+
+                <h3>The Definition</h3>
+                <p><strong>AI-native means AI does the work. Humans provide judgment.</strong></p>
+
+                <p>
+                    Think of it like Dan Shipper's metaphor: an AI-native app is "Claude Code in a
+                    trench coat." The application isn't a bunch of manually written code that gets
+                    executed—it's an AI agent that figures out what to do and does it.
+                </p>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Traditional</th>
+                                <th>AI-Native</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Engineer writes code for a feature</td>
+                                <td>AI writes code; engineer reviews and approves</td>
+                            </tr>
+                            <tr>
+                                <td>Designer creates mockups in Figma</td>
+                                <td>AI generates screens; designer refines until it feels right</td>
+                            </tr>
+                            <tr>
+                                <td>PM writes detailed specs</td>
+                                <td>PM describes intent in plain English</td>
+                            </tr>
+                            <tr>
+                                <td>Debugging takes hours of tracing</td>
+                                <td>AI traces the full stack in minutes</td>
+                            </tr>
+                            <tr>
+                                <td>Limited by how fast people can type</td>
+                                <td>Limited by how fast people can think</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>What We're NOT Saying</h3>
+                <p>
+                    We're not saying AI is better than us at everything. We're saying AI is better
+                    at certain things, and we should let it do those things.
+                </p>
+
+                <div class="summary-grid">
+                    <div class="summary-col ai">
+                        <h4>AI is better at</h4>
+                        <ul>
+                            <li>Writing code that matches patterns</li>
+                            <li>Holding vast amounts of context</li>
+                            <li>Working without breaks</li>
+                            <li>Generating variations quickly</li>
+                            <li>Tracing through complex systems</li>
+                        </ul>
+                    </div>
+                    <div class="summary-col human">
+                        <h4>We are better at</h4>
+                        <ul>
+                            <li>Understanding what users actually need</li>
+                            <li>Knowing when something feels off</li>
+                            <li>Making judgment calls</li>
+                            <li>Setting vision and strategy</li>
+                            <li><strong>Having taste</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="callout">
+                    <strong>The unlock:</strong> We are the most educated people in the world on how
+                    to solve problems for Benson users. AI is a tool. If we understand how to wield it,
+                    we will ship faster than anyone could imagine.
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Section 3: The Radical Vision -->
+            <section id="radical-vision" class="reveal">
+                <h2>3. The Radical Vision</h2>
+
+                <h3>Turning Everyone Into Superhumans</h3>
+                <p>
+                    I want to do something radical. I want to take every person on this team—each
+                    of you, who are already incredibly smart—and give you superpowers.
+                </p>
+
+                <div class="team-grid">
+                    <div class="team-card orange">
+                        <div class="team-bar"></div>
+                        <div class="team-name">Phillip</div>
+                        <div class="team-role">Product</div>
+                        <div class="team-transform">
+                            <div class="team-from">Has 10 feature ideas, can only ship 2 per month</div>
+                            <div class="team-to">Has 10 ideas, can test all 10 and ship the 3 that work</div>
+                        </div>
+                    </div>
+                    <div class="team-card purple">
+                        <div class="team-bar"></div>
+                        <div class="team-name">Tea & Tim</div>
+                        <div class="team-role">UX & Design</div>
+                        <div class="team-transform">
+                            <div class="team-from">Designs a screen, waits days for implementation</div>
+                            <div class="team-to">Sees AI-generated implementation in hours, iterates same-day</div>
+                        </div>
+                    </div>
+                    <div class="team-card blue">
+                        <div class="team-bar"></div>
+                        <div class="team-name">Luka</div>
+                        <div class="team-role">Backend</div>
+                        <div class="team-transform">
+                            <div class="team-from">Writes endpoints from morning to evening</div>
+                            <div class="team-to">Reviews AI-generated code, focuses on architecture</div>
+                        </div>
+                    </div>
+                    <div class="team-card green">
+                        <div class="team-bar"></div>
+                        <div class="team-name">Rok</div>
+                        <div class="team-role">iOS</div>
+                        <div class="team-transform">
+                            <div class="team-from">Builds screens from morning to evening</div>
+                            <div class="team-to">Reviews AI-generated code, focuses on quality</div>
+                        </div>
+                    </div>
+                </div>
+
+                <p>
+                    The work doesn't disappear. It transforms. Instead of grinding through routine
+                    implementation, everyone operates at a higher level—architecture, strategy,
+                    judgment, taste.
+                </p>
+
+                <div class="callout">
+                    <strong>Less stress. More thinking. Faster shipping.</strong>
+                </div>
+
+                <h3>The Compound Effects</h3>
+                <p>This isn't just about speed. It's about what becomes possible:</p>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Effect</th>
+                                <th>Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Experimentation velocity</strong></td>
+                                <td>Try 10 things instead of 2. Find what works faster.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Distribution testing</strong></td>
+                                <td>Spin up landing pages, ad variants, referral flows in days, not weeks</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Hyper-personalization</strong></td>
+                                <td>Every user gets a product that feels built for them</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fundraising leverage</strong></td>
+                                <td>Show investors a 5-person team shipping like a 20-person team</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Talent attraction</strong></td>
+                                <td>Engineers want to work at places on the cutting edge</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Reduced burnout</strong></td>
+                                <td>Less grind, more creative problem-solving</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Section 4: The Bigger Vision -->
+            <section id="bigger-vision" class="reveal">
+                <h2>4. The Bigger Vision</h2>
+
+                <h3>AI That Grows People's Money</h3>
+                <p>
+                    The transformation we're making isn't just operational. It connects directly
+                    to what we're building for users.
+                </p>
+
+                <div class="highlight-box green">
+                    <h4>Benson's mission</h4>
+                    <p>Use AI to optimize and grow people's money—all the way through.</p>
+                </div>
+
+                <p>
+                    If we're going to build AI that manages users' investments, we need to be the
+                    team that understands AI better than anyone. We can't build an AI-native product
+                    with a traditional team. The people building the AI need to be living with AI every day.
+                </p>
+
+                <p>By going AI-native internally, we:</p>
+                <ol>
+                    <li>Develop intuition for what AI is good at (and what it's not)</li>
+                    <li>Build systems and patterns we can apply to user-facing AI</li>
+                    <li>Create a product that's genuinely hyper-personalized</li>
+                    <li>Move fast enough to stay ahead of well-funded competitors</li>
+                </ol>
+
+                <div class="callout">
+                    <strong>We're not just adopting AI tools. We're becoming an AI company.</strong>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Section 5: What This Unlocks -->
+            <section id="what-this-unlocks" class="reveal">
+                <h2>5. What This Unlocks</h2>
+
+                <h3>By End of February 2026</h3>
+                <p>When we're fully AI-native:</p>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon">⚡</div>
+                        <h4>Faster Feature Shipping</h4>
+                        <p>Features that took 2 weeks now take 3 days. Same-day turnaround for simple changes.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🧘</div>
+                        <h4>Reduced Stress</h4>
+                        <p>Less grinding through routine work. More time for high-level thinking. Sustainable pace.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🏗️</div>
+                        <h4>Architectural Thinking</h4>
+                        <p>Everyone operates as an architect, not just an implementer. Better decisions.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🧪</div>
+                        <h4>Rapid Experimentation</h4>
+                        <p>Test 10 marketing approaches in the time it used to take for 1. Find PMF faster.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">💰</div>
+                        <h4>Superior Fundraising</h4>
+                        <p>"We're a 5-person team shipping like a 20-person team." Lower burn per feature.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🎯</div>
+                        <h4>Hyper-Personalization</h4>
+                        <p>Every user feels like Benson was built for them. AI that actually knows each user.</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Section 6: Team Synchronization -->
+            <section id="team-sync" class="reveal">
+                <h2>6. Why Team Synchronization Matters</h2>
+
+                <h3>The Single Source of Truth Problem</h3>
+                <p>In traditional development, knowledge lives in many places:</p>
+                <ul>
+                    <li>Someone's head</li>
+                    <li>A Slack thread</li>
+                    <li>An outdated Notion doc</li>
+                    <li>A local machine that hasn't pushed</li>
+                </ul>
+
+                <p>
+                    This creates <strong>knowledge fragmentation</strong>: different team members
+                    work with different versions of reality.
+                </p>
+
+                <h3>The AI-Native Solution</h3>
+                <p>
+                    When we work AI-native, <strong>the GitHub repository becomes the single source
+                    of truth for everything</strong>:
+                </p>
+                <ul>
+                    <li>Code (obviously)</li>
+                    <li>Design tokens and patterns</li>
+                    <li>AI instructions (CLAUDE.md)</li>
+                    <li>Development workflows</li>
+                    <li>Team conventions</li>
+                </ul>
+
+                <div class="callout">
+                    <strong>If it's not in the repo, it doesn't exist for AI—and it shouldn't exist for us either.</strong>
+                </div>
+
+                <h3>Why Pushing Matters So Much</h3>
+                <p>When you push to GitHub:</p>
+                <ul>
+                    <li>Every team member can pull the latest and have the exact same context</li>
+                    <li>AI (Claude Code) operates on the same information for everyone</li>
+                    <li>No more "works on my machine" or "I have a local fix for that"</li>
+                    <li>New team members can onboard instantly</li>
+                    <li>We can reproduce any state of the product</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <p><strong>A push is not just code delivery—it's knowledge synchronization.</strong></p>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Section 7: Code Is the Source of Truth -->
+            <section id="code-source-truth" class="reveal">
+                <h2>7. Code Is the Source of Truth</h2>
+
+                <div class="highlight-box green">
+                    <h4>Critical principle</h4>
+                    <p>We do not maintain separate documentation for things that exist in code.</p>
+                </div>
+
+                <ul>
+                    <li>AI reads <code>Colors.swift</code> to understand our colors—not a markdown file</li>
+                    <li>AI reads <code>/Components</code> folder to understand our components—not a spec doc</li>
+                    <li>AI analyzes existing screens to learn our patterns—not a style guide</li>
+                </ul>
+
+                <p>
+                    <strong>Why?</strong> Because documentation drifts. Code is always current.
+                    If AI learns from code, it always generates code that matches reality.
+                </p>
+
+                <div class="callout">
+                    Everything we document should be consumable by both humans and Claude.
+                    We're writing for two audiences now.
+                </div>
+            </section>
+
+            <!-- PART B: THE HOW -->
+            <div id="part-b" class="part-header reveal">
+                <div class="part-label">Part B</div>
+                <h2>The How</h2>
+                <p>The concrete steps, workflows, and processes for executing our AI-native transformation.</p>
+            </div>
+
+            <!-- Section 8: Technical Foundation -->
+            <section id="technical-foundation" class="reveal">
+                <h2>8. The Technical Foundation</h2>
+
+                <h3>The Unified Workspace</h3>
+                <p>We create a single repository that contains (or links to) everything:</p>
+
+                <pre><code>github.com/benson-ai/benson-workspace
+├── /ios                     # iOS app codebase (submodule)
+├── /backend                 # Backend API codebase (submodule)
+├── /scripts                 # Automation tools
+├── /local-env               # Local development configuration
+├── /screenshots             # Visual reference of current app
+├── /templates               # Feature specs, bug reports
+├── CLAUDE.md                # Instructions for AI
+├── ONBOARDING.md            # Setup guide for humans
+└── README.md                # Overview</code></pre>
+
+                <h3>The CLAUDE.md File</h3>
+                <p>This is the master instruction set for AI. It tells Claude Code:</p>
+                <ul>
+                    <li>Where to find design tokens (colors, typography, spacing)</li>
+                    <li>Where to find reusable components</li>
+                    <li>How to analyze existing screens for patterns</li>
+                    <li>How to understand the backend structure</li>
+                    <li>Rules for generating new code</li>
+                </ul>
+
+                <p>
+                    When anyone prompts Claude Code in this workspace, it reads CLAUDE.md first
+                    and operates accordingly.
+                </p>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Section 9: Keeping the Team Synchronized -->
+            <section id="keeping-sync" class="reveal">
+                <h2>9. Keeping the Team Synchronized</h2>
+
+                <h3>The Golden Rule</h3>
+                <div class="highlight-box green">
+                    <p><strong>Push early, push often, pull before you work.</strong></p>
+                </div>
+
+                <p>
+                    Every piece of knowledge—code, AI instructions, patterns, scripts—must flow
+                    through GitHub to be real.
+                </p>
+
+                <h3>Daily Sync Checklist</h3>
+
+                <h4>Start of day:</h4>
+                <pre><code>cd benson-workspace
+git pull --recurse-submodules
+git submodule update --remote</code></pre>
+
+                <h4>End of day:</h4>
+                <ul>
+                    <li>Commit all work in progress (use WIP commits if needed)</li>
+                    <li>Push to GitHub</li>
+                    <li>No local-only changes overnight</li>
+                </ul>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Section 10: Development Workflow -->
+            <section id="dev-workflow" class="reveal">
+                <h2>10. The Development Workflow</h2>
+
+                <h3>The Development Loop</h3>
+
+                <div class="workflow">
+                    <div class="workflow-step">
+                        <div class="workflow-node">
+                            <div class="num">01</div>
+                            <div class="title">Speak</div>
+                        </div>
+                        <span class="workflow-arrow">→</span>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="workflow-node highlight">
+                            <div class="num">02</div>
+                            <div class="title">Generate</div>
+                        </div>
+                        <span class="workflow-arrow">→</span>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="workflow-node">
+                            <div class="num">03</div>
+                            <div class="title">UX Review</div>
+                        </div>
+                        <span class="workflow-arrow">→</span>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="workflow-node">
+                            <div class="num">04</div>
+                            <div class="title">Eng Review</div>
+                        </div>
+                        <span class="workflow-arrow">→</span>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="workflow-node">
+                            <div class="num">05</div>
+                            <div class="title">Ship</div>
+                        </div>
+                        <span class="workflow-arrow">→</span>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="workflow-node">
+                            <div class="num">06</div>
+                            <div class="title">Measure</div>
+                        </div>
+                        <span class="workflow-arrow back">↺</span>
+                    </div>
+                </div>
+
+                <h3>Speed Comparison</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Scenario</th>
+                                <th>Traditional</th>
+                                <th>AI-Native</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Add position milestone screen</td>
+                                <td>1-2 weeks</td>
+                                <td><strong class="green">2-3 days</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Debug failed order for user</td>
+                                <td>30 min - 2 hours</td>
+                                <td><strong class="green">5-10 minutes</strong></td>
+                            </tr>
+                            <tr>
+                                <td>New smart invest allocation UI</td>
+                                <td>2 weeks</td>
+                                <td><strong class="green">4-5 days</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Fix portfolio calculation bug</td>
+                                <td>1-4 hours</td>
+                                <td><strong class="green">15-30 minutes</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Add new onboarding variation</td>
+                                <td>1 week</td>
+                                <td><strong class="green">1-2 days</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Section 11: The Team -->
+            <section id="the-team" class="reveal">
+                <h2>11. The Team</h2>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Person</th>
+                                <th>Role</th>
+                                <th>Domain</th>
+                                <th>Reviews</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Phillip</strong></td>
+                                <td>Product</td>
+                                <td>What we build and why</td>
+                                <td>Feature specs, priorities</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tea & Tim</strong></td>
+                                <td>UX & Design</td>
+                                <td>How it looks and feels</td>
+                                <td>Visual output, user flows</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Luka</strong></td>
+                                <td>Backend Engineering</td>
+                                <td>API, database, business logic</td>
+                                <td>Backend code quality</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Rok</strong></td>
+                                <td>iOS Frontend Engineering</td>
+                                <td>iOS app, SwiftUI, mobile UX</td>
+                                <td>iOS code quality</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>What AI Cannot Replace</h3>
+                <ul>
+                    <li><strong>Phillip:</strong> Understanding users' emotions, feeling if a feature is exciting, knowing when to pivot, building relationships</li>
+                    <li><strong>Tea & Tim:</strong> Knowing that something is off by 2 pixels, feeling whether an animation is satisfying, having taste</li>
+                    <li><strong>Luka:</strong> Making judgment calls on API design, knowing what happens at scale, catching subtle data flow bugs</li>
+                    <li><strong>Rok:</strong> Making iOS architecture decisions, ensuring smooth animations and native feel, catching subtle UI bugs</li>
+                </ul>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Section 12: AI Tools Budget -->
+            <section id="ai-tools-budget" class="reveal">
+                <h2>12. AI Tools Budget</h2>
+
+                <div class="highlight-box green">
+                    <h4>Company Commitment</h4>
+                    <p>
+                        <strong>The company will cover all AI tools for every team member.</strong><br>
+                        Monthly Budget: <strong>Up to $300 per person</strong>
+                    </p>
+                </div>
+
+                <h3>Recommended Starting Stack</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tool</th>
+                                <th>Cost</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Claude Pro</td>
+                                <td>$20/month</td>
+                                <td>AI assistant for complex tasks</td>
+                            </tr>
+                            <tr>
+                                <td>Claude Code</td>
+                                <td>~$100/month</td>
+                                <td>AI coding agent with full codebase access</td>
+                            </tr>
+                            <tr>
+                                <td>GitHub Copilot</td>
+                                <td>$19/month</td>
+                                <td>Inline code suggestions</td>
+                            </tr>
+                            <tr>
+                                <td>Cursor Pro</td>
+                                <td>$20/month</td>
+                                <td>AI-native code editor (optional)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Section 13: Sprint Plan -->
+            <section id="sprint-plan" class="reveal">
+                <h2>13. January-February Sprint Plan</h2>
+
+                <div class="highlight-box">
+                    <h4>Sprint Overview</h4>
+                    <p>
+                        <strong>Goal:</strong> Fully AI-native by mid-February 2026. Optimization through end of month.<br>
+                        <strong>Timeline:</strong> January 13 → February 28 (7 weeks)
+                    </p>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-week">
+                            <div class="timeline-num">W1</div>
+                            <div class="timeline-dates">Jan 13-17</div>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Foundation</h4>
+                            <p>Workspace set up, AI has full context, local dev works</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-week">
+                            <div class="timeline-num">W2</div>
+                            <div class="timeline-dates">Jan 20-24</div>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Validation</h4>
+                            <p>Phillip ships first feature to DEV</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-week">
+                            <div class="timeline-num">W3</div>
+                            <div class="timeline-dates">Jan 27-31</div>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Team Training</h4>
+                            <p>Teach entire team the AI-native process</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-week">
+                            <div class="timeline-num">W4</div>
+                            <div class="timeline-dates">Feb 3-7</div>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Production</h4>
+                            <p>Week 2 feature ships to PROD</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item milestone">
+                        <div class="timeline-week">
+                            <div class="timeline-num">W5</div>
+                            <div class="timeline-dates">Feb 10-14</div>
+                        </div>
+                        <div class="timeline-content">
+                            <span class="milestone-badge">Milestone</span>
+                            <h4>AI-Native</h4>
+                            <p>Everyone building custom flows. Team presents to each other.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-week">
+                            <div class="timeline-num">W6</div>
+                            <div class="timeline-dates">Feb 17-21</div>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Optimize</h4>
+                            <p>Refine workflows based on learnings</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-week">
+                            <div class="timeline-num">W7</div>
+                            <div class="timeline-dates">Feb 24-28</div>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Lock In</h4>
+                            <p>Document patterns, set up monitoring, prepare for Q2</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Success Criteria</h3>
+                <ul class="checklist">
+                    <li>Workspace repo exists with full codebase access</li>
+                    <li>Any team member can run full stack locally</li>
+                    <li>AI accurately understands our codebase</li>
+                    <li>5+ features shipped using AI-native workflow</li>
+                    <li>Phillip has personally shipped multiple features start-to-finish</li>
+                    <li>Process documented and repeatable</li>
+                    <li>All team members have AI tool access</li>
+                    <li>Team stress level has noticeably decreased</li>
+                    <li>High-level architectural discussions are happening</li>
+                    <li>Everyone has created custom AI flows for their reports</li>
+                    <li>Team has built a documented system together</li>
+                    <li>Team has presented their workflows to each other</li>
+                </ul>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Section 14: Post-February -->
+            <section id="post-february" class="reveal">
+                <h2>14. Post-February: The Path Forward</h2>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <h4>March-April: Ramp Up</h4>
+                        <p>Team uses AI-native workflow for all new development. Begin hyper-personalization work. Experiment with distribution at scale.</p>
+                    </div>
+                    <div class="card">
+                        <h4>May-June (Q2): Hyper-Personalization</h4>
+                        <p>Every user has AI-generated investment personality. Product recommendations are truly personalized. Measurable improvement in retention.</p>
+                    </div>
+                    <div class="card">
+                        <h4>July-Sept (Q3): Distribution at Scale</h4>
+                        <p>10x marketing experiments. Find channels that work. Lower CAC through rapid iteration. AI-generated content and campaigns.</p>
+                    </div>
+                    <div class="card">
+                        <h4>Oct-Dec (Q4): Agent Ecosystem</h4>
+                        <p>Multiple AI agents working together. Support handled by AI with human oversight. Automated portfolio recommendations.</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Section 15: Weekly Operations -->
+            <section id="weekly-ops" class="reveal">
+                <h2>15. Weekly Operations</h2>
+
+                <h3>Auto-Generated Monday Report</h3>
+                <p>Every Monday, AI generates a report like this:</p>
+
+                <div class="report-box">
+                    <div class="report-header">BENSON WEEKLY REPORT — Auto-Generated<br>Week of January 6-12, 2026</div>
+
+                    <div class="report-section">
+                        <h5>Product Health</h5>
+                        <p>• Orders placed: 47 (↑ 12% from last week)</p>
+                        <p>• Failed orders: 3 (all insufficient funds—no bugs)</p>
+                        <p>• New users: 12</p>
+                        <p>• Onboarding completion: 8/12 (67%)</p>
+                    </div>
+
+                    <div class="report-section">
+                        <h5>Issues Detected</h5>
+                        <p>⚠️ 2 users experiencing slow portfolio load (>3 seconds)</p>
+                        <p style="padding-left: 1rem; color: var(--gray);">Root cause: Users have 50+ positions, query not optimized</p>
+                        <p style="padding-left: 1rem; color: var(--green);">Suggested fix ready: [Link to AI-generated PR]</p>
+                    </div>
+
+                    <div class="report-section">
+                        <h5>Decisions Needed From Humans</h5>
+                        <p>☐ Approve portfolio optimization PR?</p>
+                        <p>☐ Approve re-engagement messages?</p>
+                        <p>☐ Prioritize: Money Moves promotion vs. new referral flow?</p>
+                    </div>
+                </div>
+
+                <p><strong>AI generates the report. You decide what to do about it.</strong></p>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Section 16: Handling AI Mistakes -->
+            <section id="handling-mistakes" class="reveal">
+                <h2>16. Handling AI Mistakes</h2>
+
+                <p>AI will make mistakes. When it does:</p>
+
+                <ol>
+                    <li><strong>Identify what's wrong specifically</strong></li>
+                    <li><strong>Feed that back to Claude Code</strong></li>
+                    <li><strong>Ask it to regenerate with the correction</strong></li>
+                    <li><strong>If it keeps failing, flag for human implementation</strong></li>
+                </ol>
+
+                <h3>Tips for Better AI Output</h3>
+                <ul>
+                    <li>Be specific in feature descriptions</li>
+                    <li>Reference existing screens as examples ("like the portfolio screen")</li>
+                    <li>Ask Claude Code to explain its reasoning</li>
+                    <li>Review generated code line by line</li>
+                    <li>Always pull latest before starting an AI session</li>
+                </ul>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Summary -->
+            <section id="summary" class="reveal">
+                <h2>Summary</h2>
+
+                <h3>The Hard Truth</h3>
+                <p>
+                    AI is now smarter, more creative, and more tireless than any of us.
+                    We can either pretend this isn't happening, or we can become superhumans.
+                </p>
+
+                <h3>The Choice</h3>
+                <p>We're choosing to become superhumans. By end of February, we will be fully AI-native.</p>
+
+                <h3>What This Means</h3>
+                <div class="summary-grid">
+                    <div class="summary-col ai">
+                        <h4>AI Does</h4>
+                        <ul>
+                            <li>Writes code that matches our patterns</li>
+                            <li>Generates screens from descriptions</li>
+                            <li>Traces bugs through the full stack</li>
+                            <li>Works 24 hours without breaks</li>
+                            <li>Holds more context than any human</li>
+                        </ul>
+                    </div>
+                    <div class="summary-col human">
+                        <h4>We Do</h4>
+                        <ul>
+                            <li>Decides what to build and why</li>
+                            <li>Judges if the design feels right</li>
+                            <li>Makes architecture decisions</li>
+                            <li>Applies judgment and taste</li>
+                            <li>Understands our users deeply</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>The Outcome</h3>
+                <ul>
+                    <li>Less stress</li>
+                    <li>More thinking at high-level architecture</li>
+                    <li>Faster experimentation on distribution</li>
+                    <li>Hyper-personalized product</li>
+                    <li>Fundraising story that destroys the competition</li>
+                    <li>A team that ships 4x more than before</li>
+                </ul>
+
+                <div class="highlight-box green" style="text-align: center; margin-top: 3rem;">
+                    <p style="font-size: 1.25rem; margin: 0;">
+                        <strong>We're still the team.</strong><br>
+                        We're just operating as superhumans now.<br><br>
+                        <em>And it all flows through GitHub—the single source of truth
+                        that keeps us all synchronized.</em>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="footer reveal">
+                <p>
+                    This document is the complete guide to Benson's AI-native transformation.<br>
+                    Reference it, share it, update it as we learn.
+                </p>
+                <div class="footer-version">Version 2 — January 2026</div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Back to slides link -->
+    <a href="ai-native.html" class="slides-link">
+        <span>←</span> View as Slides
+    </a>
+
+    <!-- Mobile TOC toggle -->
+    <button class="mobile-toc-toggle" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')">
+        ☰ Contents
+    </button>
+
+    <script>
+        // Progress bar
+        const progressBar = document.getElementById('progressBar');
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + '%';
+        });
+
+        // Scroll reveal animations
+        const reveals = document.querySelectorAll('.reveal');
+        const revealOnScroll = () => {
+            reveals.forEach(el => {
+                const top = el.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                if (top < windowHeight - 100) {
+                    el.classList.add('visible');
+                }
+            });
+        };
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll(); // Initial check
+
+        // Active TOC link
+        const tocLinks = document.querySelectorAll('.toc-link');
+        const sections = document.querySelectorAll('section[id], div[id]');
+
+        const updateActiveLink = () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', updateActiveLink);
+        updateActiveLink();
+    </script>
+</body>
+</html>
