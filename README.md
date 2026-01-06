@@ -25,6 +25,18 @@ Input:  "I apologize for the delay. I will let you know when it's ready."
 Output: "my bad on the delay. ill lmk when its ready"
 ```
 
+### Compound Calculator
+**URL:** https://yunitdev.github.io/fun/compound
+
+Wealth calculator that shows how much money you can make from investing. Used in Benson app share links.
+
+**Features:**
+- Age and weekly investment input
+- Risk level selection (low/normal/high)
+- Projected wealth visualization
+- Multi-step form with name/phone collection
+- Benson app download CTA
+
 ---
 
 ## File Structure
@@ -33,6 +45,11 @@ Output: "my bad on the delay. ill lmk when its ready"
 fun/
 ├── type-like-phillip.html    # Text transformation tool
 ├── live-notifications.html   # Live notification display
+├── compound/                 # Wealth calculator (folder-based for clean URL)
+│   ├── index.html
+│   ├── assets/
+│   ├── scripts/
+│   └── styles/
 └── README.md                 # This file
 ```
 

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>How Much Money Can You Make?</title>
+  <meta name="description" content="See exactly how much money you can make from investing. Simple math, life-changing results.">
+
+  <meta property="og:title" content="How Much Money Can You Make?">
+  <meta property="og:description" content="See exactly how much money you can make from investing.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://yunitdev.github.io/fun/compound/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://yunitdev.github.io/fun/compound/assets/og-image.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <div class="texture-overlay"></div>
+
+  <!-- ========== PAGE 1: Setup ========== -->
+  <main class="page page--setup" id="page-setup">
+    <!-- Immersive Wealth Visualization -->
+    <div class="wealth-canvas" id="wealth-canvas"></div>
+    <div class="wealth-floor"></div>
+
+    <div class="page-inner">
+      <header class="header">
+        <div class="brand">COMPOUND</div>
+      </header>
+
+      <section class="setup-section">
+        <h1 class="main-question" id="main-question">
+          <span class="typewriter-text" id="typewriter-text"></span>
+          <span class="typewriter-cursor">|</span>
+        </h1>
+
+        <div class="setup-inputs" id="setup-inputs">
+          <div class="setup-field">
+            <label class="setup-label" for="age-input">I'm</label>
+            <input type="number" id="age-input" min="16" max="64" placeholder="25" inputmode="numeric">
+            <span class="setup-suffix">years old</span>
+          </div>
+
+          <div class="setup-field">
+            <label class="setup-label" for="amount-input">I can invest</label>
+            <div class="input-wrapper">
+              <input type="number" id="amount-input" min="10" max="2000" step="5" placeholder="25" inputmode="numeric">
+            </div>
+            <span class="setup-suffix">per week</span>
+            <span class="input-error-text" id="amount-error">Minimum $10/week</span>
+          </div>
+        </div>
+
+        <button class="btn-go" id="btn-go" type="button">
+          Show Me
+        </button>
+      </section>
+
+      <footer class="footer-setup" id="footer-setup">
+        <p class="footer-tag">How smart people play this game.</p>
+      </footer>
+    </div>
+  </main>
+
+  <!-- ========== PAGE 2: Results ========== -->
+  <main class="page page--results" id="page-results">
+    <div class="page-inner">
+
+      <!-- Header -->
+      <header class="header-results">
+        <button class="back-btn" id="btn-back" aria-label="Go back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </button>
+        <div class="header-info">
+          <span class="header-age">Age <span id="display-age">25</span></span>
+        </div>
+      </header>
+
+      <!-- Weekly Amount Slider -->
+      <div class="amount-control">
+        <div class="amount-display">
+          <span class="amount-prefix">$</span>
+          <span class="amount-value" id="display-amount">25</span>
+          <span class="amount-suffix">/ week</span>
+        </div>
+        <input type="range" id="amount-slider" min="10" max="2000" step="5" value="25" class="amount-slider">
+        <div class="amount-labels">
+          <span>$10</span>
+          <span>$2,000</span>
+        </div>
+      </div>
+
+      <!-- Big Value Display -->
+      <section class="value-display">
+        <div class="value-label">You could have</div>
+        <div class="value-main">
+          <span class="value-currency">$</span>
+          <span class="value-number" id="value-main">0</span>
+        </div>
+      </section>
+
+      <!-- Timeframe Options -->
+      <div class="timeframe-options">
+        <button class="timeframe-btn" data-timeframe="short">
+          <span class="timeframe-label">Age</span>
+          <span class="timeframe-age" id="age-short">30</span>
+        </button>
+        <button class="timeframe-btn" data-timeframe="medium">
+          <span class="timeframe-label">Age</span>
+          <span class="timeframe-age" id="age-medium">45</span>
+        </button>
+        <button class="timeframe-btn timeframe-btn--active" data-timeframe="long">
+          <span class="timeframe-label">Age</span>
+          <span class="timeframe-age" id="age-long">65</span>
+        </button>
+      </div>
+
+      <!-- Footer with CTA -->
+      <footer class="footer-results">
+        <p class="footer-insight">
+          You put in <span id="total-contributed">$0</span> → grows to <span id="total-final">$0</span>
+        </p>
+        <div class="scenario-toggle">
+          <button class="scenario-btn" data-scenario="low">Low risk</button>
+          <button class="scenario-btn scenario-btn--active" data-scenario="normal">Normal risk</button>
+          <button class="scenario-btn" data-scenario="high">High risk</button>
+        </div>
+        <button class="btn-cta" id="btn-show-how">👀 Show me how</button>
+      </footer>
+
+    </div>
+  </main>
+
+  <!-- ========== PAGE 3: Multi-Step Form ========== -->
+  <main class="page page--form" id="page-form">
+    <div class="page-inner">
+      <header class="header-form">
+        <button class="back-btn" id="btn-back-form" aria-label="Go back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </button>
+        <div class="step-indicator">
+          <span class="step-text">Step <span id="current-step">1</span> of 3</span>
+          <div class="step-dots">
+            <span class="step-dot step-dot--active" data-step="1"></span>
+            <span class="step-dot" data-step="2"></span>
+            <span class="step-dot" data-step="3"></span>
+          </div>
+        </div>
+      </header>
+
+      <section class="form-section">
+        <!-- Step 1: First Name -->
+        <div class="form-step form-step--active" id="step-1">
+          <h2 class="form-title">What's your first name?</h2>
+          <p class="form-subtitle">Let's personalize your wealth plan.</p>
+          <div class="form-field form-field--large">
+            <input type="text" id="first-name" placeholder="First name" required autocomplete="given-name">
+          </div>
+          <button type="button" class="btn-next" id="btn-step-1">Continue</button>
+        </div>
+
+        <!-- Step 2: Last Name -->
+        <div class="form-step" id="step-2">
+          <h2 class="form-title">And your last name?</h2>
+          <p class="form-subtitle">Almost there!</p>
+          <div class="form-field form-field--large">
+            <input type="text" id="last-name" placeholder="Last name" required autocomplete="family-name">
+          </div>
+          <button type="button" class="btn-next" id="btn-step-2">Continue</button>
+        </div>
+
+        <!-- Step 3: Phone -->
+        <div class="form-step" id="step-3">
+          <h2 class="form-title">What's your phone number?</h2>
+          <p class="form-subtitle">We'll text you your personalized plan.</p>
+          <div class="form-field form-field--large">
+            <input type="tel" id="phone" placeholder="(555) 555-5555" required autocomplete="tel">
+          </div>
+          <button type="button" class="btn-next btn-next--final" id="btn-step-3">🎁 See my plan</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ========== PAGE 4: Hard vs Easy Comparison ========== -->
+  <main class="page page--comparison" id="page-comparison">
+    <div class="comparison-container">
+      <!-- Personalized Header -->
+      <header class="comparison-header">
+        <p class="comparison-greeting">Hey <span id="user-first-name">there</span> 👋</p>
+        <h1 class="comparison-headline">Your path to</h1>
+        <div class="comparison-goal">
+          <span class="goal-amount" id="goal-amount">$0</span>
+          <span class="goal-subtext">by age 65</span>
+        </div>
+      </header>
+
+      <!-- Path Cards -->
+      <div class="path-options">
+
+        <!-- Hard Way - Compressed, Painful -->
+        <div class="path-card path-card--hard">
+          <div class="path-card-badge">😰 The Hard Way</div>
+          <div class="path-card-stat">
+            <span class="stat-number stat-number--bad">8%</span>
+            <span class="stat-label">success rate</span>
+          </div>
+          <ul class="path-card-list path-card-list--hard">
+            <li><span class="list-icon">❌</span> Remember to invest every single week</li>
+            <li><span class="list-icon">❌</span> Research & pick winning stocks</li>
+            <li><span class="list-icon">❌</span> Track market 24/7</li>
+            <li><span class="list-icon">❌</span> Hope you beat <span id="hard-return">12%</span> returns</li>
+          </ul>
+          <div class="path-card-warning">
+            <span class="warning-icon">⚠️</span>
+            <span>92% of people give up within 6 months</span>
+          </div>
+        </div>
+
+        <!-- Easy Way - Expanded, Glowing, Premium -->
+        <div class="path-card path-card--easy">
+          <div class="path-card-badge path-card-badge--recommended">✨ The Easy Way</div>
+          <div class="path-card-stat">
+            <span class="stat-number stat-number--good">87%</span>
+            <span class="stat-label">success rate</span>
+          </div>
+          <ul class="path-card-list path-card-list--easy">
+            <li><span class="list-icon">✓</span> Set it once, invest automatically</li>
+            <li><span class="list-icon">✓</span> AI picks stocks for you</li>
+            <li><span class="list-icon">✓</span> 24/7 monitoring while you sleep</li>
+            <li><span class="list-icon">✓</span> Smart rebalancing built-in</li>
+          </ul>
+          <div class="path-card-social">
+            <span class="social-avatars">👤👤👤</span>
+            <span class="social-text"><strong id="social-count">0</strong> people chose this path</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom CTA - Impossible to miss -->
+      <div class="comparison-cta-section">
+        <a href="https://apps.apple.com/us/app/benson-ai-stock-trading/id6470971278" class="comparison-cta" target="_blank">
+          <span class="cta-text">Download Benson</span>
+          <span class="cta-subtext">Start your first investment today →</span>
+        </a>
+        <div class="cta-trust">
+          <span class="trust-item">🔒 Bank-level security</span>
+          <span class="trust-item">⭐ 4.8 App Store</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="scripts/calculator.js"></script>
+</body>
+</html>

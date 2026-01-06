@@ -27,6 +27,8 @@ Rules:
 - Descriptive name that explains what the tool does
 - `.html` extension
 
+**Exception:** `compound/` uses folder structure (`compound/index.html`) for clean URL compatibility with Benson app share links. This is the ONLY exception.
+
 ### 3. File Structure Section
 Keep the "## File Structure" section in README.md accurate. Format:
 ```
