@@ -41,10 +41,73 @@ fun/
 
 ## Adding New Tools
 
-1. Create a new HTML file (e.g., `new-tool.html`) in the root
-2. Link to it from the main page if desired
-3. Follow the existing dark theme + neon green accent style for consistency
-4. Push to main branch - GitHub Pages auto-deploys
+### Quick Start
+```bash
+cd /Users/phillipaubrey/fun-repo
+# Create your new tool
+cp index.html new-tool.html  # Use as template, or start fresh
+# Edit new-tool.html
+git add . && git commit -m "Add new-tool" && git push
+# Live at: https://yunitdev.github.io/fun/new-tool.html
+```
+
+### Step-by-Step
+
+1. **Create the file**
+   - Add `new-tool.html` in the root directory
+   - Use `index.html` as a template if helpful
+
+2. **Follow the design system**
+   - Background: `#0a0a0a` (dark)
+   - Accent: `#00ff88` (neon green)
+   - Font: Space Mono or system monospace
+   - Keep it single-file (HTML + embedded CSS/JS)
+
+3. **Update this README**
+   - Add your tool under the "Tools" section
+   - Include: name, URL, description, features
+
+4. **Deploy**
+   ```bash
+   git add . && git commit -m "Add [tool-name]" && git push
+   ```
+   GitHub Pages auto-deploys within ~1 minute.
+
+### Naming Convention
+- Use lowercase, hyphenated names: `my-cool-tool.html`
+- Keep names short and descriptive
+
+### File Organization
+- Simple tools: Single HTML file in root
+- Tools with assets: Create a folder (e.g., `my-tool/index.html`, `my-tool/assets/`)
+
+### Template Structure
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tool Name</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Space Mono', monospace;
+      background: #0a0a0a;
+      color: #fff;
+      min-height: 100vh;
+    }
+    /* Accent color: #00ff88 */
+  </style>
+</head>
+<body>
+  <!-- Your tool here -->
+  <script>
+    // Your JS here
+  </script>
+</body>
+</html>
+```
 
 ## Tech Stack
 - HTML5
