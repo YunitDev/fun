@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Type like Phillip</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-card: #111111;
+            --bg-input: #1a1a1a;
+            --border: #2a2a2a;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --text-muted: #555555;
+            --accent: #00ff88;
+            --accent-dim: #00ff8833;
+            --accent-glow: #00ff8866;
+            --red: #ff4444;
+            --yellow: #ffcc00;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Grid background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-top: 2rem;
+        }
+
+        .logo-mark {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .logo-mark .dot {
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+            50% { box-shadow: 0 0 20px 5px var(--accent-glow); }
+        }
+
+        .logo-mark span {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--accent);
+        }
+
+        h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.6s ease-out 0.1s both;
+        }
+
+        h1 .highlight {
+            color: var(--accent);
+            position: relative;
+            display: inline-block;
+        }
+
+        h1 .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 0.1em;
+            left: 0;
+            width: 100%;
+            height: 0.15em;
+            background: var(--accent);
+            opacity: 0.3;
+            transform: skewX(-12deg);
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.6;
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        .subtitle strong {
+            color: var(--text-primary);
+        }
+
+        /* Main transformer section */
+        .transformer {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 0;
+            margin-bottom: 4rem;
+            animation: fadeInUp 0.6s ease-out 0.3s both;
+        }
+
+        @media (max-width: 900px) {
+            .transformer {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .panel-left {
+            border-radius: 12px 0 0 12px;
+        }
+
+        .panel-right {
+            border-radius: 0 12px 12px 0;
+            border-left: none;
+        }
+
+        @media (max-width: 900px) {
+            .panel-left, .panel-right {
+                border-radius: 12px;
+                border: 1px solid var(--border);
+            }
+        }
+
+        .panel-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .panel-label .icon {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .panel-left .icon {
+            background: var(--red);
+        }
+
+        .panel-right .icon {
+            background: var(--accent);
+        }
+
+        .panel-label span {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-secondary);
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            resize: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-dim);
+        }
+
+        textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .output-area {
+            width: 100%;
+            height: 200px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--accent);
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+
+        .output-area.empty {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Middle arrow section */
+        .arrow-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 1.5rem;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        @media (max-width: 900px) {
+            .arrow-section {
+                padding: 1.5rem;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                flex-direction: row;
+                gap: 1rem;
+            }
+        }
+
+        .transform-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #00cc6a);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .transform-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+
+        .transform-btn:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        .transform-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        .transform-btn:active {
+            transform: scale(0.95);
+        }
+
+        .transform-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--bg-dark);
+            position: relative;
+            z-index: 1;
+        }
+
+        .transform-btn.loading svg {
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Copy button */
+        .copy-btn {
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .copy-btn.copied {
+            border-color: var(--accent);
+            background: var(--accent-dim);
+            color: var(--accent);
+        }
+
+        .copy-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        /* Examples section */
+        .examples-section {
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .section-header .line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border), transparent);
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .example-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .example-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-dim);
+        }
+
+        .example-header {
+            padding: 1rem 1.25rem;
+            background: var(--bg-input);
+            border-bottom: 1px solid var(--border);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+        }
+
+        .example-content {
+            padding: 1.25rem;
+        }
+
+        .example-before, .example-after {
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .example-before {
+            background: rgba(255, 68, 68, 0.05);
+            border: 1px solid rgba(255, 68, 68, 0.2);
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .example-before::before {
+            content: 'BEFORE';
+            position: absolute;
+            top: -0.5em;
+            left: 1rem;
+            background: var(--bg-card);
+            padding: 0 0.5rem;
+            font-size: 0.6rem;
+            letter-spacing: 0.1em;
+            color: var(--red);
+        }
+
+        .example-after {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            color: var(--accent);
+            position: relative;
+        }
+
+        .example-after::before {
+            content: 'AFTER';
+            position: absolute;
+            top: -0.5em;
+            left: 1rem;
+            background: var(--bg-card);
+            padding: 0 0.5rem;
+            font-size: 0.6rem;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 4rem;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            animation: fadeInUp 0.6s ease-out 0.5s both;
+        }
+
+        .footer-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .footer-text a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Quick reference tooltip */
+        .quick-ref {
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            background: var(--bg-input);
+            border-radius: 8px;
+            border: 1px dashed var(--border);
+        }
+
+        .quick-ref-title {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .quick-ref-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .quick-ref-item {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            background: var(--bg-dark);
+            border-radius: 4px;
+            color: var(--text-secondary);
+        }
+
+        .quick-ref-item .arrow {
+            color: var(--accent);
+            margin: 0 0.25rem;
+        }
+
+        /* Character count */
+        .char-count {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 0.5rem;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo-mark">
+                <div class="dot"></div>
+                <span>Text Transformer</span>
+            </div>
+            <h1>Type like <span class="highlight">Phillip</span></h1>
+            <p class="subtitle">Transform formal, robotic text into <strong>authentic</strong>, direct communication. No fluff, no corporate speak.</p>
+        </header>
+
+        <main>
+            <section class="transformer">
+                <div class="panel panel-left">
+                    <div class="panel-label">
+                        <div class="icon"></div>
+                        <span>Formal Input</span>
+                    </div>
+                    <textarea id="input" placeholder="Paste your formal, corporate, or robotic text here...
+
+Example: &quot;Hello, I wanted to reach out to see if you would be willing to schedule a meeting at your earliest convenience.&quot;"></textarea>
+                    <div class="char-count"><span id="input-count">0</span> characters</div>
+                    <div class="quick-ref">
+                        <div class="quick-ref-title">Quick transformations</div>
+                        <div class="quick-ref-items">
+                            <span class="quick-ref-item">I'm<span class="arrow">→</span>Im</span>
+                            <span class="quick-ref-item">let me know<span class="arrow">→</span>lmk</span>
+                            <span class="quick-ref-item">right now<span class="arrow">→</span>rn</span>
+                            <span class="quick-ref-item">for sure<span class="arrow">→</span>forsure</span>
+                            <span class="quick-ref-item">by the way<span class="arrow">→</span>btw</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="arrow-section">
+                    <button class="transform-btn" id="transformBtn" title="Transform text">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="panel panel-right">
+                    <div class="panel-label">
+                        <div class="icon"></div>
+                        <span>Phillip's Style</span>
+                    </div>
+                    <div class="output-area empty" id="output">transformed text will appear here...</div>
+                    <div class="char-count"><span id="output-count">0</span> characters</div>
+                    <button class="copy-btn" id="copyBtn">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                        </svg>
+                        Copy
+                    </button>
+                </div>
+            </section>
+
+            <section class="examples-section">
+                <div class="section-header">
+                    <h2>Examples</h2>
+                    <div class="line"></div>
+                </div>
+
+                <div class="examples-grid">
+                    <div class="example-card">
+                        <div class="example-header">Introduction</div>
+                        <div class="example-content">
+                            <div class="example-before">Hello, my name is Phillip and I am the CEO of Benson. I wanted to introduce myself and let you know that I'm here to help.</div>
+                            <div class="example-after">yo Im Phillip the CEO of Benson. Hit me if you need anything</div>
+                        </div>
+                    </div>
+
+                    <div class="example-card">
+                        <div class="example-header">Follow Up</div>
+                        <div class="example-content">
+                            <div class="example-before">I hope this message finds you well. I wanted to follow up on our previous conversation to see if you had any additional questions.</div>
+                            <div class="example-after">following up on this. Any questions?</div>
+                        </div>
+                    </div>
+
+                    <div class="example-card">
+                        <div class="example-header">Request</div>
+                        <div class="example-content">
+                            <div class="example-before">Would you be willing to provide some feedback on your experience? Any thoughts you could share would be greatly appreciated.</div>
+                            <div class="example-after">curious what you think so far. Feedback helps me improve things</div>
+                        </div>
+                    </div>
+
+                    <div class="example-card">
+                        <div class="example-header">Problem Resolution</div>
+                        <div class="example-content">
+                            <div class="example-before">I apologize for the technical difficulties you experienced. Our team is currently investigating the issue and working on a resolution.</div>
+                            <div class="example-after">my bad on that issue. Team is looking into it rn. Ill hit you when its fixed</div>
+                        </div>
+                    </div>
+
+                    <div class="example-card">
+                        <div class="example-header">Good News</div>
+                        <div class="example-content">
+                            <div class="example-before">I'm pleased to inform you that we've achieved excellent results. The investment increased by 15% which represents a significant gain.</div>
+                            <div class="example-after">yo that investment? Just jumped 15%. Lets go!!</div>
+                        </div>
+                    </div>
+
+                    <div class="example-card">
+                        <div class="example-header">Scheduling</div>
+                        <div class="example-content">
+                            <div class="example-before">Would you be available for a call sometime this week? Please let me know what works best for your schedule.</div>
+                            <div class="example-after">can you hop on a call this week? lmk what works for you</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p class="footer-text">Built for authentic communication &middot; <a href="#">meetbenson.com</a></p>
+        </footer>
+    </div>
+
+    <script>
+        const input = document.getElementById('input');
+        const output = document.getElementById('output');
+        const transformBtn = document.getElementById('transformBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const inputCount = document.getElementById('input-count');
+        const outputCount = document.getElementById('output-count');
+
+        // Character counter
+        input.addEventListener('input', () => {
+            inputCount.textContent = input.value.length;
+        });
+
+        // Transform function (placeholder - would connect to Claude API)
+        function transformText(text) {
+            if (!text.trim()) return '';
+
+            let result = text;
+
+            // Remove formal openings
+            const formalOpenings = [
+                /^(Dear|Hello|Hi there|Greetings|Good morning|Good afternoon|Good evening)[,.]?\s*/i,
+                /I hope this (message |email |)finds you well[.,]?\s*/gi,
+                /I hope you('re| are) (doing |)well[.,]?\s*/gi,
+                /I wanted to reach out (to you )?(to |because |regarding )?/gi,
+                /I am writing to (you )?(to |because |regarding )?/gi,
+                /Allow me to introduce myself[.,]?\s*/gi,
+            ];
+            formalOpenings.forEach(pattern => {
+                result = result.replace(pattern, '');
+            });
+
+            // Replace formal phrases
+            const replacements = [
+                [/\bI am\b/g, 'Im'],
+                [/\bI'm\b/g, 'Im'],
+                [/\bI will\b/g, 'Ill'],
+                [/\bI'll\b/g, 'Ill'],
+                [/\bdo not\b/gi, 'dont'],
+                [/\bdon't\b/gi, 'dont'],
+                [/\bcan not\b/gi, 'cant'],
+                [/\bcannot\b/gi, 'cant'],
+                [/\bcan't\b/gi, 'cant'],
+                [/\bwill not\b/gi, 'wont'],
+                [/\bwon't\b/gi, 'wont'],
+                [/\bdid not\b/gi, 'didnt'],
+                [/\bdidn't\b/gi, 'didnt'],
+                [/\bdoes not\b/gi, 'doesnt'],
+                [/\bdoesn't\b/gi, 'doesnt'],
+                [/\byou will\b/gi, 'youll'],
+                [/\byou'll\b/gi, 'youll'],
+                [/\byou are\b/gi, 'youre'],
+                [/\byou're\b/gi, 'youre'],
+                [/\bthat is\b/gi, 'thats'],
+                [/\bthat's\b/gi, 'thats'],
+                [/\bit is\b/gi, 'its'],
+                [/\bit's\b/gi, 'its'],
+                [/\bI have\b/g, 'Ive'],
+                [/\bI've\b/g, 'Ive'],
+                [/\bwe have\b/gi, 'weve'],
+                [/\bwe've\b/gi, 'weve'],
+                [/\bhe is\b/gi, 'hes'],
+                [/\bhe's\b/gi, 'hes'],
+                [/\bshe is\b/gi, 'shes'],
+                [/\bshe's\b/gi, 'shes'],
+                [/\bwhat is\b/gi, 'whats'],
+                [/\bwhat's\b/gi, 'whats'],
+                [/\bthere is\b/gi, 'theres'],
+                [/\bthere's\b/gi, 'theres'],
+                [/\bwould not\b/gi, 'wouldnt'],
+                [/\bwouldn't\b/gi, 'wouldnt'],
+                [/\bcould not\b/gi, 'couldnt'],
+                [/\bcouldn't\b/gi, 'couldnt'],
+                [/\bshould not\b/gi, 'shouldnt'],
+                [/\bshouldn't\b/gi, 'shouldnt'],
+                [/\bthey are\b/gi, 'theyre'],
+                [/\bthey're\b/gi, 'theyre'],
+                [/\bwe are\b/gi, 'were'],
+                [/\bwe're\b/gi, 'were'],
+                [/\bis not\b/gi, 'isnt'],
+                [/\bisn't\b/gi, 'isnt'],
+                [/\bare not\b/gi, 'arent'],
+                [/\baren't\b/gi, 'arent'],
+                [/\bhave not\b/gi, 'havent'],
+                [/\bhaven't\b/gi, 'havent'],
+                [/\bwas not\b/gi, 'wasnt'],
+                [/\bwasn't\b/gi, 'wasnt'],
+                [/\bwere not\b/gi, 'werent'],
+                [/\bweren't\b/gi, 'werent'],
+
+                // Slang replacements
+                [/\blet me know\b/gi, 'lmk'],
+                [/\bby the way\b/gi, 'btw'],
+                [/\bright now\b/gi, 'rn'],
+                [/\bI don't know\b/gi, 'idk'],
+                [/\bI dont know\b/gi, 'idk'],
+                [/\bfor sure\b/gi, 'forsure'],
+                [/\bfor real\b/gi, 'fr'],
+                [/\balright\b/gi, 'ight'],
+                [/\bokay then\b/gi, 'ight'],
+                [/\bbecause\b/gi, 'bc'],
+                [/\bnot going to lie\b/gi, 'ngl'],
+                [/\btrying to\b/gi, 'tryna'],
+
+                // Formal phrase replacements
+                [/\bwould you be willing to\b/gi, 'you down to'],
+                [/\bI was wondering if you could\b/gi, 'can you'],
+                [/\bI was wondering if\b/gi, 'curious if'],
+                [/\bif it's not too much trouble\b/gi, ''],
+                [/\bif its not too much trouble\b/gi, ''],
+                [/\bat your earliest convenience\b/gi, 'when you get a chance'],
+                [/\bplease let me know if you need any assistance\b/gi, 'lmk if you need help'],
+                [/\bplease do not hesitate to\b/gi, 'just'],
+                [/\bdo not hesitate to\b/gi, 'just'],
+                [/\bdont hesitate to\b/gi, 'just'],
+                [/\bI apologize for\b/gi, 'my bad on'],
+                [/\bI am sorry for\b/gi, 'my bad on'],
+                [/\bIm sorry for\b/gi, 'my bad on'],
+                [/\bwe are currently\b/gi, 'were'],
+                [/\bI would like to\b/gi, 'I want to'],
+                [/\bI would love to\b/gi, 'Id love to'],
+                [/\bplease feel free to\b/gi, 'feel free to'],
+                [/\bkindly\b/gi, ''],
+                [/\bwould be greatly appreciated\b/gi, 'would help'],
+                [/\bany thoughts you could share\b/gi, 'any thoughts'],
+                [/\bI am pleased to inform you that\b/gi, ''],
+                [/\bIm pleased to inform you that\b/gi, ''],
+                [/\bwhich represents a significant\b/gi, 'thats a'],
+                [/\bplease let me know what works best for your schedule\b/gi, 'lmk what works for you'],
+                [/\bwhat works best for your schedule\b/gi, 'what works for you'],
+                [/\bscheduling a meeting\b/gi, 'a call'],
+                [/\bschedule a meeting\b/gi, 'hop on a call'],
+                [/\bregarding\b/gi, 'about'],
+                [/\bprevious conversation\b/gi, 'this'],
+                [/\badditional questions\b/gi, 'questions'],
+                [/\bI genuinely\b/gi, 'I'],
+                [/\bgenuinely\b/gi, ''],
+                [/\bquick question\b/gi, ''],
+                [/\btouching base\b/gi, 'checking in'],
+                [/\bcircle back\b/gi, 'follow up'],
+                [/\bgoing forward\b/gi, 'from now on'],
+                [/\bleverage\b/gi, 'use'],
+            ];
+
+            replacements.forEach(([pattern, replacement]) => {
+                result = result.replace(pattern, replacement);
+            });
+
+            // Clean up extra spaces
+            result = result.replace(/\s+/g, ' ').trim();
+
+            // Clean up double periods or commas
+            result = result.replace(/\.+/g, '.').replace(/,+/g, ',');
+            result = result.replace(/\s+\./g, '.').replace(/\s+,/g, ',');
+            result = result.replace(/,\s*\./g, '.');
+
+            // Add casual opener if message starts abruptly
+            if (result && !result.toLowerCase().startsWith('yo') &&
+                !result.toLowerCase().startsWith('hey') &&
+                !result.toLowerCase().startsWith('btw') &&
+                !result.toLowerCase().startsWith('following') &&
+                !result.toLowerCase().startsWith('checking') &&
+                result.length > 30) {
+                // Only add 'yo' sometimes for variety
+                if (Math.random() > 0.5) {
+                    result = 'yo ' + result.charAt(0).toLowerCase() + result.slice(1);
+                }
+            }
+
+            // Make first letter lowercase for casual feel (unless it's a name or "I")
+            if (result && result.charAt(0) !== 'I' && !/^[A-Z][a-z]+\s/.test(result)) {
+                result = result.charAt(0).toLowerCase() + result.slice(1);
+            }
+
+            // Remove trailing period for short messages
+            if (result.length < 50 && result.endsWith('.')) {
+                result = result.slice(0, -1);
+            }
+
+            return result;
+        }
+
+        // Transform button click handler
+        transformBtn.addEventListener('click', () => {
+            const text = input.value.trim();
+
+            if (!text) {
+                output.textContent = 'enter some text first...';
+                output.classList.add('empty');
+                return;
+            }
+
+            // Add loading state
+            transformBtn.classList.add('loading');
+
+            // Simulate API delay for better UX
+            setTimeout(() => {
+                const transformed = transformText(text);
+                output.textContent = transformed;
+                output.classList.remove('empty');
+                outputCount.textContent = transformed.length;
+                transformBtn.classList.remove('loading');
+            }, 300);
+        });
+
+        // Allow Enter key (with Cmd/Ctrl) to transform
+        input.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+                transformBtn.click();
+            }
+        });
+
+        // Copy button handler
+        copyBtn.addEventListener('click', async () => {
+            const text = output.textContent;
+
+            if (!text || output.classList.contains('empty')) return;
+
+            try {
+                await navigator.clipboard.writeText(text);
+                copyBtn.classList.add('copied');
+                copyBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                    Copied!
+                `;
+
+                setTimeout(() => {
+                    copyBtn.classList.remove('copied');
+                    copyBtn.innerHTML = `
+                        <svg viewBox="0 0 24 24">
+                            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                        </svg>
+                        Copy
+                    `;
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy:', err);
+            }
+        });
+    </script>
+</body>
+</html>
