@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Native Benson</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --black: #09090b;
+            --dark: #141416;
+            --gray: #71717a;
+            --light: #a1a1aa;
+            --white: #fafafa;
+            --green: #22c55e;
+            --green-dim: #16a34a;
+            --green-glow: rgba(34, 197, 94, 0.15);
+            --orange: #f97316;
+            --purple: #a855f7;
+            --blue: #3b82f6;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        .serif { font-family: 'Instrument Serif', serif; font-weight: 400; }
+        .green { color: var(--green); }
+        .italic { font-style: italic; }
+
+        /* Ambient background */
+        .ambient {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .ambient-orb-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--green);
+            top: -200px;
+            right: -200px;
+            opacity: 0.08;
+            animation-delay: 0s;
+        }
+
+        .ambient-orb-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--green);
+            bottom: -100px;
+            left: -100px;
+            opacity: 0.06;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        /* Slides */
+        .slide {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        visibility 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-content {
+            max-width: 1100px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .fade-up-left {
+            opacity: 0;
+            transform: translate(-30px, 20px);
+        }
+
+        .fade-up-right {
+            opacity: 0;
+            transform: translate(30px, 20px);
+        }
+
+        .fade-scale {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        .slide.active .fade-up,
+        .slide.active .fade-up-left,
+        .slide.active .fade-up-right,
+        .slide.active .fade-scale {
+            animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .slide.active .fade-up-left {
+            animation-name: revealFromLeft;
+        }
+
+        .slide.active .fade-up-right {
+            animation-name: revealFromRight;
+        }
+
+        .slide.active .fade-scale {
+            animation-name: revealScale;
+        }
+
+        .slide.active .d1 { animation-delay: 0.1s; }
+        .slide.active .d2 { animation-delay: 0.2s; }
+        .slide.active .d3 { animation-delay: 0.3s; }
+        .slide.active .d4 { animation-delay: 0.4s; }
+        .slide.active .d5 { animation-delay: 0.5s; }
+        .slide.active .d6 { animation-delay: 0.6s; }
+
+        @keyframes revealUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes revealFromLeft {
+            to { opacity: 1; transform: translate(0, 0); }
+        }
+
+        @keyframes revealFromRight {
+            to { opacity: 1; transform: translate(0, 0); }
+        }
+
+        @keyframes revealScale {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .glow-text {
+            animation: textGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
+            50% { text-shadow: 0 0 40px rgba(34, 197, 94, 0.6), 0 0 60px rgba(34, 197, 94, 0.3); }
+        }
+
+        /* Navigation */
+        .nav-dots {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 100;
+        }
+
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav-dot:hover {
+            background: rgba(255,255,255,0.5);
+            transform: scale(1.3);
+        }
+
+        .nav-dot.active {
+            background: var(--green);
+            box-shadow: 0 0 15px var(--green);
+        }
+
+        .nav-arrows {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 100;
+        }
+
+        .nav-arrow {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 1.25rem;
+        }
+
+        .nav-arrow:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--green);
+            transform: scale(1.1);
+        }
+
+        .nav-arrow:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 2.5rem;
+            left: 2rem;
+            font-size: 0.8rem;
+            color: var(--gray);
+            z-index: 100;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: clamp(3.5rem, 10vw, 7rem);
+            line-height: 0.95;
+            letter-spacing: -0.03em;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 5vw, 3.25rem);
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+        }
+
+        h3 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+
+        .label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--green);
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            color: var(--light);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255,255,255,0.12);
+        }
+
+        /* Grids */
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+
+        /* === SLIDE STYLES === */
+
+        /* Hero */
+        .hero { text-align: center; }
+        .hero h1 { margin-bottom: 1.5rem; }
+        .hero .subtitle { max-width: 550px; margin: 0 auto 2.5rem; }
+
+        .hero-visual {
+            display: inline-flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem 2.5rem;
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 100px;
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-visual::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.1), transparent);
+            transform: translateX(-100%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            50%, 100% { transform: translateX(100%); }
+        }
+
+        .hero-visual span {
+            font-size: 1.1rem;
+            color: var(--light);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-visual .arrow {
+            color: var(--green);
+            font-size: 1.5rem;
+            animation: arrowPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes arrowPulse {
+            0%, 100% { transform: translateX(0); opacity: 1; }
+            50% { transform: translateX(5px); opacity: 0.7; }
+        }
+
+        .hero-visual .result {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        /* Hard Truth */
+        .truth-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .truth-option {
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .truth-option.bad {
+            background: rgba(239, 68, 68, 0.05);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .truth-option.good {
+            background: var(--green-glow);
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+
+        .truth-option h4 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .truth-option.bad h4 { color: #ef4444; }
+        .truth-option.good h4 { color: var(--green); }
+
+        .truth-option p {
+            font-size: 0.9rem;
+            color: var(--light);
+            line-height: 1.6;
+        }
+
+        /* Team */
+        .team-grid { margin-top: 3rem; }
+
+        .team-card {
+            padding: 2rem 1.5rem;
+            text-align: left;
+        }
+
+        .team-bar {
+            width: 40px;
+            height: 4px;
+            border-radius: 2px;
+            margin-bottom: 1.5rem;
+            transition: width 0.4s ease;
+        }
+
+        .team-card:hover .team-bar { width: 60px; }
+
+        .team-card:nth-child(1) .team-bar { background: var(--orange); }
+        .team-card:nth-child(2) .team-bar { background: var(--purple); }
+        .team-card:nth-child(3) .team-bar { background: var(--blue); }
+        .team-card:nth-child(4) .team-bar { background: var(--green); }
+
+        .team-name {
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .team-role {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.25rem;
+        }
+
+        .team-card:nth-child(1) .team-role { color: var(--orange); }
+        .team-card:nth-child(2) .team-role { color: var(--purple); }
+        .team-card:nth-child(3) .team-role { color: var(--blue); }
+        .team-card:nth-child(4) .team-role { color: var(--green); }
+
+        .team-transform {
+            padding-top: 1.25rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .team-from {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 0.35rem;
+            text-decoration: line-through;
+            text-decoration-color: rgba(255,255,255,0.3);
+        }
+
+        .team-to {
+            font-size: 0.85rem;
+            color: var(--white);
+            font-weight: 500;
+        }
+
+        /* Unlocks Grid */
+        .unlocks-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .unlock-card {
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 1.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .unlock-card:hover {
+            border-color: rgba(34, 197, 94, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .unlock-icon {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .unlock-card h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--white);
+        }
+
+        .unlock-card p {
+            font-size: 0.9rem;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+
+        /* System Overview */
+        .system-overview { text-align: center; }
+
+        .loop-visual {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem;
+            margin: 3rem auto 2rem;
+            max-width: 900px;
+        }
+
+        .loop-step {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .loop-node {
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+
+        .loop-node:hover {
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .loop-node.highlight {
+            border-color: var(--green);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.15);
+        }
+
+        .loop-node .num {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 0.25rem;
+        }
+
+        .loop-node .title {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .loop-arrow {
+            color: var(--gray);
+            font-size: 1.25rem;
+            opacity: 0.4;
+        }
+
+        .loop-arrow.back {
+            color: var(--green);
+            opacity: 0.8;
+        }
+
+        .system-tagline {
+            font-size: 1.1rem;
+            color: var(--light);
+            margin-top: 2rem;
+        }
+
+        /* Step Slides */
+        .step-slide {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .step-left {
+            text-align: left;
+        }
+
+        .step-number {
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--green);
+            line-height: 1;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .step-title {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-owner-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .step-owner-label strong {
+            color: var(--white);
+        }
+
+        .step-desc {
+            font-size: 1.1rem;
+            color: var(--light);
+            line-height: 1.7;
+        }
+
+        .step-right {
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .step-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .step-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-section h4 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--green);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .step-section h4::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--green);
+            border-radius: 2px;
+        }
+
+        .step-list {
+            list-style: none;
+        }
+
+        .step-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--light);
+            padding: 0.4rem 0;
+        }
+
+        .step-list li::before {
+            content: '→';
+            color: var(--gray);
+            flex-shrink: 0;
+        }
+
+        .step-list li strong {
+            color: var(--white);
+        }
+
+        /* Eng Review Split */
+        .eng-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .eng-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .eng-card h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .eng-card .role {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .eng-card.backend .role { color: var(--blue); }
+        .eng-card.ios .role { color: var(--green); }
+
+        .eng-card.backend { border-color: rgba(59, 130, 246, 0.3); }
+        .eng-card.ios { border-color: rgba(34, 197, 94, 0.3); }
+
+        /* Measure Monday Report */
+        .monday-report {
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            font-family: 'DM Sans', monospace;
+            font-size: 0.85rem;
+            margin-top: 2rem;
+        }
+
+        .report-header {
+            color: var(--green);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .report-section {
+            margin-bottom: 1rem;
+        }
+
+        .report-section h5 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .report-section p {
+            color: var(--light);
+            font-size: 0.85rem;
+        }
+
+        .report-action {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            color: var(--white);
+        }
+
+        .report-action .checkbox {
+            width: 14px;
+            height: 14px;
+            border: 1px solid var(--gray);
+            border-radius: 3px;
+        }
+
+        /* Sync Slide */
+        .sync-slide {
+            background: var(--green);
+            color: var(--black);
+        }
+
+        .sync-slide .label { color: var(--black); opacity: 0.6; }
+        .sync-slide h2 { margin-bottom: 1rem; }
+        .sync-slide .subtitle { color: var(--black); opacity: 0.8; max-width: 500px; }
+
+        .sync-rules {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .sync-rule {
+            background: rgba(0,0,0,0.1);
+            border-radius: 16px;
+            padding: 1.75rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .sync-rule:hover {
+            background: rgba(0,0,0,0.15);
+            transform: translateY(-4px);
+        }
+
+        .sync-rule-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            display: inline-block;
+        }
+
+        .sync-rule h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.35rem; }
+        .sync-rule p { font-size: 0.9rem; color: var(--black); opacity: 0.7; }
+
+        /* Sprint Calendar */
+        .sprint-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .sprint-header .subtitle { margin: 1rem auto 0; }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar-week {
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .calendar-week:hover {
+            border-color: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+
+        .calendar-week.milestone {
+            border-color: var(--green);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.15);
+        }
+
+        .calendar-week.current {
+            border-color: var(--orange);
+        }
+
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .week-num {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--green);
+            line-height: 1;
+        }
+
+        .calendar-week.milestone .week-num {
+            color: var(--green);
+        }
+
+        .week-dates {
+            font-size: 0.65rem;
+            color: var(--gray);
+            text-align: right;
+        }
+
+        .week-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--white);
+        }
+
+        .week-desc {
+            font-size: 0.75rem;
+            color: var(--gray);
+            line-height: 1.4;
+        }
+
+        .week-badge {
+            position: absolute;
+            top: -8px;
+            right: 12px;
+            background: var(--green);
+            color: var(--black);
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .calendar-phase {
+            text-align: center;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .phase-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray);
+        }
+
+        .phase-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .optimization-bar {
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .optimization-bar .week-num {
+            font-size: 1.25rem;
+        }
+
+        .optimization-content {
+            flex: 1;
+        }
+
+        .optimization-content .week-title {
+            margin-bottom: 0.25rem;
+        }
+
+        /* Milestones */
+        .milestone-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .milestone-card {
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .milestone-card:hover {
+            border-color: rgba(34, 197, 94, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .milestone-q {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--green);
+            margin-bottom: 0.75rem;
+        }
+
+        .milestone-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .milestone-desc {
+            font-size: 0.85rem;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+
+        /* Close */
+        .close-slide { text-align: center; }
+
+        .close-slide h2 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .close-quote {
+            font-size: 1.25rem;
+            color: var(--light);
+            max-width: 600px;
+            margin: 0 auto 4rem;
+        }
+
+        .compound-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+
+        .compound-item { text-align: center; }
+
+        .compound-period {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .compound-item:hover .compound-period {
+            color: var(--green);
+        }
+
+        .compound-result {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .restart-btn {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0.75rem 1.5rem;
+            border-radius: 100px;
+        }
+
+        .restart-btn:hover {
+            color: var(--white);
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .grid-2, .grid-4, .sync-rules, .milestone-grid, .compound-grid, .step-slide, .eng-split, .truth-options, .unlocks-grid, .calendar-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .loop-visual {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .loop-arrow {
+                transform: rotate(90deg);
+            }
+
+            .week-block {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .nav-dots { right: 1rem; }
+            .nav-arrows { right: 1rem; bottom: 1rem; }
+            .slide-counter { left: 1rem; bottom: 1.5rem; }
+        }
+
+        @media (max-width: 600px) {
+            .slide { padding: 3rem 1.5rem; }
+            .hero-visual { flex-direction: column; gap: 0.75rem; padding: 1.5rem; }
+            .hero-visual .arrow { transform: rotate(90deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Background -->
+    <div class="ambient">
+        <div class="ambient-orb ambient-orb-1"></div>
+        <div class="ambient-orb ambient-orb-2"></div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-dots">
+        <div class="nav-dot active" onclick="goToSlide(0)"></div>
+        <div class="nav-dot" onclick="goToSlide(1)"></div>
+        <div class="nav-dot" onclick="goToSlide(2)"></div>
+        <div class="nav-dot" onclick="goToSlide(3)"></div>
+        <div class="nav-dot" onclick="goToSlide(4)"></div>
+        <div class="nav-dot" onclick="goToSlide(5)"></div>
+        <div class="nav-dot" onclick="goToSlide(6)"></div>
+        <div class="nav-dot" onclick="goToSlide(7)"></div>
+        <div class="nav-dot" onclick="goToSlide(8)"></div>
+        <div class="nav-dot" onclick="goToSlide(9)"></div>
+        <div class="nav-dot" onclick="goToSlide(10)"></div>
+        <div class="nav-dot" onclick="goToSlide(11)"></div>
+        <div class="nav-dot" onclick="goToSlide(12)"></div>
+        <div class="nav-dot" onclick="goToSlide(13)"></div>
+        <div class="nav-dot" onclick="goToSlide(14)"></div>
+        <div class="nav-dot" onclick="goToSlide(15)"></div>
+    </div>
+
+    <div class="nav-arrows">
+        <button class="nav-arrow" id="prevBtn" onclick="prevSlide()">←</button>
+        <button class="nav-arrow" id="nextBtn" onclick="nextSlide()">→</button>
+    </div>
+
+    <div class="slide-counter">
+        <span id="currentNum">1</span> / 16
+    </div>
+
+    <!-- Slide 1: Hero -->
+    <section class="slide hero active" data-index="0">
+        <div class="slide-content">
+            <h1 class="serif fade-up">AI <span class="green glow-text">Native</span></h1>
+            <p class="subtitle fade-up d1">
+                Describe a feature in plain English. Ship it to production the same day.
+                This is how Benson builds now.
+            </p>
+            <div class="hero-visual fade-scale d2">
+                <span>Plain English</span>
+                <span class="arrow">→</span>
+                <span class="result">Production Code</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 2: The Hard Truth -->
+    <section class="slide" data-index="1">
+        <div class="slide-content">
+            <p class="label fade-up">The Hard Truth</p>
+            <h2 class="serif fade-up d1">AI is now smarter, more creative,<br>and more tireless than any of us.</h2>
+            <p class="subtitle fade-up d2" style="max-width: 750px;">
+                It works 24 hours a day. It doesn't get tired. It holds more context than any human.
+                It writes code faster than any engineer. <strong style="color: var(--white);">We have two options:</strong>
+            </p>
+
+            <div class="truth-options fade-up d3">
+                <div class="truth-option bad">
+                    <h4>Option 1: Pretend things aren't changing</h4>
+                    <p>Assume we'll always be as smart as we are. Assume our current pace is sustainable. Assume our competitors won't figure this out. Get left behind.</p>
+                </div>
+                <div class="truth-option good">
+                    <h4>Option 2: Become superhumans</h4>
+                    <p>Acknowledge the shift. Embrace the tools. Turn every person on this team into someone who operates at <strong>10x their current capacity</strong>.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 3: What AI-Native Means -->
+    <section class="slide" data-index="2">
+        <div class="slide-content" style="text-align: center;">
+            <p class="label fade-up">The Definition</p>
+            <h2 class="serif fade-up d1">AI does the work.<br>Humans provide <span class="green italic">judgment</span>.</h2>
+            <p class="subtitle fade-up d2" style="max-width: 700px; margin: 1rem auto 0;">
+                We're no longer the smartest in the room. But we are <strong style="color: var(--white);">the most educated on solving our users' problems</strong>. AI is a tool—if we wield it well, we ship faster than anyone could imagine.
+            </p>
+
+            <div class="grid-2 fade-up d3" style="max-width: 900px; margin: 2.5rem auto 0; text-align: left;">
+                <div class="card">
+                    <h4 style="color: var(--green); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">AI is better at</h4>
+                    <ul class="step-list">
+                        <li>Writing code that matches patterns</li>
+                        <li>Holding vast amounts of context</li>
+                        <li>Working without breaks</li>
+                        <li>Generating variations quickly</li>
+                        <li>Tracing through complex systems</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4 style="color: var(--white); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">We are better at</h4>
+                    <ul class="step-list">
+                        <li>Understanding what users actually need</li>
+                        <li>Knowing when something feels off</li>
+                        <li>Making judgment calls</li>
+                        <li>Setting vision and strategy</li>
+                        <li><strong>Having taste</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 4: Team -->
+    <section class="slide" data-index="3">
+        <div class="slide-content">
+            <p class="label fade-up">The Team</p>
+            <h2 class="serif fade-up d1">Same people. New superpowers.</h2>
+
+            <div class="grid-4 team-grid">
+                <div class="card team-card fade-up d1">
+                    <div class="team-bar"></div>
+                    <div class="team-name">Phillip</div>
+                    <div class="team-role">Product</div>
+                    <div class="team-transform">
+                        <div class="team-from">FROM: Writing detailed specs</div>
+                        <div class="team-to">TO: Testing ideas at speed of thought</div>
+                    </div>
+                </div>
+                <div class="card team-card fade-up d2">
+                    <div class="team-bar"></div>
+                    <div class="team-name">Tea & Tim</div>
+                    <div class="team-role">UX & Design</div>
+                    <div class="team-transform">
+                        <div class="team-from">FROM: Waiting for implementation</div>
+                        <div class="team-to">TO: Instant feedback on real builds</div>
+                    </div>
+                </div>
+                <div class="card team-card fade-up d3">
+                    <div class="team-bar"></div>
+                    <div class="team-name">Luka</div>
+                    <div class="team-role">Backend</div>
+                    <div class="team-transform">
+                        <div class="team-from">FROM: Coding endpoints all day</div>
+                        <div class="team-to">TO: Architect & Quality Guardian</div>
+                    </div>
+                </div>
+                <div class="card team-card fade-up d4">
+                    <div class="team-bar"></div>
+                    <div class="team-name">Rok</div>
+                    <div class="team-role">iOS</div>
+                    <div class="team-transform">
+                        <div class="team-from">FROM: Coding views all day</div>
+                        <div class="team-to">TO: iOS Architect & Guardian</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 5: What This Unlocks -->
+    <section class="slide" data-index="4">
+        <div class="slide-content" style="text-align: center;">
+            <p class="label fade-up">What This Unlocks</p>
+            <h2 class="serif fade-up d1">By end of February, we become <span class="green italic">superhumans</span>.</h2>
+
+            <div class="unlocks-grid">
+                <div class="unlock-card fade-up d2">
+                    <div class="unlock-icon">⚡</div>
+                    <h4>Ship 4x Faster</h4>
+                    <p>2-3 weeks becomes 2-3 days. Same-day turnaround for simple changes.</p>
+                </div>
+                <div class="unlock-card fade-up d2">
+                    <div class="unlock-icon">🧘</div>
+                    <h4>Less Stress</h4>
+                    <p>Less grinding through routine work. More time for high-level thinking.</p>
+                </div>
+                <div class="unlock-card fade-up d3">
+                    <div class="unlock-icon">🧪</div>
+                    <h4>10x More Experiments</h4>
+                    <p>Test 10 ideas in the time it used to take to test 1. Find what works faster.</p>
+                </div>
+                <div class="unlock-card fade-up d3">
+                    <div class="unlock-icon">🎯</div>
+                    <h4>Hyper-Personalized Product</h4>
+                    <p>Every user feels like Benson was built specifically for them.</p>
+                </div>
+                <div class="unlock-card fade-up d4">
+                    <div class="unlock-icon">💰</div>
+                    <h4>Better Fundraising Position</h4>
+                    <p>"A 5-person team shipping like a 20-person team." Investors have never seen leverage like this.</p>
+                </div>
+                <div class="unlock-card fade-up d4">
+                    <div class="unlock-icon">🚀</div>
+                    <h4>Path to Profitability</h4>
+                    <p>Reach our goals without enormous additional stress or headcount.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 6: System Overview -->
+    <section class="slide system-overview" data-index="5">
+        <div class="slide-content">
+            <p class="label fade-up">The System</p>
+            <h2 class="serif fade-up d1">A full-circle development loop</h2>
+            <p class="subtitle fade-up d2">Every feature follows this cycle. Every role has clear gates. Data closes the loop.</p>
+
+            <div class="loop-visual fade-up d3">
+                <div class="loop-step">
+                    <div class="loop-node">
+                        <div class="num">01</div>
+                        <div class="title">Speak</div>
+                    </div>
+                    <span class="loop-arrow">→</span>
+                </div>
+                <div class="loop-step">
+                    <div class="loop-node highlight">
+                        <div class="num">02</div>
+                        <div class="title">Generate</div>
+                    </div>
+                    <span class="loop-arrow">→</span>
+                </div>
+                <div class="loop-step">
+                    <div class="loop-node">
+                        <div class="num">03</div>
+                        <div class="title">UX Review</div>
+                    </div>
+                    <span class="loop-arrow">→</span>
+                </div>
+                <div class="loop-step">
+                    <div class="loop-node">
+                        <div class="num">04</div>
+                        <div class="title">Eng Review</div>
+                    </div>
+                    <span class="loop-arrow">→</span>
+                </div>
+                <div class="loop-step">
+                    <div class="loop-node">
+                        <div class="num">05</div>
+                        <div class="title">Ship</div>
+                    </div>
+                    <span class="loop-arrow">→</span>
+                </div>
+                <div class="loop-step">
+                    <div class="loop-node">
+                        <div class="num">06</div>
+                        <div class="title">Measure</div>
+                    </div>
+                    <span class="loop-arrow back">↺</span>
+                </div>
+            </div>
+
+            <p class="system-tagline fade-up d4">
+                <strong style="color: var(--green);">The loop never stops:</strong>
+                Measure → Find issues → Speak (describe fix) → Generate → Review → Ship → Measure again
+            </p>
+        </div>
+    </section>
+
+    <!-- Slide 7: Step 1 - SPEAK -->
+    <section class="slide" data-index="6">
+        <div class="slide-content step-slide">
+            <div class="step-left">
+                <div class="step-number fade-up">01</div>
+                <h2 class="serif step-title fade-up d1">Speak</h2>
+                <p class="step-owner-label fade-up d2">Owner: <strong style="color: var(--orange);">Phillip (Product)</strong></p>
+                <p class="step-desc fade-up d3">
+                    Describe the feature, bug fix, or change in plain English.
+                    Be specific about intent, user benefit, and any constraints.
+                    This description kicks off the entire cycle.
+                </p>
+            </div>
+            <div class="step-right fade-up d4">
+                <div class="step-section">
+                    <h4>Responsibilities</h4>
+                    <ul class="step-list">
+                        <li>Write clear feature descriptions with user context</li>
+                        <li>Define what success looks like</li>
+                        <li>Prioritize what gets built and when</li>
+                        <li>Make final go/no-go shipping decisions</li>
+                    </ul>
+                </div>
+                <div class="step-section">
+                    <h4>Inputs to AI</h4>
+                    <ul class="step-list">
+                        <li>Plain English feature description</li>
+                        <li>Reference to similar existing screens</li>
+                        <li>User stories or problem statements</li>
+                        <li>Any specific constraints or requirements</li>
+                    </ul>
+                </div>
+                <div class="step-section">
+                    <h4>Output</h4>
+                    <ul class="step-list">
+                        <li>Feature request that triggers AI generation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 8: Step 2 - GENERATE -->
+    <section class="slide" data-index="7">
+        <div class="slide-content step-slide">
+            <div class="step-left">
+                <div class="step-number fade-up">02</div>
+                <h2 class="serif step-title fade-up d1">Generate</h2>
+                <p class="step-owner-label fade-up d2">Owner: <strong style="color: var(--green);">AI (Claude Code)</strong></p>
+                <p class="step-desc fade-up d3">
+                    AI reads the entire codebase, understands patterns, and generates
+                    backend + iOS code that matches our existing architecture.
+                </p>
+            </div>
+            <div class="step-right fade-up d4">
+                <div class="step-section">
+                    <h4>What AI Reads</h4>
+                    <ul class="step-list">
+                        <li><strong>CLAUDE.md</strong> — Master instructions for AI</li>
+                        <li><strong>Colors.swift, Typography.swift</strong> — Design tokens</li>
+                        <li><strong>/Components</strong> — Reusable UI components</li>
+                        <li><strong>Existing screens</strong> — Patterns to follow</li>
+                    </ul>
+                </div>
+                <div class="step-section">
+                    <h4>Why Documentation Matters</h4>
+                    <ul class="step-list">
+                        <li>AI only knows what's in the repo</li>
+                        <li>Code IS the documentation (not separate docs)</li>
+                        <li>Better documentation = better generation</li>
+                        <li><strong>If it's not pushed, it doesn't exist for AI</strong></li>
+                    </ul>
+                </div>
+                <div class="step-section">
+                    <h4>Output</h4>
+                    <ul class="step-list">
+                        <li>Pull Request with backend + iOS code</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 9: Step 3 - UX REVIEW -->
+    <section class="slide" data-index="8">
+        <div class="slide-content step-slide">
+            <div class="step-left">
+                <div class="step-number fade-up">03</div>
+                <h2 class="serif step-title fade-up d1">UX Review</h2>
+                <p class="step-owner-label fade-up d2">Owner: <strong style="color: var(--purple);">Tea & Tim (UX & Design)</strong></p>
+                <p class="step-desc fade-up d3">
+                    Review the actual built UI—not mockups—and judge if it matches
+                    brand, feels right, and provides intuitive UX.
+                </p>
+            </div>
+            <div class="step-right fade-up d4">
+                <div class="step-section">
+                    <h4>Responsibilities</h4>
+                    <ul class="step-list">
+                        <li>Review AI-generated UI against brand standards</li>
+                        <li>Judge if the UX is intuitive and flows well</li>
+                        <li>Catch visual issues (spacing, alignment, color)</li>
+                        <li>Approve or request adjustments</li>
+                    </ul>
+                </div>
+                <div class="step-section">
+                    <h4>How to Give Feedback</h4>
+                    <ul class="step-list">
+                        <li><strong>Direct to AI:</strong> "Make the button bigger" works</li>
+                        <li><strong>GitHub PR comments:</strong> Inline on specific code</li>
+                        <li><strong>Slack with screenshot:</strong> Circle what's wrong</li>
+                        <li><strong>Reference existing screens:</strong> "Like the portfolio page"</li>
+                    </ul>
+                </div>
+                <div class="step-section">
+                    <h4>Output</h4>
+                    <ul class="step-list">
+                        <li><strong>Approve</strong> → Moves to Eng Review</li>
+                        <li><strong>Request Changes</strong> → AI regenerates</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 10: Step 4 - ENG REVIEW -->
+    <section class="slide" data-index="9">
+        <div class="slide-content step-slide">
+            <div class="step-left">
+                <div class="step-number fade-up">04</div>
+                <h2 class="serif step-title fade-up d1">Eng Review</h2>
+                <p class="step-owner-label fade-up d2">
+                    Owners: <strong style="color: var(--blue);">Luka (Backend)</strong> +
+                    <strong style="color: var(--green);">Rok (iOS)</strong>
+                </p>
+                <p class="step-desc fade-up d3">
+                    Backend and iOS engineers review code simultaneously.
+                    You are the quality gatekeepers—no code ships without your approval.
+                </p>
+            </div>
+            <div class="step-right fade-up d4">
+                <div class="eng-split">
+                    <div class="eng-card backend">
+                        <h4>Luka</h4>
+                        <div class="role">Backend</div>
+                        <ul class="step-list">
+                            <li>Review API endpoints</li>
+                            <li>Check database queries</li>
+                            <li>Verify business logic</li>
+                            <li>Approve or request changes</li>
+                        </ul>
+                    </div>
+                    <div class="eng-card ios">
+                        <h4>Rok</h4>
+                        <div class="role">iOS</div>
+                        <ul class="step-list">
+                            <li>Review SwiftUI code</li>
+                            <li>Check view architecture</li>
+                            <li>Verify native feel</li>
+                            <li>Approve or request changes</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="step-section" style="margin-top: 1.5rem;">
+                    <h4>Shared Responsibilities</h4>
+                    <ul class="step-list">
+                        <li><strong>Review ALL code</strong> pushed to your repo</li>
+                        <li>Catch edge cases and potential bugs</li>
+                        <li>Ensure it follows our patterns</li>
+                        <li>Tell AI what to fix—it will regenerate</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 11: Step 5 - SHIP -->
+    <section class="slide" data-index="10">
+        <div class="slide-content step-slide">
+            <div class="step-left">
+                <div class="step-number fade-up">05</div>
+                <h2 class="serif step-title fade-up d1">Ship</h2>
+                <p class="step-owner-label fade-up d2">Owner: <strong>Everyone</strong></p>
+                <p class="step-desc fade-up d3">
+                    After UX and Eng approval, merge the PR and deploy.
+                    What used to take 2-3 weeks now takes 2-3 days.
+                </p>
+            </div>
+            <div class="step-right fade-up d4">
+                <div class="step-section">
+                    <h4>Checklist Before Merge</h4>
+                    <ul class="step-list">
+                        <li>UX has approved the visual/UX</li>
+                        <li>Luka has approved backend code</li>
+                        <li>Rok has approved iOS code</li>
+                        <li>Tests pass (if applicable)</li>
+                        <li>Phillip confirms it solves the user problem</li>
+                    </ul>
+                </div>
+                <div class="step-section">
+                    <h4>Speed Comparison</h4>
+                    <ul class="step-list">
+                        <li><strong>Before:</strong> 2-3 weeks per feature</li>
+                        <li><strong>After:</strong> 2-3 days per feature</li>
+                        <li><strong>Bug fixes:</strong> Minutes, not hours</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 12: Step 6 - MEASURE -->
+    <section class="slide" data-index="11">
+        <div class="slide-content step-slide">
+            <div class="step-left">
+                <div class="step-number fade-up">06</div>
+                <h2 class="serif step-title fade-up d1">Measure</h2>
+                <p class="step-owner-label fade-up d2">Owner: <strong>All Stakeholders</strong></p>
+                <p class="step-desc fade-up d3">
+                    Every Monday, AI generates a report for the team.
+                    We review metrics, identify issues, and decide what to iterate on next.
+                </p>
+            </div>
+            <div class="step-right fade-up d4">
+                <div class="step-section">
+                    <h4>Monday Report Includes</h4>
+                    <ul class="step-list">
+                        <li><strong>Product health:</strong> Orders, users, completions</li>
+                        <li><strong>Issues detected:</strong> Bugs, slow queries, errors</li>
+                        <li><strong>AI-proposed fixes:</strong> Ready for human review</li>
+                        <li><strong>Decisions needed:</strong> What requires human input</li>
+                    </ul>
+                </div>
+                <div class="step-section">
+                    <h4>What We Discuss</h4>
+                    <ul class="step-list">
+                        <li>Approve or reject AI-proposed fixes</li>
+                        <li>Prioritize next features</li>
+                        <li>Identify patterns in user feedback</li>
+                        <li>Decide: iterate, pivot, or delete</li>
+                    </ul>
+                </div>
+                <div class="step-section">
+                    <h4>Then the Loop Restarts</h4>
+                    <ul class="step-list">
+                        <li>Issues found → Phillip speaks new fix → Generate → Review → Ship → Measure</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 13: Sync -->
+    <section class="slide sync-slide" data-index="12">
+        <div class="slide-content">
+            <p class="label fade-up">The Golden Rule</p>
+            <h2 class="serif fade-up d1">Push early. Push often.</h2>
+            <p class="subtitle fade-up d2">
+                GitHub is the single source of truth. If it's not pushed, it doesn't exist—for AI or for us.
+            </p>
+
+            <div class="sync-rules fade-up d3">
+                <div class="sync-rule">
+                    <div class="sync-rule-icon">☀️</div>
+                    <h4>Start of day</h4>
+                    <p>Pull latest before any work</p>
+                </div>
+                <div class="sync-rule">
+                    <div class="sync-rule-icon">🚀</div>
+                    <h4>After changes</h4>
+                    <p>Commit and push—don't batch</p>
+                </div>
+                <div class="sync-rule">
+                    <div class="sync-rule-icon">🌙</div>
+                    <h4>End of day</h4>
+                    <p>No local-only changes overnight</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 14: Sprint Calendar -->
+    <section class="slide" data-index="13">
+        <div class="slide-content">
+            <div class="sprint-header">
+                <p class="label fade-up">The Timeline</p>
+                <h2 class="serif fade-up d1">January 13 → February 28</h2>
+                <p class="subtitle fade-up d2">AI-native by mid-February. Optimization through end of month.</p>
+            </div>
+
+            <!-- January -->
+            <div class="calendar-phase fade-up d2">
+                <div class="phase-label">January</div>
+                <div class="phase-title">Build & Validate</div>
+            </div>
+            <div class="calendar-grid fade-up d2">
+                <div class="calendar-week">
+                    <div class="week-header">
+                        <div class="week-num">W1</div>
+                        <div class="week-dates">Jan 13-17</div>
+                    </div>
+                    <div class="week-title">Foundation</div>
+                    <div class="week-desc">Workspace setup, CLAUDE.md, local dev working</div>
+                </div>
+                <div class="calendar-week">
+                    <div class="week-header">
+                        <div class="week-num">W2</div>
+                        <div class="week-dates">Jan 20-24</div>
+                    </div>
+                    <div class="week-title">Validation</div>
+                    <div class="week-desc">Phillip ships first feature to DEV</div>
+                </div>
+                <div class="calendar-week">
+                    <div class="week-header">
+                        <div class="week-num">W3</div>
+                        <div class="week-dates">Jan 27-31</div>
+                    </div>
+                    <div class="week-title">Team Training</div>
+                    <div class="week-desc">Teach entire team the AI-native process</div>
+                </div>
+                <div class="calendar-week">
+                    <div class="week-header">
+                        <div class="week-num">W4</div>
+                        <div class="week-dates">Feb 3-7</div>
+                    </div>
+                    <div class="week-title">Production</div>
+                    <div class="week-desc">Week 2 feature ships to PROD</div>
+                </div>
+            </div>
+
+            <!-- February -->
+            <div class="calendar-phase fade-up d3">
+                <div class="phase-label">February</div>
+                <div class="phase-title">Milestone & Optimize</div>
+            </div>
+            <div class="calendar-grid fade-up d3">
+                <div class="calendar-week milestone">
+                    <div class="week-badge">Milestone</div>
+                    <div class="week-header">
+                        <div class="week-num">W5</div>
+                        <div class="week-dates">Feb 10-14</div>
+                    </div>
+                    <div class="week-title">AI-Native</div>
+                    <div class="week-desc">Everyone builds custom flows. Team presents to each other.</div>
+                </div>
+                <div class="calendar-week">
+                    <div class="week-header">
+                        <div class="week-num">W6</div>
+                        <div class="week-dates">Feb 17-21</div>
+                    </div>
+                    <div class="week-title">Optimize</div>
+                    <div class="week-desc">Refine workflows based on learnings</div>
+                </div>
+                <div class="calendar-week">
+                    <div class="week-header">
+                        <div class="week-num">W7</div>
+                        <div class="week-dates">Feb 24-28</div>
+                    </div>
+                    <div class="week-title">Lock In</div>
+                    <div class="week-desc">Document patterns, set up monitoring</div>
+                </div>
+                <div class="calendar-week" style="background: transparent; border: 1px dashed rgba(255,255,255,0.1);">
+                    <div class="week-header">
+                        <div class="week-num" style="opacity: 0.3;">→</div>
+                        <div class="week-dates">March+</div>
+                    </div>
+                    <div class="week-title" style="opacity: 0.5;">Q2 Goals</div>
+                    <div class="week-desc">Hyper-personalization begins</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 15: Quarterly Milestones -->
+    <section class="slide" data-index="14">
+        <div class="slide-content">
+            <p class="label fade-up" style="text-align: center;">2026 Roadmap</p>
+            <h2 class="serif fade-up d1" style="text-align: center;">The path to 10x</h2>
+
+            <div class="milestone-grid fade-up d2">
+                <div class="milestone-card">
+                    <div class="milestone-q">Q1</div>
+                    <div class="milestone-title">AI-Native Operations</div>
+                    <div class="milestone-desc">Phillip ships features without engineering on routine tasks. Team stress decreases.</div>
+                </div>
+                <div class="milestone-card">
+                    <div class="milestone-q">Q2</div>
+                    <div class="milestone-title">Hyper-Personalization</div>
+                    <div class="milestone-desc">Every user has AI-generated investment personality. Product feels custom-built.</div>
+                </div>
+                <div class="milestone-card">
+                    <div class="milestone-q">Q3</div>
+                    <div class="milestone-title">Distribution at Scale</div>
+                    <div class="milestone-desc">10x more marketing experiments. CAC drops by 30%+. Find channels that work.</div>
+                </div>
+                <div class="milestone-card">
+                    <div class="milestone-q">Q4</div>
+                    <div class="milestone-title">Agent Ecosystem</div>
+                    <div class="milestone-desc">AI agents handle support, recommendations, and user communication autonomously.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 16: Close -->
+    <section class="slide close-slide" data-index="15">
+        <div class="slide-content">
+            <h2 class="serif fade-up">We're still the team.<br>Just <span class="green italic glow-text">faster</span>.</h2>
+            <p class="close-quote fade-up d1">"Less stress. More thinking. A faster, more ambitious version of ourselves."</p>
+
+            <div class="compound-grid fade-up d2">
+                <div class="compound-item">
+                    <div class="compound-period">Month 1</div>
+                    <div class="compound-result">Ship 2x more</div>
+                </div>
+                <div class="compound-item">
+                    <div class="compound-period">Month 3</div>
+                    <div class="compound-result">Ship 3x more</div>
+                </div>
+                <div class="compound-item">
+                    <div class="compound-period">Month 6</div>
+                    <div class="compound-result">18 months done</div>
+                </div>
+                <div class="compound-item">
+                    <div class="compound-period">Year 1</div>
+                    <div class="compound-result">Lapped competitors</div>
+                </div>
+            </div>
+
+            <button class="restart-btn fade-up d3" onclick="goToSlide(0)"><span>↺</span> Restart</button>
+        </div>
+    </section>
+
+    <script>
+        let current = 0;
+        const total = 16;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.nav-dot');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const counter = document.getElementById('currentNum');
+
+        function updateSlide() {
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === current);
+            });
+            dots.forEach((d, i) => {
+                d.classList.toggle('active', i === current);
+            });
+            counter.textContent = current + 1;
+            prevBtn.disabled = current === 0;
+            nextBtn.disabled = current === total - 1;
+        }
+
+        function nextSlide() {
+            if (current < total - 1) { current++; updateSlide(); }
+        }
+
+        function prevSlide() {
+            if (current > 0) { current--; updateSlide(); }
+        }
+
+        function goToSlide(i) {
+            current = i;
+            updateSlide();
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                prevSlide();
+            }
+        });
+
+        // Initialize
+        updateSlide();
+    </script>
+
+</body>
+</html>
