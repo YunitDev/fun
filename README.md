@@ -33,10 +33,6 @@ Output: "my bad on the delay. ill lmk when its ready"
 fun/
 ├── type-like-phillip.html    # Text transformation tool
 ├── live-notifications.html   # Live notification display
-├── compound/                 # Assets for compound calculator OG images
-│   └── assets/
-│       └── og-image.png
-├── wealth-journey/           # (reserved for future use)
 └── README.md                 # This file
 ```
 
