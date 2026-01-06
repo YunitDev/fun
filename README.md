@@ -8,7 +8,7 @@ https://yunitdev.github.io/fun/
 ## Tools
 
 ### Type like Phillip
-**URL:** https://yunitdev.github.io/fun/
+**URL:** https://yunitdev.github.io/fun/type-like-phillip.html
 
 A text transformation tool that converts formal language into casual, authentic "Phillip-style" communication.
 
@@ -31,31 +31,50 @@ Output: "my bad on the delay. ill lmk when its ready"
 
 ```
 fun/
-├── index.html          # "Type like Phillip" tool (main page)
-├── compound/           # Assets for compound calculator OG images
+├── type-like-phillip.html    # Text transformation tool
+├── live-notifications.html   # Live notification display
+├── compound/                 # Assets for compound calculator OG images
 │   └── assets/
 │       └── og-image.png
-├── wealth-journey/     # (reserved for future use)
-└── README.md           # This file
+├── wealth-journey/           # (reserved for future use)
+└── README.md                 # This file
 ```
 
 ## Adding New Tools
 
+### Naming Convention (Required)
+
+**Every tool must have a descriptive filename. No `index.html` files.**
+
+| Good | Bad |
+|------|-----|
+| `type-like-phillip.html` | `index.html` |
+| `live-notifications.html` | `tool.html` |
+| `word-counter.html` | `new.html` |
+
+**Rules:**
+- Lowercase only
+- Hyphen-separated words
+- Descriptive name that explains what the tool does
+- `.html` extension
+
+**URL pattern:** `https://yunitdev.github.io/fun/[tool-name].html`
+
 ### Quick Start
 ```bash
 cd /Users/phillipaubrey/fun-repo
-# Create your new tool
-cp index.html new-tool.html  # Use as template, or start fresh
-# Edit new-tool.html
-git add . && git commit -m "Add new-tool" && git push
-# Live at: https://yunitdev.github.io/fun/new-tool.html
+# Create your new tool with descriptive name
+cp type-like-phillip.html my-new-tool.html
+# Edit my-new-tool.html
+git add . && git commit -m "Add my-new-tool" && git push
+# Live at: https://yunitdev.github.io/fun/my-new-tool.html
 ```
 
 ### Step-by-Step
 
 1. **Create the file**
-   - Add `new-tool.html` in the root directory
-   - Use `index.html` as a template if helpful
+   - Name it descriptively: `[what-it-does].html`
+   - Use `type-like-phillip.html` as a template if helpful
 
 2. **Follow the design system**
    - Background: `#0a0a0a` (dark)
@@ -73,13 +92,9 @@ git add . && git commit -m "Add new-tool" && git push
    ```
    GitHub Pages auto-deploys within ~1 minute.
 
-### Naming Convention
-- Use lowercase, hyphenated names: `my-cool-tool.html`
-- Keep names short and descriptive
-
 ### File Organization
-- Simple tools: Single HTML file in root
-- Tools with assets: Create a folder (e.g., `my-tool/index.html`, `my-tool/assets/`)
+- Simple tools: Single HTML file in root (e.g., `my-tool.html`)
+- Tools with assets: Create a folder with descriptive name (e.g., `my-tool/my-tool.html`, `my-tool/assets/`)
 
 ### Template Structure
 ```html
