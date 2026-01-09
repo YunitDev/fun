@@ -414,33 +414,78 @@
 
         .amount-card {
             background: var(--white);
-            border: 2px solid transparent;
-            border-radius: 16px;
-            padding: 16px;
+            border: 3px solid transparent;
+            border-radius: 20px;
+            padding: 24px 20px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: center;
+            min-height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            -webkit-tap-highlight-color: rgba(255,140,105,0.2);
         }
 
         .amount-card:active {
-            transform: scale(0.96);
+            transform: scale(0.95);
+            background: var(--peach-light);
         }
 
         .amount-card.active {
             border-color: var(--coral);
-            box-shadow: 0 8px 30px rgba(255,140,105,0.25);
+            box-shadow: 0 8px 30px rgba(255,140,105,0.3);
+            background: var(--white);
         }
 
         .amount-value {
             font-family: 'Fraunces', serif;
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 600;
             color: var(--charcoal);
         }
 
         .amount-period {
-            font-size: 0.8rem;
+            font-size: 0.875rem;
             color: var(--charcoal-light);
+            margin-top: 4px;
+        }
+
+        /* Next Button for interactive slides */
+        .next-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--coral);
+            color: var(--white);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 18px 48px;
+            border-radius: 100px;
+            border: none;
+            cursor: pointer;
+            margin-top: 24px;
+            box-shadow: 0 8px 30px rgba(255,140,105,0.4);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: rgba(255,140,105,0.3);
+        }
+
+        .next-button:active {
+            transform: scale(0.96) translateY(0);
+            background: var(--coral-deep);
+        }
+
+        .slide.active .next-button {
+            animation: slideUp 0.6s ease-out 0.9s forwards;
+        }
+
+        .next-button svg {
+            width: 18px;
+            height: 18px;
         }
 
         /* Projection Card */
@@ -824,6 +869,13 @@
                             <span class="projection-value" id="proj-5yr">$59,200</span>
                         </div>
                     </div>
+
+                    <button class="next-button" id="nextFromAmount">
+                        Continue
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
 
@@ -845,6 +897,13 @@
                             <div class="tip-text">You've already proven you can spot winners. Keep doing what works—don't overthink it.</div>
                         </div>
                     </div>
+
+                    <button class="next-button" id="nextFromTips">
+                        Got it
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
 
@@ -869,11 +928,20 @@
         const amountCards = document.querySelectorAll('.amount-card');
         const proj1yr = document.getElementById('proj-1yr');
         const proj5yr = document.getElementById('proj-5yr');
+        const nextFromAmount = document.getElementById('nextFromAmount');
+        const nextFromTips = document.getElementById('nextFromTips');
 
         let currentSlide = 0;
         let autoAdvanceTimer = null;
         const totalSlides = slides.length;
         const AUTO_ADVANCE_DELAY = 6000;
+
+        // Interactive slides that require explicit Next button
+        const INTERACTIVE_SLIDES = [6, 7];
+
+        function isInteractiveSlide(index) {
+            return INTERACTIVE_SLIDES.includes(index);
+        }
 
         function updateSlide(newIndex) {
             if (newIndex < 0 || newIndex >= totalSlides) return;
@@ -904,8 +972,8 @@
 
             currentSlide = newIndex;
 
-            // Auto-advance (pause on interactive slides 6 and 7)
-            if (currentSlide < totalSlides - 1 && currentSlide !== 6 && currentSlide !== 7) {
+            // Auto-advance only on non-interactive slides
+            if (currentSlide < totalSlides - 1 && !isInteractiveSlide(currentSlide)) {
                 autoAdvanceTimer = setTimeout(() => {
                     updateSlide(currentSlide + 1);
                 }, AUTO_ADVANCE_DELAY);
@@ -913,37 +981,62 @@
         }
 
         function goNext() {
+            // Block tap/swipe navigation on interactive slides
+            if (isInteractiveSlide(currentSlide)) return;
+
             if (currentSlide < totalSlides - 1) {
                 updateSlide(currentSlide + 1);
             }
         }
 
         function goPrev() {
+            // Allow going back on interactive slides
             if (currentSlide > 0) {
                 updateSlide(currentSlide - 1);
             }
         }
 
+        // Tap zone navigation (disabled on interactive slides via goNext check)
         tapRight.addEventListener('click', goNext);
         tapLeft.addEventListener('click', goPrev);
 
-        // Touch swipe
+        // Touch swipe (disabled on interactive slides via goNext check)
         let touchStartX = 0;
+        let touchStartY = 0;
         document.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
         }, { passive: true });
 
         document.addEventListener('touchend', (e) => {
-            const diff = touchStartX - e.changedTouches[0].screenX;
-            if (Math.abs(diff) > 50) {
-                diff > 0 ? goNext() : goPrev();
+            const diffX = touchStartX - e.changedTouches[0].screenX;
+            const diffY = touchStartY - e.changedTouches[0].screenY;
+
+            // Only trigger swipe if horizontal movement is greater than vertical
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    goNext();
+                } else {
+                    goPrev();
+                }
             }
         }, { passive: true });
 
-        // Keyboard
+        // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight' || e.key === ' ') goNext();
             else if (e.key === 'ArrowLeft') goPrev();
+        });
+
+        // Next buttons for interactive slides
+        nextFromAmount.addEventListener('click', (e) => {
+            e.stopPropagation();
+            updateSlide(7); // Go to tips slide
+        });
+
+        nextFromTips.addEventListener('click', (e) => {
+            e.stopPropagation();
+            updateSlide(8); // Go to closing slide
         });
 
         // Amount selector
