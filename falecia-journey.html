@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Falecia's Journey</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #FDF8F3;
+            --cream-dark: #F5EDE4;
+            --peach: #FFBE98;
+            --peach-light: #FFE4D4;
+            --coral: #FF8C69;
+            --coral-deep: #E8734F;
+            --sage: #8FB996;
+            --sage-dark: #6B9B73;
+            --sage-light: #C8E0CB;
+            --lavender: #C5B4E3;
+            --lavender-light: #E8E0F5;
+            --sky: #A8D4F0;
+            --gold: #F4D03F;
+            --gold-light: #FCF3CF;
+            --charcoal: #3D3D3D;
+            --charcoal-light: #6B6B6B;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--charcoal);
+            color: var(--charcoal);
+            line-height: 1.5;
+            touch-action: manipulation;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Fraunces', serif;
+            font-weight: 500;
+            line-height: 1.15;
+        }
+
+        /* Story Container */
+        .story-container {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 4px;
+            padding: 12px 12px 0;
+            z-index: 100;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 3px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--white);
+            width: 0%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-bar.complete .progress-bar-fill {
+            width: 100%;
+        }
+
+        .progress-bar.active .progress-bar-fill {
+            width: 100%;
+            animation: progressFill 8s linear forwards;
+        }
+
+        @keyframes progressFill {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        /* Slides */
+        .slides-wrapper {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 28px 40px;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.95);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        .slide.prev {
+            transform: translateX(-100%) scale(0.9);
+        }
+
+        .slide.next {
+            transform: translateX(100%) scale(0.9);
+        }
+
+        /* Tap Zones */
+        .tap-zone {
+            position: absolute;
+            top: 60px;
+            bottom: 0;
+            width: 30%;
+            z-index: 50;
+            cursor: pointer;
+        }
+
+        .tap-zone-left { left: 0; }
+        .tap-zone-right { right: 0; }
+
+        /* Slide Backgrounds */
+        .slide-1 {
+            background: linear-gradient(165deg, var(--cream) 0%, var(--peach-light) 100%);
+        }
+        .slide-2 {
+            background: linear-gradient(165deg, var(--lavender-light) 0%, var(--cream) 100%);
+        }
+        .slide-3 {
+            background: linear-gradient(165deg, var(--coral) 0%, var(--peach) 100%);
+            color: var(--white);
+        }
+        .slide-4 {
+            background: linear-gradient(165deg, var(--sage-light) 0%, var(--cream) 100%);
+        }
+        .slide-5 {
+            background: linear-gradient(165deg, var(--lavender) 0%, var(--sky) 100%);
+            color: var(--white);
+        }
+        .slide-6 {
+            background: linear-gradient(165deg, var(--sage) 0%, var(--sage-dark) 100%);
+            color: var(--white);
+        }
+        .slide-7 {
+            background: linear-gradient(165deg, var(--cream) 0%, var(--peach-light) 100%);
+        }
+        .slide-8 {
+            background: linear-gradient(165deg, var(--gold-light) 0%, var(--cream) 100%);
+        }
+        .slide-9 {
+            background: linear-gradient(165deg, var(--coral-deep) 0%, var(--coral) 100%);
+            color: var(--white);
+        }
+
+        /* Decorative Elements */
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .shape-1 {
+            width: 200px;
+            height: 200px;
+            background: var(--peach);
+            top: -50px;
+            right: -50px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape-2 {
+            width: 150px;
+            height: 150px;
+            background: var(--lavender);
+            bottom: 10%;
+            left: -40px;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        .shape-3 {
+            width: 100px;
+            height: 100px;
+            background: var(--sage);
+            top: 30%;
+            right: -30px;
+            animation: float 7s ease-in-out infinite 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(10px, -15px) rotate(5deg); }
+            66% { transform: translate(-5px, 10px) rotate(-3deg); }
+        }
+
+        /* Content Styles */
+        .slide-content {
+            text-align: center;
+            max-width: 340px;
+            z-index: 10;
+        }
+
+        .slide-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .slide.active .slide-label {
+            animation: slideUp 0.6s ease-out 0.2s forwards;
+        }
+
+        .slide-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .slide.active .slide-title {
+            animation: slideUp 0.6s ease-out 0.35s forwards;
+        }
+
+        .slide-title span {
+            font-style: italic;
+        }
+
+        .slide-text {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .slide.active .slide-text {
+            animation: slideUp 0.6s ease-out 0.5s forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Special Elements */
+        .greeting {
+            font-size: 1.1rem;
+            color: var(--coral);
+            font-weight: 500;
+            margin-bottom: 8px;
+            opacity: 0;
+        }
+
+        .slide.active .greeting {
+            animation: slideUp 0.5s ease-out 0.1s forwards;
+        }
+
+        .stat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.25);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-top: 24px;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .slide.active .stat-badge {
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.7s forwards;
+        }
+
+        @keyframes popIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Emoji Icon */
+        .slide-emoji {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        .slide.active .slide-emoji {
+            animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards;
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            60% { transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Winners Cards */
+        .winners-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 24px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .winner-card {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        .slide.active .winner-card:nth-child(1) { animation: slideInRight 0.5s ease-out 0.4s forwards; }
+        .slide.active .winner-card:nth-child(2) { animation: slideInRight 0.5s ease-out 0.5s forwards; }
+        .slide.active .winner-card:nth-child(3) { animation: slideInRight 0.5s ease-out 0.6s forwards; }
+        .slide.active .winner-card:nth-child(4) { animation: slideInRight 0.5s ease-out 0.7s forwards; }
+
+        @keyframes slideInRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .winner-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .winner-icon {
+            font-size: 1.5rem;
+        }
+
+        .winner-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .winner-company {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .winner-return {
+            font-family: 'Fraunces', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        /* Amount Selector */
+        .amount-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 24px 0;
+            width: 100%;
+            max-width: 300px;
+            opacity: 0;
+        }
+
+        .slide.active .amount-grid {
+            animation: slideUp 0.6s ease-out 0.5s forwards;
+        }
+
+        .amount-card {
+            background: var(--white);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .amount-card:active {
+            transform: scale(0.96);
+        }
+
+        .amount-card.active {
+            border-color: var(--coral);
+            box-shadow: 0 8px 30px rgba(255,140,105,0.25);
+        }
+
+        .amount-value {
+            font-family: 'Fraunces', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .amount-period {
+            font-size: 0.8rem;
+            color: var(--charcoal-light);
+        }
+
+        /* Projection Card */
+        .projection-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 300px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .slide.active .projection-card {
+            animation: slideUp 0.6s ease-out 0.7s forwards;
+        }
+
+        .projection-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--cream-dark);
+        }
+
+        .projection-row:last-child {
+            border-bottom: none;
+        }
+
+        .projection-label {
+            color: var(--charcoal-light);
+            font-size: 0.9rem;
+        }
+
+        .projection-value {
+            font-family: 'Fraunces', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--sage);
+        }
+
+        /* Tips Cards */
+        .tips-container {
+            width: 100%;
+            max-width: 320px;
+            margin-top: 24px;
+        }
+
+        .tip-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .slide.active .tip-card:nth-child(1) { animation: slideUp 0.6s ease-out 0.4s forwards; }
+        .slide.active .tip-card:nth-child(2) { animation: slideUp 0.6s ease-out 0.6s forwards; }
+
+        .tip-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--coral);
+            color: var(--white);
+            border-radius: 50%;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 12px;
+        }
+
+        .tip-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.25rem;
+            color: var(--charcoal);
+            margin-bottom: 8px;
+        }
+
+        .tip-text {
+            font-size: 0.95rem;
+            color: var(--charcoal-light);
+            line-height: 1.5;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--white);
+            color: var(--coral);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 16px 32px;
+            border-radius: 100px;
+            border: none;
+            cursor: pointer;
+            margin-top: 28px;
+            text-decoration: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: transform 0.2s ease;
+        }
+
+        .cta-button:active {
+            transform: scale(0.96) translateY(0);
+        }
+
+        .slide.active .cta-button {
+            animation: slideUp 0.6s ease-out 0.7s forwards;
+        }
+
+        /* Tap Hint */
+        .tap-hint {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: inherit;
+            opacity: 0.5;
+            font-size: 0.8rem;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        .tap-hint svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* White text slides adjustments */
+        .slide-3 .slide-label,
+        .slide-5 .slide-label,
+        .slide-6 .slide-label,
+        .slide-9 .slide-label {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .slide-3 .slide-text,
+        .slide-5 .slide-text,
+        .slide-6 .slide-text,
+        .slide-9 .slide-text {
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* Celebration confetti effect */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            opacity: 0;
+        }
+
+        .slide.active .confetti {
+            animation: confettiFall 3s ease-out forwards;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                opacity: 1;
+                transform: translateY(-100px) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(400px) rotate(720deg);
+            }
+        }
+
+        /* Responsive */
+        @media (min-height: 750px) {
+            .slide-title {
+                font-size: 2.25rem;
+            }
+            .slide-text {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (min-width: 500px) {
+            .slide {
+                padding: 80px 40px 60px;
+            }
+            .slide-content {
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="story-container">
+        <!-- Progress Bars -->
+        <div class="progress-container">
+            <div class="progress-bar active" data-slide="0"><div class="progress-bar-fill"></div></div>
+            <div class="progress-bar" data-slide="1"><div class="progress-bar-fill"></div></div>
+            <div class="progress-bar" data-slide="2"><div class="progress-bar-fill"></div></div>
+            <div class="progress-bar" data-slide="3"><div class="progress-bar-fill"></div></div>
+            <div class="progress-bar" data-slide="4"><div class="progress-bar-fill"></div></div>
+            <div class="progress-bar" data-slide="5"><div class="progress-bar-fill"></div></div>
+            <div class="progress-bar" data-slide="6"><div class="progress-bar-fill"></div></div>
+            <div class="progress-bar" data-slide="7"><div class="progress-bar-fill"></div></div>
+            <div class="progress-bar" data-slide="8"><div class="progress-bar-fill"></div></div>
+        </div>
+
+        <!-- Tap Zones -->
+        <div class="tap-zone tap-zone-left" id="tapLeft"></div>
+        <div class="tap-zone tap-zone-right" id="tapRight"></div>
+
+        <!-- Slides -->
+        <div class="slides-wrapper">
+
+            <!-- Slide 1: Welcome -->
+            <div class="slide slide-1 active" data-index="0">
+                <div class="floating-shape shape-1"></div>
+                <div class="floating-shape shape-2"></div>
+                <div class="slide-content">
+                    <p class="greeting">Hey Falecia 👋</p>
+                    <h1 class="slide-title">Let's make 2026 <span>your year</span></h1>
+                    <p class="slide-text">You've already started something great. Here's how to build on it.</p>
+                </div>
+                <div class="tap-hint">
+                    <span>Tap to continue</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Slide 2: First Step -->
+            <div class="slide slide-2" data-index="1">
+                <div class="floating-shape shape-3"></div>
+                <div class="slide-content">
+                    <div class="slide-emoji">🌱</div>
+                    <p class="slide-label">December 2024</p>
+                    <h2 class="slide-title">You took the first step</h2>
+                    <p class="slide-text">You opened your account and started investing. Most people never even begin—but you did.</p>
+                </div>
+            </div>
+
+            <!-- Slide 3: Best Month -->
+            <div class="slide slide-3" data-index="2">
+                <div class="slide-content">
+                    <div class="slide-emoji">🔥</div>
+                    <p class="slide-label">January 2025</p>
+                    <h2 class="slide-title">You crushed it</h2>
+                    <p class="slide-text">Consistent deposits, smart picks, building week after week.</p>
+                    <div class="stat-badge">
+                        ✨ 56 investments · $420 invested
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Life Happened -->
+            <div class="slide slide-4" data-index="3">
+                <div class="floating-shape shape-2"></div>
+                <div class="slide-content">
+                    <div class="slide-emoji">💫</div>
+                    <p class="slide-label">February – October 2025</p>
+                    <h2 class="slide-title">Life happened</h2>
+                    <p class="slide-text">You stopped investing during this time—and that's okay, it happens to everyone. But here's what matters: you never closed your account. Your portfolio kept working for you.</p>
+                </div>
+            </div>
+
+            <!-- Slide 5: Fresh Start -->
+            <div class="slide slide-5" data-index="4">
+                <div class="slide-content">
+                    <div class="slide-emoji">🌅</div>
+                    <p class="slide-label">Right Now</p>
+                    <h2 class="slide-title">A fresh chapter <span>begins</span></h2>
+                    <p class="slide-text">2026 is wide open. Let's make it count.</p>
+                </div>
+            </div>
+
+            <!-- Slide 6: Your Wins -->
+            <div class="slide slide-6" data-index="5">
+                <!-- Confetti elements -->
+                <div class="confetti" style="left: 10%; top: 0; background: var(--gold); animation-delay: 0.1s;"></div>
+                <div class="confetti" style="left: 25%; top: 0; background: var(--peach); animation-delay: 0.3s;"></div>
+                <div class="confetti" style="left: 40%; top: 0; background: var(--white); animation-delay: 0.2s;"></div>
+                <div class="confetti" style="left: 55%; top: 0; background: var(--lavender); animation-delay: 0.4s;"></div>
+                <div class="confetti" style="left: 70%; top: 0; background: var(--gold); animation-delay: 0.15s;"></div>
+                <div class="confetti" style="left: 85%; top: 0; background: var(--peach); animation-delay: 0.35s;"></div>
+
+                <div class="slide-content">
+                    <p class="slide-label">Celebrate This</p>
+                    <h2 class="slide-title">Your winners are <span>winning</span></h2>
+
+                    <div class="winners-grid">
+                        <div class="winner-card">
+                            <div class="winner-info">
+                                <span class="winner-icon">🏆</span>
+                                <div>
+                                    <div class="winner-name">CLS</div>
+                                    <div class="winner-company">Celestica</div>
+                                </div>
+                            </div>
+                            <div class="winner-return">+11%</div>
+                        </div>
+                        <div class="winner-card">
+                            <div class="winner-info">
+                                <span class="winner-icon">⚡</span>
+                                <div>
+                                    <div class="winner-name">LASR</div>
+                                    <div class="winner-company">nLIGHT</div>
+                                </div>
+                            </div>
+                            <div class="winner-return">+10%</div>
+                        </div>
+                        <div class="winner-card">
+                            <div class="winner-info">
+                                <span class="winner-icon">📡</span>
+                                <div>
+                                    <div class="winner-name">BKTI</div>
+                                    <div class="winner-company">BK Tech</div>
+                                </div>
+                            </div>
+                            <div class="winner-return">+9.7%</div>
+                        </div>
+                        <div class="winner-card">
+                            <div class="winner-info">
+                                <span class="winner-icon">💻</span>
+                                <div>
+                                    <div class="winner-name">AMD</div>
+                                    <div class="winner-company">Advanced Micro</div>
+                                </div>
+                            </div>
+                            <div class="winner-return">+8%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 7: The One Thing -->
+            <div class="slide slide-7" data-index="6">
+                <div class="floating-shape shape-1"></div>
+                <div class="slide-content">
+                    <p class="slide-label">The Secret</p>
+                    <h2 class="slide-title">Consistency beats <span>everything</span></h2>
+                    <p class="slide-text">Pick what works for your budget:</p>
+
+                    <div class="amount-grid">
+                        <div class="amount-card" data-amount="75">
+                            <div class="amount-value">$75</div>
+                            <div class="amount-period">per week</div>
+                        </div>
+                        <div class="amount-card" data-amount="100">
+                            <div class="amount-value">$100</div>
+                            <div class="amount-period">per week</div>
+                        </div>
+                        <div class="amount-card active" data-amount="150">
+                            <div class="amount-value">$150</div>
+                            <div class="amount-period">per week</div>
+                        </div>
+                        <div class="amount-card" data-amount="200">
+                            <div class="amount-value">$200</div>
+                            <div class="amount-period">per week</div>
+                        </div>
+                    </div>
+
+                    <div class="projection-card">
+                        <div class="projection-row">
+                            <span class="projection-label">In 1 year</span>
+                            <span class="projection-value" id="proj-1yr">$8,400</span>
+                        </div>
+                        <div class="projection-row">
+                            <span class="projection-label">In 5 years</span>
+                            <span class="projection-value" id="proj-5yr">$59,200</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 8: Two Tips -->
+            <div class="slide slide-8" data-index="7">
+                <div class="slide-content">
+                    <p class="slide-label">Your Game Plan</p>
+                    <h2 class="slide-title">Two things to focus on</h2>
+
+                    <div class="tips-container">
+                        <div class="tip-card">
+                            <div class="tip-number">1</div>
+                            <div class="tip-title">Set it and forget it</div>
+                            <div class="tip-text">Pick a weekly deposit amount—any amount—and make it automatic. The magic is in showing up every week.</div>
+                        </div>
+                        <div class="tip-card">
+                            <div class="tip-number">2</div>
+                            <div class="tip-title">Trust your picks</div>
+                            <div class="tip-text">You've already proven you can spot winners. Keep doing what works—don't overthink it.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 9: Closing -->
+            <div class="slide slide-9" data-index="8">
+                <div class="slide-content">
+                    <div class="slide-emoji">💪</div>
+                    <p class="slide-label">You've Got This</p>
+                    <h2 class="slide-title">Your 2026 starts <span>now</span></h2>
+                    <p class="slide-text">Set your weekly deposit, stay consistent, and watch your portfolio grow. You've already proven you can do this.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const progressBars = document.querySelectorAll('.progress-bar');
+        const tapLeft = document.getElementById('tapLeft');
+        const tapRight = document.getElementById('tapRight');
+        const amountCards = document.querySelectorAll('.amount-card');
+        const proj1yr = document.getElementById('proj-1yr');
+        const proj5yr = document.getElementById('proj-5yr');
+
+        let currentSlide = 0;
+        let autoAdvanceTimer = null;
+        const totalSlides = slides.length;
+        const AUTO_ADVANCE_DELAY = 6000;
+
+        function updateSlide(newIndex) {
+            if (newIndex < 0 || newIndex >= totalSlides) return;
+
+            if (autoAdvanceTimer) {
+                clearTimeout(autoAdvanceTimer);
+            }
+
+            progressBars.forEach((bar, index) => {
+                bar.classList.remove('active', 'complete');
+                if (index < newIndex) {
+                    bar.classList.add('complete');
+                } else if (index === newIndex) {
+                    bar.classList.add('active');
+                }
+            });
+
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev', 'next');
+                if (index === newIndex) {
+                    slide.classList.add('active');
+                } else if (index < newIndex) {
+                    slide.classList.add('prev');
+                } else {
+                    slide.classList.add('next');
+                }
+            });
+
+            currentSlide = newIndex;
+
+            // Auto-advance (pause on interactive slides 6 and 7)
+            if (currentSlide < totalSlides - 1 && currentSlide !== 6 && currentSlide !== 7) {
+                autoAdvanceTimer = setTimeout(() => {
+                    updateSlide(currentSlide + 1);
+                }, AUTO_ADVANCE_DELAY);
+            }
+        }
+
+        function goNext() {
+            if (currentSlide < totalSlides - 1) {
+                updateSlide(currentSlide + 1);
+            }
+        }
+
+        function goPrev() {
+            if (currentSlide > 0) {
+                updateSlide(currentSlide - 1);
+            }
+        }
+
+        tapRight.addEventListener('click', goNext);
+        tapLeft.addEventListener('click', goPrev);
+
+        // Touch swipe
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            const diff = touchStartX - e.changedTouches[0].screenX;
+            if (Math.abs(diff) > 50) {
+                diff > 0 ? goNext() : goPrev();
+            }
+        }, { passive: true });
+
+        // Keyboard
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') goNext();
+            else if (e.key === 'ArrowLeft') goPrev();
+        });
+
+        // Amount selector
+        function calculateProjection(weeklyAmount) {
+            const annualRate = 0.15;
+            const weeksPerYear = 52;
+
+            let total1yr = 0;
+            for (let week = 0; week < weeksPerYear; week++) {
+                total1yr = (total1yr + weeklyAmount) * (1 + annualRate / weeksPerYear);
+            }
+
+            let total5yr = 0;
+            for (let week = 0; week < weeksPerYear * 5; week++) {
+                total5yr = (total5yr + weeklyAmount) * (1 + annualRate / weeksPerYear);
+            }
+
+            return {
+                oneYear: Math.round(total1yr),
+                fiveYears: Math.round(total5yr)
+            };
+        }
+
+        function formatCurrency(amount) {
+            return '$' + amount.toLocaleString();
+        }
+
+        amountCards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                e.stopPropagation();
+                amountCards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+
+                const amount = parseInt(card.dataset.amount);
+                const projections = calculateProjection(amount);
+
+                proj1yr.textContent = formatCurrency(projections.oneYear);
+                proj5yr.textContent = formatCurrency(projections.fiveYears);
+
+                if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+            });
+        });
+
+        // Prevent tap zones from interfering with interactive elements
+        document.querySelectorAll('.amount-card, .cta-button, .tip-card').forEach(el => {
+            el.addEventListener('click', (e) => e.stopPropagation());
+        });
+
+        // Initialize
+        updateSlide(0);
+    </script>
+</body>
+</html>
