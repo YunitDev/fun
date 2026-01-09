@@ -144,13 +144,20 @@
             position: absolute;
             top: 60px;
             bottom: 0;
-            width: 30%;
+            width: 25%;
             z-index: 50;
             cursor: pointer;
+            transition: opacity 0.3s ease;
         }
 
         .tap-zone-left { left: 0; }
         .tap-zone-right { right: 0; }
+
+        /* Hide tap zones on interactive slides */
+        .tap-zones-disabled .tap-zone {
+            pointer-events: none;
+            opacity: 0;
+        }
 
         /* Slide Backgrounds */
         .slide-1 {
@@ -401,11 +408,13 @@
         .amount-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 24px 0;
+            gap: 16px;
+            margin: 28px 0;
             width: 100%;
-            max-width: 300px;
+            max-width: 320px;
             opacity: 0;
+            position: relative;
+            z-index: 100;
         }
 
         .slide.active .amount-grid {
@@ -414,41 +423,54 @@
 
         .amount-card {
             background: var(--white);
-            border: 3px solid transparent;
+            border: 3px solid var(--cream-dark);
             border-radius: 20px;
-            padding: 24px 20px;
+            padding: 28px 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.15s ease;
             text-align: center;
-            min-height: 90px;
+            min-height: 100px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            -webkit-tap-highlight-color: rgba(255,140,105,0.2);
+            align-items: center;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            position: relative;
+            z-index: 101;
         }
 
         .amount-card:active {
-            transform: scale(0.95);
+            transform: scale(0.92);
             background: var(--peach-light);
+            border-color: var(--peach);
         }
 
         .amount-card.active {
             border-color: var(--coral);
-            box-shadow: 0 8px 30px rgba(255,140,105,0.3);
+            box-shadow: 0 8px 30px rgba(255,140,105,0.35);
             background: var(--white);
+        }
+
+        .amount-card.active:active {
+            background: var(--peach-light);
         }
 
         .amount-value {
             font-family: 'Fraunces', serif;
-            font-size: 1.75rem;
+            font-size: 2rem;
             font-weight: 600;
             color: var(--charcoal);
+            pointer-events: none;
         }
 
         .amount-period {
-            font-size: 0.875rem;
+            font-size: 0.9rem;
             color: var(--charcoal-light);
-            margin-top: 4px;
+            margin-top: 6px;
+            pointer-events: none;
         }
 
         /* Next Button for interactive slides */
@@ -943,6 +965,8 @@
             return INTERACTIVE_SLIDES.includes(index);
         }
 
+        const storyContainer = document.querySelector('.story-container');
+
         function updateSlide(newIndex) {
             if (newIndex < 0 || newIndex >= totalSlides) return;
 
@@ -971,6 +995,13 @@
             });
 
             currentSlide = newIndex;
+
+            // Disable tap zones on interactive slides
+            if (isInteractiveSlide(currentSlide)) {
+                storyContainer.classList.add('tap-zones-disabled');
+            } else {
+                storyContainer.classList.remove('tap-zones-disabled');
+            }
 
             // Auto-advance only on non-interactive slides
             if (currentSlide < totalSlides - 1 && !isInteractiveSlide(currentSlide)) {
@@ -1064,24 +1095,51 @@
             return '$' + amount.toLocaleString();
         }
 
+        function selectAmount(card) {
+            amountCards.forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+
+            const amount = parseInt(card.dataset.amount);
+            const projections = calculateProjection(amount);
+
+            proj1yr.textContent = formatCurrency(projections.oneYear);
+            proj5yr.textContent = formatCurrency(projections.fiveYears);
+
+            if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+        }
+
         amountCards.forEach(card => {
+            // Use both touch and click for maximum compatibility
+            let touchMoved = false;
+
+            card.addEventListener('touchstart', (e) => {
+                touchMoved = false;
+                e.stopPropagation();
+            }, { passive: true });
+
+            card.addEventListener('touchmove', () => {
+                touchMoved = true;
+            }, { passive: true });
+
+            card.addEventListener('touchend', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                if (!touchMoved) {
+                    selectAmount(card);
+                }
+            });
+
             card.addEventListener('click', (e) => {
                 e.stopPropagation();
-                amountCards.forEach(c => c.classList.remove('active'));
-                card.classList.add('active');
-
-                const amount = parseInt(card.dataset.amount);
-                const projections = calculateProjection(amount);
-
-                proj1yr.textContent = formatCurrency(projections.oneYear);
-                proj5yr.textContent = formatCurrency(projections.fiveYears);
-
-                if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+                e.preventDefault();
+                selectAmount(card);
             });
         });
 
-        // Prevent tap zones from interfering with interactive elements
-        document.querySelectorAll('.amount-card, .cta-button, .tip-card').forEach(el => {
+        // Stop all events from bubbling on interactive elements
+        document.querySelectorAll('.next-button, .tip-card, .projection-card').forEach(el => {
+            el.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
+            el.addEventListener('touchend', (e) => e.stopPropagation(), { passive: true });
             el.addEventListener('click', (e) => e.stopPropagation());
         });
 
