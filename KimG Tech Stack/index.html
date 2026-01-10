@@ -678,188 +678,384 @@
             color: var(--ink);
         }
 
-        /* Mobile optimizations */
+        /* Tap zones for navigation */
+        .tap-zone {
+            position: fixed;
+            top: 0;
+            bottom: 60px;
+            width: 25%;
+            z-index: 50;
+            cursor: pointer;
+        }
+
+        .tap-zone-left {
+            left: 0;
+        }
+
+        .tap-zone-right {
+            right: 0;
+        }
+
+        /* Pull to refresh indicator */
+        .pull-indicator {
+            position: fixed;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--walnut);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: top 0.3s ease;
+            z-index: 1001;
+        }
+
+        .pull-indicator.visible {
+            top: 10px;
+        }
+
+        /* Mobile optimizations - fit on one screen */
         @media (max-width: 600px) {
             html {
-                font-size: 16px;
+                font-size: 14px;
+            }
+
+            body {
+                overflow: hidden;
             }
 
             .slide {
-                padding: 1.5rem;
-                padding-bottom: 5rem;
-                overflow-y: auto;
-                justify-content: flex-start;
-                padding-top: 2.5rem;
+                padding: 1rem;
+                padding-top: 1.5rem;
+                padding-bottom: 4rem;
+                overflow: hidden;
+            }
+
+            .slide-content {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
             }
 
             h1 {
-                font-size: 2rem;
+                font-size: 1.75rem;
+                line-height: 1.1;
             }
 
             h2 {
-                font-size: 1.4rem;
+                font-size: 1.25rem;
+                line-height: 1.15;
             }
 
-            .eyebrow {
-                margin-bottom: 0.75rem;
-            }
-
-            .lead {
+            h3 {
                 font-size: 0.95rem;
             }
 
-            /* Hide flywheel visual on mobile, show simplified version */
+            .eyebrow {
+                font-size: 0.6rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .lead {
+                font-size: 0.85rem;
+                margin-top: 0.75rem !important;
+            }
+
+            /* Vision grid - horizontal compact */
+            .vision-grid {
+                display: flex;
+                gap: 0.5rem;
+                margin-top: 1rem;
+                flex: 1;
+            }
+
+            .vision-card {
+                padding: 0.75rem 0.5rem;
+                flex: 1;
+            }
+
+            .vision-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .vision-card h3 {
+                font-size: 0.8rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .vision-card p {
+                font-size: 0.65rem;
+                line-height: 1.3;
+            }
+
+            /* Flywheel - hide visual, compact text */
             .flywheel-visual {
                 display: none;
             }
 
             .flywheel-container {
-                gap: 1.5rem;
+                margin-top: 1rem;
+                gap: 0;
             }
 
-            /* Funnel - stack vertically on mobile */
-            .funnel-mobile {
-                display: flex !important;
-                flex-direction: column;
-                gap: 0.75rem;
+            .flywheel-container > div:last-child h3 {
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
             }
 
-            .funnel-mobile .arrow-mobile {
-                text-align: center;
-                color: var(--stone);
+            .flywheel-container > div:last-child p {
+                font-size: 0.75rem;
+                line-height: 1.4;
+                margin-top: 0.5rem !important;
+            }
+
+            .flywheel-insight {
+                padding: 0.75rem;
+                margin-top: 0.75rem;
+            }
+
+            .flywheel-insight p {
+                font-size: 0.75rem;
+            }
+
+            /* Flow steps - 2x2 grid */
+            .flow-steps {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem;
+                flex-direction: unset;
+            }
+
+            .flow-step {
+                padding: 0.6rem;
+                border-radius: 8px !important;
+            }
+
+            .flow-step::after {
+                display: none;
+            }
+
+            .flow-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .flow-label {
+                font-size: 0.5rem;
+                margin-bottom: 0.2rem;
+            }
+
+            .flow-title {
+                font-size: 0.75rem;
+                margin-bottom: 0.1rem;
+            }
+
+            .flow-desc {
+                font-size: 0.6rem;
+            }
+
+            /* Outcome grid */
+            .outcome-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.4rem;
+                margin-top: 0.75rem;
+            }
+
+            .outcome-item {
+                padding: 0.5rem;
+            }
+
+            .outcome-number {
                 font-size: 1.25rem;
-                padding: 0.25rem 0;
             }
 
-            /* Hide desktop funnel on mobile */
+            .outcome-label {
+                font-size: 0.55rem;
+            }
+
+            /* Funnel mobile */
             .funnel-desktop {
                 display: none !important;
             }
 
-            /* Vision cards smaller */
-            .vision-card {
-                padding: 1rem;
+            .funnel-mobile {
+                display: flex !important;
+                flex-direction: row;
+                align-items: center;
+                gap: 0.25rem;
+                margin-top: 1rem;
             }
 
-            .vision-icon {
-                width: 44px;
-                height: 44px;
-                font-size: 1.25rem;
-                margin-bottom: 0.75rem;
+            .funnel-mobile .card {
+                flex: 1;
+                padding: 0.6rem !important;
             }
 
-            .vision-card p {
-                font-size: 0.85rem;
+            .funnel-mobile .card > div {
+                flex-direction: column !important;
+                gap: 0.25rem !important;
             }
 
-            /* Flow steps tighter */
-            .flow-step {
-                padding: 1rem 0.75rem;
+            .funnel-mobile .card > div > div:first-child {
+                font-size: 1.5rem !important;
             }
 
-            .flow-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
+            .funnel-mobile .card > div > div:last-child {
+                font-size: 0.6rem !important;
             }
 
-            .flow-title {
+            .funnel-mobile .arrow-mobile {
                 font-size: 0.9rem;
+                padding: 0;
+                color: var(--stone);
             }
 
-            .flow-desc {
-                font-size: 0.75rem;
+            /* Bottom line card on slide 5 */
+            .bottom-line-card {
+                margin-top: 0.75rem !important;
+                padding: 0.75rem 1rem !important;
+                flex-direction: column !important;
+                gap: 0.5rem !important;
+                text-align: center;
             }
 
-            /* Outcome grid horizontal on mobile */
-            .outcome-grid {
-                grid-template-columns: repeat(3, 1fr);
+            .bottom-line-card > div:first-child {
+                text-align: center;
+            }
+
+            .bottom-line-card > div:last-child {
+                font-size: 0.7rem !important;
+                max-width: none !important;
+            }
+
+            /* Summary grid */
+            .summary-grid {
+                display: flex;
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+
+            .summary-card {
+                padding: 0.75rem;
+                flex: 1;
+            }
+
+            .summary-card h3 {
+                font-size: 0.85rem;
+                margin-bottom: 0.5rem;
                 gap: 0.5rem;
             }
 
-            .outcome-item {
-                padding: 0.75rem 0.5rem;
-            }
-
-            .outcome-number {
-                font-size: 1.5rem;
-            }
-
-            .outcome-label {
-                font-size: 0.7rem;
-            }
-
-            /* Summary cards */
-            .summary-card {
-                padding: 1.25rem;
+            .summary-card h3 span {
+                width: 28px;
+                height: 28px;
+                font-size: 0.85rem;
             }
 
             .summary-list li {
-                font-size: 0.85rem;
-                padding: 0.4rem 0;
-                padding-left: 1.25rem;
+                font-size: 0.7rem;
+                padding: 0.3rem 0;
+                padding-left: 1rem;
             }
 
-            /* Navigation adjustments */
+            /* Final slide */
+            .final-icons {
+                margin-top: 1.5rem !important;
+                gap: 1.5rem !important;
+            }
+
+            .final-icons > div > div:first-child {
+                font-size: 1.75rem !important;
+            }
+
+            .final-icons > div > div:last-child {
+                font-size: 0.7rem !important;
+            }
+
+            /* Navigation */
             .nav-arrows {
                 display: none;
             }
 
-            .slide-counter {
-                bottom: 1.25rem;
-                right: 1.25rem;
-                font-size: 0.7rem;
-            }
-
             .nav-container {
-                bottom: 1.25rem;
-                padding: 0.4rem;
-                gap: 0.4rem;
+                bottom: 0.75rem;
+                padding: 0.35rem;
+                gap: 0.35rem;
             }
 
             .nav-dot {
-                width: 8px;
-                height: 8px;
+                width: 6px;
+                height: 6px;
             }
 
             .nav-dot.active {
-                width: 20px;
+                width: 18px;
             }
 
-            /* Flywheel insight */
-            .flywheel-insight {
-                padding: 1rem;
+            .slide-counter {
+                bottom: 0.85rem;
+                right: 1rem;
+                font-size: 0.65rem;
+            }
+        }
+
+        /* Very small phones */
+        @media (max-width: 375px) {
+            html {
+                font-size: 13px;
             }
 
-            .flywheel-insight p {
-                font-size: 0.85rem;
-            }
-
-            /* Final slide icons */
-            .final-icons {
-                gap: 1.5rem !important;
+            .slide {
+                padding: 0.75rem;
+                padding-top: 1.25rem;
             }
         }
 
         /* Landscape phone */
-        @media (max-height: 500px) {
+        @media (max-height: 500px) and (orientation: landscape) {
             .slide {
-                padding: 1rem 2rem;
-                padding-bottom: 4rem;
+                padding: 0.75rem 2rem;
+                padding-bottom: 3rem;
             }
 
-            h1, h2 {
-                margin-bottom: 0.5rem;
+            h1 {
+                font-size: 1.5rem;
             }
 
-            .vision-grid, .flow-section, .outcome-grid {
-                margin-top: 1rem;
+            h2 {
+                font-size: 1.1rem;
+            }
+
+            .vision-grid {
+                margin-top: 0.5rem;
+            }
+
+            .vision-card {
+                padding: 0.5rem;
+            }
+
+            .vision-icon {
+                width: 28px;
+                height: 28px;
+                margin-bottom: 0.25rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="progress-bar" id="progress"></div>
+    <div class="pull-indicator" id="pullIndicator">Release to refresh</div>
+
+    <!-- Tap zones for mobile navigation -->
+    <div class="tap-zone tap-zone-left" id="tapLeft"></div>
+    <div class="tap-zone tap-zone-right" id="tapRight"></div>
 
     <div class="slides-container">
         <!-- Slide 1: Title -->
@@ -1013,36 +1209,36 @@
 
                 <!-- Mobile funnel -->
                 <div class="reveal funnel-mobile" style="margin-top: 2rem; display: none;">
-                    <div class="card" style="text-align: center; padding: 1.25rem;">
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
-                            <div style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--sky);">100</div>
-                            <div style="font-size: 0.9rem; color: var(--walnut); text-align: left;">signed up</div>
+                    <div class="card" style="text-align: center;">
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <div style="font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--sky);">100</div>
+                            <div style="font-size: 0.7rem; color: var(--walnut);">signed up</div>
                         </div>
                     </div>
-                    <div class="arrow-mobile">↓</div>
-                    <div class="card" style="text-align: center; padding: 1.25rem;">
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
-                            <div style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--sky);">42</div>
-                            <div style="font-size: 0.9rem; color: var(--walnut); text-align: left;">showed up</div>
+                    <div class="arrow-mobile">→</div>
+                    <div class="card" style="text-align: center;">
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <div style="font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--sky);">42</div>
+                            <div style="font-size: 0.7rem; color: var(--walnut);">showed up</div>
                         </div>
                     </div>
-                    <div class="arrow-mobile">↓</div>
-                    <div class="card" style="text-align: center; padding: 1.25rem; background: var(--sage-bg); border-color: var(--sage-soft);">
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
-                            <div style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--sage);">24</div>
-                            <div style="font-size: 0.9rem; color: var(--walnut); text-align: left;">new customers</div>
+                    <div class="arrow-mobile">→</div>
+                    <div class="card" style="text-align: center; background: var(--sage-bg); border-color: var(--sage-soft);">
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <div style="font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--sage);">24</div>
+                            <div style="font-size: 0.7rem; color: var(--walnut);">customers</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="reveal" style="margin-top: 2rem; max-width: 800px;">
-                    <div class="card" style="background: var(--terracotta-bg); border-color: var(--terracotta-soft); display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: 1.5rem 2rem; flex-wrap: wrap;">
+                    <div class="card bottom-line-card" style="background: var(--terracotta-bg); border-color: var(--terracotta-soft); display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: 1.5rem 2rem; flex-wrap: wrap;">
                         <div>
                             <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--terracotta); margin-bottom: 0.25rem;">The bottom line</div>
-                            <div style="font-size: 1.1rem; color: var(--espresso);"><strong>$42</strong> to get a new customer</div>
+                            <div style="font-size: 1.1rem; color: var(--espresso);"><strong>$42</strong> per new customer</div>
                         </div>
                         <div style="font-size: 0.9rem; color: var(--walnut); max-width: 350px;">
-                            Real numbers sponsors can take back to their team. No guessing.
+                            Real numbers for sponsors. No guessing.
                         </div>
                     </div>
                 </div>
@@ -1092,18 +1288,18 @@
                     You focus on the mission. The tech keeps track of who's interested, how it's going, and what to share with sponsors.
                 </p>
 
-                <div class="reveal" style="margin-top: 3rem; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                <div class="reveal final-icons" style="margin-top: 3rem; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
                     <div style="text-align: center;">
                         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📋</div>
-                        <div style="font-size: 0.85rem; color: var(--walnut);">Signup tracking</div>
+                        <div style="font-size: 0.85rem; color: var(--walnut);">Signups</div>
                     </div>
                     <div style="text-align: center;">
                         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📊</div>
-                        <div style="font-size: 0.85rem; color: var(--walnut);">Results tracking</div>
+                        <div style="font-size: 0.85rem; color: var(--walnut);">Results</div>
                     </div>
                     <div style="text-align: center;">
                         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📤</div>
-                        <div style="font-size: 0.85rem; color: var(--walnut);">Easy sharing</div>
+                        <div style="font-size: 0.85rem; color: var(--walnut);">Sharing</div>
                     </div>
                 </div>
             </div>
@@ -1176,21 +1372,60 @@
         document.getElementById('prevBtn').addEventListener('click', () => goToSlide(currentSlide - 1));
         document.getElementById('nextBtn').addEventListener('click', () => goToSlide(currentSlide + 1));
 
-        // Touch support
+        // Touch swipe support
         let touchStartX = 0;
+        let touchStartY = 0;
         let touchEndX = 0;
+        let touchEndY = 0;
+        let isPulling = false;
+        const pullIndicator = document.getElementById('pullIndicator');
 
         document.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        });
+
+        document.addEventListener('touchmove', e => {
+            const currentY = e.changedTouches[0].screenY;
+            const pullDistance = currentY - touchStartY;
+
+            // Pull to refresh detection
+            if (pullDistance > 60 && currentSlide === 0) {
+                isPulling = true;
+                pullIndicator.classList.add('visible');
+            }
         });
 
         document.addEventListener('touchend', e => {
             touchEndX = e.changedTouches[0].screenX;
-            const diff = touchStartX - touchEndX;
-            if (Math.abs(diff) > 50) {
-                if (diff > 0) goToSlide(currentSlide + 1);
+            touchEndY = e.changedTouches[0].screenY;
+
+            // Check for pull to refresh
+            if (isPulling) {
+                isPulling = false;
+                pullIndicator.classList.remove('visible');
+                location.reload();
+                return;
+            }
+
+            // Horizontal swipe
+            const diffX = touchStartX - touchEndX;
+            const diffY = touchStartY - touchEndY;
+
+            // Only swipe if horizontal movement is greater than vertical
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                if (diffX > 0) goToSlide(currentSlide + 1);
                 else goToSlide(currentSlide - 1);
             }
+        });
+
+        // Tap zone navigation
+        document.getElementById('tapLeft').addEventListener('click', () => {
+            goToSlide(currentSlide - 1);
+        });
+
+        document.getElementById('tapRight').addEventListener('click', () => {
+            goToSlide(currentSlide + 1);
         });
 
         // Initialize
