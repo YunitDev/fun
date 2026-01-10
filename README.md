@@ -37,6 +37,22 @@ Wealth calculator that shows how much money you can make from investing. Used in
 - Multi-step form with name/phone collection
 - Benson app download CTA
 
+### KimG Tech Stack
+**URL:** https://yunitdev.github.io/fun/KimG%20Tech%20Stack/
+
+Visual slide deck proposing tech solutions for Make Tech Easy - a nonprofit teaching seniors digital skills.
+
+**Features:**
+- Bigger picture vision (roles: you, students, tech)
+- Flywheel growth visualization
+- Demand capture system flow
+- Impact measurement with ROI funnel
+- Keyboard and touch navigation
+- Mobile responsive design
+- Progress bar indicator
+
+**Use Case:** Template for proposing tech solutions to help someone scale their work.
+
 ---
 
 ## File Structure
@@ -50,6 +66,8 @@ fun/
 │   ├── assets/
 │   ├── scripts/
 │   └── styles/
+├── KimG Tech Stack/          # Make Tech Easy proposal deck
+│   └── index.html
 └── README.md                 # This file
 ```
 
